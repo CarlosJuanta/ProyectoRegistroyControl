@@ -1,0 +1,67 @@
+
+.principal {
+    margin-top: 0px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: cursive;
+    background-color: #ffffff;
+    position:relative;
+}
+
+.login-container {
+    text-align: center;
+    padding: 20px;
+    width: 350px;
+    height: 450px;
+    border-radius: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 0 8px rgba(100, 26, 26, 0.5); /* Cambia el color de la sombra a rojo semi-transparente */
+}
+
+
+.logo {
+    width: 120px; /* Ajusta el ancho de acuerdo a tu imagen */
+    height: 120px;
+    margin-bottom: 5px;
+}
+
+.school-name {
+    font-size: 18px;
+    margin-bottom: 20px;
+    font-family: cursive;
+   
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="password"]{
+    text-align: center;
+    width: 80%;
+    height: 50;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    border: solid 1px
+}
+
+button {
+    background-color: #2d4b74;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
