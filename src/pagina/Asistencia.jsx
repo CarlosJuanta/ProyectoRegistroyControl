@@ -85,7 +85,7 @@ const Asistencia = () => {
     </tr>
     <tr>
     <th scope="row">78654321</th>
-      <td>Maria</td>
+      <td>Lucias</td>
       <td>Méndez</td>
       <td>Primero</td> 
       <td>24/08/2023</td>
