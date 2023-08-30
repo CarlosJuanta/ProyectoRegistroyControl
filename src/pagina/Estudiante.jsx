@@ -12,7 +12,7 @@ const Estudiante = () => {
   return (
     <>
     <h3>Formulario Registro Nuevo Estudiante</h3>
-    <Form className="bg-light p-4">
+    <Form className="bg-light p-5">
 
   <Row>
     <Col md={3}>
@@ -24,7 +24,7 @@ const Estudiante = () => {
           id="CUI"
           name="CUI"
           placeholder="CUI"
-          type="text"
+          type="text-area"
          
         />
       </FormGroup>
@@ -38,7 +38,7 @@ const Estudiante = () => {
           id="nombres"
           name="nombres"
           placeholder="Nombres"
-          type="text"
+          type="text-area"
         />
       </FormGroup>
     </Col>
@@ -51,7 +51,7 @@ const Estudiante = () => {
           id="apellidos"
           name="apellidos"
           placeholder="Apellidos"
-          type="text"
+          type="text-area"
         />
       </FormGroup>
     </Col>
@@ -80,6 +80,7 @@ const Estudiante = () => {
           id="direccion"
           name="direccion"
           placeholder="Dirección"
+          type="text-area"
         />
       </FormGroup>
     </Col> 
@@ -92,6 +93,7 @@ const Estudiante = () => {
           id="nacionalidad"
           name="nacionalidad"
           placeholder="Nacionalidad"
+          type="text-area"
         />
       </FormGroup>
     </Col>
@@ -109,6 +111,7 @@ const Estudiante = () => {
           id="codigomineduc"
           name="codigomineduc"
           placeholder="Código Mineduc"
+          type="text-area"
         />
       </FormGroup>
     </Col>
@@ -126,7 +129,7 @@ const Estudiante = () => {
           id="cuiencargado"
           name="cuiencargado"
           placeholder="CUI Encargado"
-          type="text"
+          type="text-area"
         />
       </FormGroup>
     </Col>
@@ -139,7 +142,7 @@ const Estudiante = () => {
           id="nombresencargado"
           name="nombresencargado"
           placeholder="Nombres Encargado"
-          type="text"
+          type="text-area"
         />
       </FormGroup>
     </Col>
@@ -152,7 +155,7 @@ const Estudiante = () => {
           id="apellidosencargado"
           name="apellidosencargado"
           placeholder="Apellidos Encargado"
-          type="text"
+          type="text-area"
         />
       </FormGroup>
     </Col>
@@ -168,6 +171,7 @@ const Estudiante = () => {
           id="direccion"
           name="direccion"
           placeholder="Dirección"
+          type="text-area"
         />
       </FormGroup>
     </Col>
@@ -180,13 +184,13 @@ const Estudiante = () => {
           id="correo"
           name="correo"
           placeholder="ejemplo@gmail.com"
-          type="mail"
+          type="email"
         />
       </FormGroup>
     </Col>
   </Row>
   
-  <Button>
+  <Button color="success">
     Registrar estudiante
   </Button>
 </Form>

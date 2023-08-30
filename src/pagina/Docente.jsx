@@ -8,7 +8,7 @@ import {
   Button,
   Form,
 } from 'reactstrap';
-const Estudiante = () => {
+const Docente = () => {
   return (
     <>
     <h3>Formulario Registro Nuevo Docente</h3>
@@ -24,7 +24,7 @@ const Estudiante = () => {
           id="cuidocente"
           name="cuidocente"
           placeholder="CUI Docente"
-          type="text"
+          type="text-area"
          
         />
       </FormGroup>
@@ -38,7 +38,7 @@ const Estudiante = () => {
           id="nombresdocente"
           name="nombredocente"
           placeholder="Nombres Docente"
-          type="text"
+          type="text-area"
         />
       </FormGroup>
     </Col>
@@ -51,7 +51,7 @@ const Estudiante = () => {
           id="apellidosdocente"
           name="apellidosdocente"
           placeholder="Apellidos Docente"
-          type="text"
+          type="text-area"
         />
       </FormGroup>
     </Col>
@@ -61,43 +61,58 @@ const Estudiante = () => {
     <Col md={3}>
       <FormGroup>
       <Label for="telefonodocente">
-          Fecha Nacimiento
+          Telefono
         </Label>
         <Input
           id="telefonodocente"
           name="telefonodocente"
           placeholder="Telefono Docente"
-          type="text"
+          type="text-area"
         />
       </FormGroup>
     </Col>
     <Col md={3}>
       <FormGroup>
         <Label for="correodocente">
-         Direccion
+         Correo
         </Label>
         <Input
           id="correodocente"
           name="correodocente"
           placeholder="Correo Docente"
+          type="email"
         />
       </FormGroup>
     </Col> 
     <Col md={3}>
       <FormGroup>
         <Label for="direcciondocente">
-          Nacionalidad
+         Dirección
         </Label>
         <Input
           id="direcciondocente"
           name="direcciondocente"
-          placeholder="Direccion Docente"
+          placeholder="ej. docente@gmail.com"
+          type="email"
+        />
+      </FormGroup>
+    </Col> 
+    <Col md={3}>
+      <FormGroup>
+        <Label for="nacionalidaddocente">
+          Nacionalidad
+        </Label>
+        <Input
+          id="nacionalidaddocente"
+          name="nacionalidaddocente"
+          placeholder="Nacionalidad Docente"
+          type="text-area"
         />
       </FormGroup>
     </Col>
   </Row> 
   
-  <Button>
+  <Button color="success">
     Registrar Docente
   </Button>
 </Form>
@@ -105,4 +120,4 @@ const Estudiante = () => {
   )
 }
 
-export default Estudiante
+export default Docente

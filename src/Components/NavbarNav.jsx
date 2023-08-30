@@ -20,14 +20,14 @@ function NavbarNav(props) {
   const toggle = () => setIsOpen(!isOpen);
 
   return (
-    <div>
+    
       <Navbar className="navbar navbar-dark bg-dark " expand="md">
-        <NavbarBrand href="/">E.O.U.M José Joaquín Palma</NavbarBrand>
+        <NavbarBrand className="ms-auto" href="/"> E.O.U.M José Joaquín Palma</NavbarBrand>
         
           <Nav className="ms-auto" navbar>
             <UncontrolledDropdown nav inNavbar>
               <DropdownToggle nav caret>
-                Opciones
+                Sesión
               </DropdownToggle>
               <DropdownMenu right>
                 <DropdownItem>Carlos Juantá</DropdownItem>
@@ -40,8 +40,9 @@ function NavbarNav(props) {
           <Nav>Activo</Nav>
           
        </Navbar>
-    </div>
+   
   );
 }
 
 export default NavbarNav;
+

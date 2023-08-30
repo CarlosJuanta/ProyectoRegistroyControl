@@ -11,14 +11,25 @@ import Grado from '../pagina/Grado'
 import Curso from '../pagina/Curso'
 import Asistencia from '../pagina/Asistencia'
 import Calificaciones from '../pagina/Calificaciones'
+import VerEstudiante from '../pagina/VerEstudiante'
+import EncargadoInfo  from '../pagina/EncargadoInfor';  
+import VerDocente from '../pagina/VerDocente'
+import GradoDocente from '../pagina/GradoDocente'
+import VerGrado from '../pagina/VerGrado'
+import CrearCurso from '../pagina/CrearCurso'
+import RegistrarFalta from '../pagina/RegistrarFalta'
+import VerFalta from '../pagina/VerFalta'
+import VerAsistencia from '../pagina/VerAsistencia'
+import CalificacionCurso from '../pagina/CalificacionCurso'
+import VerCalificacionCurso from '../pagina/VerCalificacionCurso'
 
 const Home = () => {
   return (
     <Router>
        
-        <div className="flex">
+        <div className="flex" style={{ overflow: 'hidden' }}>
         <Sidebar />
-        <div className='content w-100'>
+        <div className='content w-100' style={{ overflowY: 'auto' }}>
         <NavbarNav /> 
            <Routes>
           <Route exact path='/' element={< Inicio />}/>
@@ -28,6 +39,17 @@ const Home = () => {
           <Route exact path='/curso' element={< Curso />}/> 
           <Route exact path='/asistencia' element={< Asistencia />}/> 
           <Route exact path='/calificaciones' element={< Calificaciones />}/>  
+          <Route exact path='/verestudiante' element={< VerEstudiante />}/>
+          <Route exact path='/encargadoinfo' element={< EncargadoInfo />}/>
+          <Route exact path='/verdocente' element={< VerDocente />}/>
+          <Route exact path='/gradodocente' element={< GradoDocente />}/>
+          <Route exact path='/vergrado' element={< VerGrado />}/>
+          <Route exact path='/crearcurso' element={<CrearCurso/>}/>
+          <Route exact path='/registrarfalta' element={<RegistrarFalta/>}/>
+          <Route exact path='/verfalta' element={<VerFalta/>}/>
+          <Route exact path='/verasistencia' element={<VerAsistencia/>}/>
+          <Route exact path='/calificacioncurso' element={<CalificacionCurso/>}/>
+          <Route exact path='/vercalificacioncurso' element={<VerCalificacionCurso/>}/>
           </Routes>
           </div>
         </div>    

@@ -24,24 +24,31 @@ const Estudiante = () => {
           id="codigogrado"
           name="codigogrado"
           placeholder="Código Grado"
-          type="text"
+          type="text-area"
          
         />
       </FormGroup>
     </Col>
     <Col md={3}>
-      <FormGroup>
-      <Label for="Nombre Grado">
-          Nombre Grado
-        </Label>
-        <Input
-          id="nombregrado"
-          name="nombregrado"
-          placeholder="Grado (Solo letras)"
-          type="text"
-        />
-      </FormGroup>
-    </Col>
+  <FormGroup>
+    <Label for="Nombre Grado">
+      Nombre Grado
+    </Label>
+    <Input
+      id="nombregrado"
+      name="nombregrado"
+      type="select"
+    >
+      <option value="primero">Primero</option>
+      <option value="segundo">Segundo</option>
+      <option value="tercero">Tercero</option>
+      <option value="cuarto">Cuarto</option>
+      <option value="quinto">Quinto</option>
+      <option value="sexto">Sexto</option>
+    </Input>
+  </FormGroup>
+</Col>
+
     <Col md={3}>
       <FormGroup>
         <Label for="descripciongrado">
@@ -51,7 +58,7 @@ const Estudiante = () => {
           id="descripciongrado"
           name="descripciongrado"
           placeholder="Descripcion "
-          type="text"
+          type="textarea"
         />
       </FormGroup>
     </Col>
@@ -67,24 +74,25 @@ const Estudiante = () => {
           id="seccion"
           name="seccion"
           placeholder="Sección"
-          type="text"
+          type="text-area"
         />
       </FormGroup>
     </Col>
     <Col md={3}>
       <FormGroup>
         <Label for="cuidocenteasignado">
-         Direccion
+         CUI docente asignado
         </Label>
         <Input
           id="cuidocenteasignado"
           name="cuidocenteasignado"
           placeholder="CUI Docente Asignado"
+          type="text-area"
         />
       </FormGroup>
     </Col> 
     </Row>
-  <Button>
+  <Button color="success">
     Registrar Grado
   </Button>
 </Form>

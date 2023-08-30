@@ -1,13 +1,16 @@
 import React from 'react'
+import {NavLink} from 'react-router-dom'
 import {
   Button,
  Table,
+
 } from 'reactstrap';
 const Curso = () => {
   return (
     <>
-    <table class="table">
-  <thead>
+   <div class="table-responsive p-5">
+    <table class="table table-hover table-light table-sm align-middle table-striped">
+  <thead class="table-dark">
     <tr>
       <th scope="col">Código Curso</th>
       <th scope="col">Nombre </th>
@@ -36,9 +39,15 @@ const Curso = () => {
     </tr>
   </tbody>
 </table> 
- <Button>
-  Crear Curso
- </Button>
+<div className='p-4'>
+<NavLink to="/crearcurso">
+          <Button color="success">
+            Crear Curso
+          </Button>
+        </NavLink>
+ 
+</div>
+</div>
     </>
   )
 }
