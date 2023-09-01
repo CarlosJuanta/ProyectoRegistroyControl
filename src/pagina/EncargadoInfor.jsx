@@ -72,6 +72,17 @@ const EncargadoInfor = () => {
     </Col>
     <Col md={3}>
       <FormGroup>
+        <Label for="teléfono">
+         Telefono
+        </Label>
+        <Input
+          placeholder="telefono"
+          type="number"
+        />
+      </FormGroup>
+    </Col>
+    <Col md={3}>
+      <FormGroup>
         <Label for="correo">
          Correo
         </Label>

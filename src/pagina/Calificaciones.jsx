@@ -94,6 +94,86 @@ const Calificaciones = () => {
       <th><NavLink to="/calificacioncurso" className='text-dark rounded py-2 w-100 d-inline-block px-2' activeClassName='active'  style={{ textDecoration: 'none' }} ><FaIcons.FaPenAlt className="me-2"/>Registrar</NavLink></th> 
       </td>
     </tr>
+     <tr>
+    <th scope="row">78654321</th>
+      <td>Maria</td>
+      <td>Méndez</td>
+      <td>Primero</td> 
+      <td>
+      <th ><NavLink to="/vercalificacioncurso" className='text-dark rounded py-2 w-100 d-inline-block px-2 ' activeClassName='active'  style={{ textDecoration: 'none' }} ><FaIcons.FaEye className="me-2"/>Ver</NavLink></th>
+      <th><NavLink to="/calificacioncurso" className='text-dark rounded py-2 w-100 d-inline-block px-2' activeClassName='active'  style={{ textDecoration: 'none' }} ><FaIcons.FaPenAlt className="me-2"/>Registrar</NavLink></th> 
+      </td>
+    </tr>
+    <tr>
+    <th scope="row">78654321</th>
+      <td>Maria</td>
+      <td>Méndez</td>
+      <td>Primero</td> 
+      <td>
+      <th ><NavLink to="/vercalificacioncurso" className='text-dark rounded py-2 w-100 d-inline-block px-2 ' activeClassName='active'  style={{ textDecoration: 'none' }} ><FaIcons.FaEye className="me-2"/>Ver</NavLink></th>
+      <th><NavLink to="/calificacioncurso" className='text-dark rounded py-2 w-100 d-inline-block px-2' activeClassName='active'  style={{ textDecoration: 'none' }} ><FaIcons.FaPenAlt className="me-2"/>Registrar</NavLink></th> 
+      </td>
+    </tr>
+    <tr>
+    <th scope="row">78654321</th>
+      <td>Maria</td>
+      <td>Méndez</td>
+      <td>Primero</td> 
+      <td>
+      <th ><NavLink to="/vercalificacioncurso" className='text-dark rounded py-2 w-100 d-inline-block px-2 ' activeClassName='active'  style={{ textDecoration: 'none' }} ><FaIcons.FaEye className="me-2"/>Ver</NavLink></th>
+      <th><NavLink to="/calificacioncurso" className='text-dark rounded py-2 w-100 d-inline-block px-2' activeClassName='active'  style={{ textDecoration: 'none' }} ><FaIcons.FaPenAlt className="me-2"/>Registrar</NavLink></th> 
+      </td>
+    </tr>
+    <tr>
+    <th scope="row">78654321</th>
+      <td>Maria</td>
+      <td>Méndez</td>
+      <td>Primero</td> 
+      <td>
+      <th ><NavLink to="/vercalificacioncurso" className='text-dark rounded py-2 w-100 d-inline-block px-2 ' activeClassName='active'  style={{ textDecoration: 'none' }} ><FaIcons.FaEye className="me-2"/>Ver</NavLink></th>
+      <th><NavLink to="/calificacioncurso" className='text-dark rounded py-2 w-100 d-inline-block px-2' activeClassName='active'  style={{ textDecoration: 'none' }} ><FaIcons.FaPenAlt className="me-2"/>Registrar</NavLink></th> 
+      </td>
+    </tr>
+    <tr>
+    <th scope="row">78654321</th>
+      <td>Maria</td>
+      <td>Méndez</td>
+      <td>Primero</td> 
+      <td>
+      <th ><NavLink to="/vercalificacioncurso" className='text-dark rounded py-2 w-100 d-inline-block px-2 ' activeClassName='active'  style={{ textDecoration: 'none' }} ><FaIcons.FaEye className="me-2"/>Ver</NavLink></th>
+      <th><NavLink to="/calificacioncurso" className='text-dark rounded py-2 w-100 d-inline-block px-2' activeClassName='active'  style={{ textDecoration: 'none' }} ><FaIcons.FaPenAlt className="me-2"/>Registrar</NavLink></th> 
+      </td>
+    </tr>
+    <tr>
+    <th scope="row">78654321</th>
+      <td>Maria</td>
+      <td>Méndez</td>
+      <td>Primero</td> 
+      <td>
+      <th ><NavLink to="/vercalificacioncurso" className='text-dark rounded py-2 w-100 d-inline-block px-2 ' activeClassName='active'  style={{ textDecoration: 'none' }} ><FaIcons.FaEye className="me-2"/>Ver</NavLink></th>
+      <th><NavLink to="/calificacioncurso" className='text-dark rounded py-2 w-100 d-inline-block px-2' activeClassName='active'  style={{ textDecoration: 'none' }} ><FaIcons.FaPenAlt className="me-2"/>Registrar</NavLink></th> 
+      </td>
+    </tr>
+    <tr>
+    <th scope="row">78654321</th>
+      <td>Maria</td>
+      <td>Méndez</td>
+      <td>Primero</td> 
+      <td>
+      <th ><NavLink to="/vercalificacioncurso" className='text-dark rounded py-2 w-100 d-inline-block px-2 ' activeClassName='active'  style={{ textDecoration: 'none' }} ><FaIcons.FaEye className="me-2"/>Ver</NavLink></th>
+      <th><NavLink to="/calificacioncurso" className='text-dark rounded py-2 w-100 d-inline-block px-2' activeClassName='active'  style={{ textDecoration: 'none' }} ><FaIcons.FaPenAlt className="me-2"/>Registrar</NavLink></th> 
+      </td>
+    </tr>
+    <tr>
+    <th scope="row">78654321</th>
+      <td>Maria</td>
+      <td>Méndez</td>
+      <td>Primero</td> 
+      <td>
+      <th ><NavLink to="/vercalificacioncurso" className='text-dark rounded py-2 w-100 d-inline-block px-2 ' activeClassName='active'  style={{ textDecoration: 'none' }} ><FaIcons.FaEye className="me-2"/>Ver</NavLink></th>
+      <th><NavLink to="/calificacioncurso" className='text-dark rounded py-2 w-100 d-inline-block px-2' activeClassName='active'  style={{ textDecoration: 'none' }} ><FaIcons.FaPenAlt className="me-2"/>Registrar</NavLink></th> 
+      </td>
+    </tr>
   </tbody>
 </table> 
 </div>

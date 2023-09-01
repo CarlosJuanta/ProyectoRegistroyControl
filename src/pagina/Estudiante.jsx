@@ -12,7 +12,7 @@ const Estudiante = () => {
   return (
     <>
     <h3>Formulario Registro Nuevo Estudiante</h3>
-    <Form className="bg-light p-5">
+    <div className="bg-light p-5" fluid="lg">
 
   <Row>
     <Col md={3}>
@@ -177,6 +177,17 @@ const Estudiante = () => {
     </Col>
     <Col md={3}>
       <FormGroup>
+        <Label for="telefono">
+         Telefono
+        </Label>
+        <Input
+          placeholder="telefono"
+          type="number"
+        />
+      </FormGroup>
+    </Col>
+    <Col md={3}>
+      <FormGroup>
         <Label for="correo">
          Correo
         </Label>
@@ -193,7 +204,7 @@ const Estudiante = () => {
   <Button color="success">
     Registrar estudiante
   </Button>
-</Form>
+</div>
     
     
     </>

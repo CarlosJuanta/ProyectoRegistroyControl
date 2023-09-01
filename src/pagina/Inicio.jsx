@@ -6,7 +6,7 @@ const Inicio = (props) => {
   return (
     <>
    
-  <div class="card-group">
+  <div class="card-group" style={{height: "100vh" }}>
   <div class="card border-white">
   
     <div class="card-body">

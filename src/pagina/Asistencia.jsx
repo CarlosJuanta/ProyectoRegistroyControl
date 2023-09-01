@@ -42,9 +42,9 @@ const Asistencia = () => {
       
     </Row>
      </div>
-    <div class="table-responsive p-4">
-    <table class="table  table-light table-sm align-middle ">
-  <thead class="table-dark table text-center">
+    <div className="table-responsive p-4">
+    <table className="table  table-light table-sm align-middle ">
+  <thead className="table-dark table text-center">
   
     <tr>
       <th scope="col">CUI</th>
@@ -67,8 +67,8 @@ const Asistencia = () => {
       <td>24/08/2023</td>
     <td><input type= "checkbox"/></td>
     <td>
-      <th ><NavLink to="/verfalta" className='text-dark rounded py-2 w-100 d-inline-block px-2 ' activeClassName='active'  style={{ textDecoration: 'none' }} ><FaIcons.FaEye className="me-2"/>Ver</NavLink></th>
-      <th><NavLink to="/registrarfalta" className='text-dark rounded py-2 w-100 d-inline-block px-2' activeClassName='active'  style={{ textDecoration: 'none' }} ><FaIcons.FaPenAlt className="me-2"/>Registrar</NavLink></th>
+      <th ><NavLink to="/verfalta" className='text-dark rounded py-2 w-100 d-inline-block px-2 '   style={{ textDecoration: 'none' }} ><FaIcons.FaEye className="me-2"/>Ver</NavLink></th>
+      <th><NavLink to="/registrarfalta" className='text-dark rounded py-2 w-100 d-inline-block px-2'   style={{ textDecoration: 'none' }} ><FaIcons.FaPenAlt className="me-2"/>Registrar</NavLink></th>
     </td>
     </tr>
     <tr>
@@ -79,8 +79,8 @@ const Asistencia = () => {
       <td>24/08/2023</td>
       <td><input type= "checkbox"/></td>
     <td>
-    <th ><NavLink to="/verfalta" className='text-dark rounded py-2 w-100 d-inline-block px-2 ' activeClassName='active'  style={{ textDecoration: 'none' }} ><FaIcons.FaEye className="me-2"/>Ver</NavLink></th>
-      <th><NavLink to="/registrarfalta" className='text-dark rounded py-2 w-100 d-inline-block px-2' activeClassName='active'  style={{ textDecoration: 'none' }} ><FaIcons.FaPenAlt className="me-2"/>Registrar</NavLink></th>
+    <th ><NavLink to="/verfalta" className='text-dark rounded py-2 w-100 d-inline-block px-2 '   style={{ textDecoration: 'none' }} ><FaIcons.FaEye className="me-2"/>Ver</NavLink></th>
+      <th><NavLink to="/registrarfalta" className='text-dark rounded py-2 w-100 d-inline-block px-2'   style={{ textDecoration: 'none' }} ><FaIcons.FaPenAlt className="me-2"/>Registrar</NavLink></th>
     </td>
     </tr>
     <tr>
@@ -91,8 +91,8 @@ const Asistencia = () => {
       <td>24/08/2023</td>
       <td><input type= "checkbox" /></td>
     <td>
-      <th><NavLink to="/verfalta" className='text-dark rounded py-2 w-100 d-inline-block px-2 ' activeClassName='active'  style={{ textDecoration: 'none' }} ><FaIcons.FaEye className="me-2"/>Ver</NavLink></th>
-      <th><NavLink to="/registrarfalta" className='text-dark rounded py-2 w-100 d-inline-block px-2' activeClassName='active'  style={{ textDecoration: 'none' }} ><FaIcons.FaPenAlt className="me-2"/>Registrar</NavLink></th>
+      <th><NavLink to="/verfalta" className='text-dark rounded py-2 w-100 d-inline-block px-2 '   style={{ textDecoration: 'none' }} ><FaIcons.FaEye className="me-2"/>Ver</NavLink></th>
+      <th><NavLink to="/registrarfalta" className='text-dark rounded py-2 w-100 d-inline-block px-2'   style={{ textDecoration: 'none' }} ><FaIcons.FaPenAlt className="me-2"/>Registrar</NavLink></th>
     </td>
     </tr>
   </tbody>

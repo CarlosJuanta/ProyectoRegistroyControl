@@ -26,11 +26,14 @@ import VerCalificacionCurso from '../pagina/VerCalificacionCurso'
 const Home = () => {
   return (
     <Router>
-       
-        <div className="flex" style={{ overflow: 'hidden' }}>
+         
+        <div className="flex"  >
+          <div className="position-fixed">
         <Sidebar />
-        <div className='content w-100' style={{ overflowY: 'auto' }}>
+          </div>
+        <div className='content w-100 ' style={{paddingLeft:"225px"}} >
         <NavbarNav /> 
+        <div className='contenido'>
            <Routes>
           <Route exact path='/' element={< Inicio />}/>
           <Route exact path='/docente' element={< Docente />}/>
@@ -52,9 +55,11 @@ const Home = () => {
           <Route exact path='/vercalificacioncurso' element={<VerCalificacionCurso/>}/>
           </Routes>
           </div>
+          </div>
         </div>    
   </Router>
   )
 }
 
 export default Home
+

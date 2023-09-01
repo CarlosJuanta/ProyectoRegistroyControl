@@ -21,7 +21,7 @@ function NavbarNav(props) {
 
   return (
     
-      <Navbar className="navbar navbar-dark bg-dark " expand="md">
+      <Navbar className="navbar navbar-dark bg-dark " expand="md sm lg">
         <NavbarBrand className="ms-auto" href="/"> E.O.U.M José Joaquín Palma</NavbarBrand>
         
           <Nav className="ms-auto" navbar>
@@ -29,7 +29,7 @@ function NavbarNav(props) {
               <DropdownToggle nav caret>
                 Sesión
               </DropdownToggle>
-              <DropdownMenu right>
+              <DropdownMenu end>
                 <DropdownItem>Carlos Juantá</DropdownItem>
                 <DropdownItem>Mi Perfil</DropdownItem>
                 <DropdownItem divider />

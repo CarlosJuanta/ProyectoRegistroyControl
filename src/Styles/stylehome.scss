@@ -17,30 +17,38 @@ $gray:rgb(219, 219, 219);
     display:flex;
 }
 
-.navbar{
-    background-color:$light;
-    padding: 1rem 2rem;
-    border-bottom: 1px solid $gray;
-}
-
 
 .sidebar{
     width: 14rem;
-    height: calc(100vh - 52px);
+    height: 100vh; /* Abarca toda la pantalla vertical */
     border-right: 1px solid $gray;
+    background-color: $light;
+    position: fixed; /* Fija la posición del sidebar */
+    top: 0; /* Lo coloca en la parte superior */
     ul{
         list-style: none;
-        padding: 1rem 2rem;   
+        padding: 2rem 2rem;   
     }
     li{
         margin-bottom: 1rem;
     }
     a{
-        text-decoration:none;
+        text-decoration: none;
+        color: black;
+        font-weight: 5s00;
+        font-size: 1.2rem;
     }
-    &.active{
-        background-color: $gray;
-    }
+  
+    .linky {
+        margin: 5px;
+      }
+      
+      .active {
+        color: red;
+      }
 }
 
-
+.contenido{
+         background:#DFDFDF ;
+          height: 100vh 
+}
