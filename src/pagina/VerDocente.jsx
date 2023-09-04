@@ -1,13 +1,29 @@
-import React from 'react'
+import React, { useState, useEffect } from "react";
+import { FormGroup, Label, Input, Col, Row, Button, Form } from "reactstrap";
+
 import {NavLink} from 'react-router-dom'
 import * as FaIcons from 'react-icons/fa'
-import {
-  Button,
-Row,
-Col,
-Input
-} from 'reactstrap';
 const VerDocente = () => {
+  const [datos, setDatos] = useState("");
+
+  const getDocentes = async () => {
+    try {
+      const response = await fetch(`${"http://localhost:3000/api/"}/docente/getall`);
+      const data = await response.json();
+      setDatos(data.resultado);
+      console.log(data.resultado);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getDocentes();
+  }, []);
+
+  if (datos.length === 0) {
+    return <h1>Cargando...</h1>;
+  }
   return (
     <>
      <h4>Docente</h4>
@@ -45,18 +61,18 @@ const VerDocente = () => {
     </tr>
   </thead>
   <tbody class="table text-center">
-    <tr>
-      <th scope="row">12345678</th>
-      <td>Cristobal</td>
-      <td>Colón</td>
-      <td>55458485</td>
-      <td>cristobal@umg.com</td> 
-    <td>Zona 10</td>
-    <td>Guatemalteco</td>
-    <td>
-    <NavLink to="/gradodocente" className='text-dark rounded py-2 w-100 d-inline-block px-2 ' activeClassName='active'  style={{ textDecoration: 'none' }} ><FaIcons.FaEye className="me-2"/>Ver</NavLink>
-    </td>
-    </tr>
+  {datos.map((docente) => (
+            <tr key={docente.cuiDocente}>
+              <td>{docente.cuiDocente}</td>
+              <td>{docente.nombreDocente}</td>
+              <td>{docente.apellidoDocente}</td>
+              <td>{docente.telefonoDocente}</td>
+              <td>{docente.correoDocente}</td>
+              <td>{docente.direccionDocente}</td>
+              <td>{docente.nacionalidadDocente}</td>
+              <td><NavLink to="/gradodocente" className='text-dark rounded py-2 w-100 d-inline-block px-2 ' activeClassName='active'  style={{ textDecoration: 'none' }} ><FaIcons.FaEye className="me-2"/>Ver</NavLink> </td>
+            </tr>
+          ))}
   </tbody>
 </table> 
 </div>

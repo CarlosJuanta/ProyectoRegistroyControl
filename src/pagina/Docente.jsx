@@ -1,18 +1,54 @@
-import React from 'react'
-import {
-  FormGroup,
-  Label,
-  Input,
-  Col,
-  Row,
-  Button,
-  Form,
+import React, {useState} from 'react'
+import { FormGroup,Label,Input,Col,Row,Button,Form,
 } from 'reactstrap';
+
 const Docente = () => {
+  const [cuidocente, setCuidocente] = useState('')
+  const [nombredocente, setNombredocente] = useState('')
+  const [apellidosdocente, setApellidosdocente] = useState('')
+  const [telefonodocente, setTelefonodocente] = useState('')
+  const [correodocente, setCorreodocente] = useState('')
+  const [direcciondocente, setDirecciondocente] = useState('')
+  const [nacionalidaddocente, setNacionalidaddocente] = useState('')
+
+
+  const handleSubmit = async (e) => {
+   
+    if (correodocente.includes("@")) {
+           try {
+               const data = {
+                 cuiDocente: cuidocente,
+                 nombreDocente: nombredocente,
+                 apellidoDocente: apellidosdocente,
+                 telefonoDocente: telefonodocente,
+                 correoDocente: correodocente,
+                 direccionDocente: direcciondocente,
+                 nacionalidadDocente: nacionalidaddocente,
+               };
+      
+               const response = await fetch(`${"http://localhost:3000/api/"}/docente/add`, {
+                 method: "POST",
+                 headers: {
+                   "Content-Type": "application/json",
+                 },
+                 body: JSON.stringify(data),
+               });
+               console.log(response.status);
+               alert("Docente Registrado");
+              
+             } catch (error) {
+               console.log(error);
+               alert("Error al registrar Docente");
+             }
+           } else {
+             alert("Correo no valido");
+           }
+         };
+  
   return (
     <>
     <h3>Formulario Registro Nuevo Docente</h3>
-    <Form className="bg-light p-4">
+    <div className="bg-light p-4">
 
   <Row>
     <Col md={3}>
@@ -21,11 +57,9 @@ const Docente = () => {
           CUI Docente
         </Label>
         <Input
-          id="cuidocente"
-          name="cuidocente"
-          placeholder="CUI Docente"
+           placeholder="CUI Docente"
           type="text-area"
-         
+          onChange={(e) => setCuidocente(e.target.value)}
         />
       </FormGroup>
     </Col>
@@ -35,10 +69,9 @@ const Docente = () => {
           Nombres 
         </Label>
         <Input
-          id="nombresdocente"
-          name="nombredocente"
           placeholder="Nombres Docente"
           type="text-area"
+          onChange= {(e) => setNombredocente(e.target.value)}
         />
       </FormGroup>
     </Col>
@@ -48,16 +81,14 @@ const Docente = () => {
           Apellidos 
         </Label>
         <Input
-          id="apellidosdocente"
-          name="apellidosdocente"
           placeholder="Apellidos Docente"
           type="text-area"
+          onChange= {(e) => setApellidosdocente(e.target.value)}
         />
       </FormGroup>
     </Col>
   </Row>
   <Row>
-   
     <Col md={3}>
       <FormGroup>
       <Label for="telefonodocente">
@@ -68,6 +99,7 @@ const Docente = () => {
           name="telefonodocente"
           placeholder="Telefono Docente"
           type="text-area"
+          onChange= {(e) => setTelefonodocente(e.target.value)}
         />
       </FormGroup>
     </Col>
@@ -77,10 +109,9 @@ const Docente = () => {
          Correo
         </Label>
         <Input
-          id="correodocente"
-          name="correodocente"
-          placeholder="Correo Docente"
+          placeholder="ej. correo@gmail.com"
           type="email"
+          onChange= {(e) => setCorreodocente(e.target.value)}
         />
       </FormGroup>
     </Col> 
@@ -90,10 +121,9 @@ const Docente = () => {
          Dirección
         </Label>
         <Input
-          id="direcciondocente"
-          name="direcciondocente"
-          placeholder="ej. docente@gmail.com"
-          type="email"
+          placeholder="Dirección"
+          type="text-area"
+          onChange= {(e) => setDirecciondocente(e.target.value)}
         />
       </FormGroup>
     </Col> 
@@ -107,15 +137,15 @@ const Docente = () => {
           name="nacionalidaddocente"
           placeholder="Nacionalidad Docente"
           type="text-area"
+          onChange= {(e) => setNacionalidaddocente(e.target.value)}
         />
       </FormGroup>
     </Col>
   </Row> 
-  
-  <Button color="success">
-    Registrar Docente
-  </Button>
-</Form>
+  <Button color="success" onClick={handleSubmit}>
+   Registrar Docente
+   </Button>
+</div>
     </>
   )
 }
