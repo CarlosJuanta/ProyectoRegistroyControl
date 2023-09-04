@@ -1,14 +1,61 @@
-import React from 'react'
-import {
-  FormGroup,
-  Label,
-  Input,
-  Col,
-  Row,
-  Button,
-  Form,
+import React, {useState} from 'react'
+import {FormGroup,Label,Input,Col,Row,Button,Form,
 } from 'reactstrap';
 const Estudiante = () => {
+  const [cuiestudiante, setCuiestudiante] = useState('')
+  const [nombreestudiante, setNombresestudiante] = useState('')
+  const [apellidoestudiante, setApellidosestudiante] = useState('')
+  const [fechanacestudiante, setFechanacestudiante] = useState('')
+  const [direccionestudiante, setDireccionestudiante] = useState('')
+  const [nacionalidadestudiante, setNacionalidadestudiante] = useState('')
+  const [codigomineducestudiante, setCodigomineducestudiante] = useState('')
+  const [cuiencargadoestudiante, setCuiencargadoestudiante] = useState('')
+  const [nombreencargadoestudiante, setNombreencargadoestudiante] = useState('')
+  const [apellidoencargadoestudiante, setApellidoencargadoestudiante] = useState('')
+  const [direccionencargadoestudiante, setDireccionencargadoestudiante] = useState('')
+  const [telefonoencargadoestudiante, setTelefonoencargadoestudiante] = useState('')
+  const [correoencargadoestudiante, setCorreoencargadoestudiante] = useState('')
+  
+  const handleSubmit = async (e) => {
+   
+    if (correoencargadoestudiante.includes("@")) {
+           try {
+               const data = {
+                  cuiEstudiante: cuiestudiante,
+                  nombreEstudiante: nombreestudiante,
+                  apellidoEstudiante: apellidoestudiante,
+                  fechanacEstudiante: fechanacestudiante,
+                  direccionEstudiante: direccionestudiante,
+                  nacionalidadEstudiante: nacionalidadestudiante,
+                  codigomineducEstudiante: codigomineducestudiante,
+                  cuiencargadoEstudiante: cuiencargadoestudiante,
+                  nombreencargadoEstudiante: nombreencargadoestudiante,
+                  apellidoencargadoEstudiante: apellidoencargadoestudiante,
+                  direccionencargadoEstudiante: direccionencargadoestudiante,
+                  telefonoencargadoEstudiante: telefonoencargadoestudiante,
+                  correoencargadoEstudiante: correoencargadoestudiante,
+                 
+               };
+      
+               const response = await fetch(`${"http://localhost:3000/api/"}/estudiante/add`, {
+                 method: "POST",
+                 headers: {
+                   "Content-Type": "application/json",
+                 },
+                 body: JSON.stringify(data),
+               });
+               console.log(response.status);
+               alert("Estudiante Registrado");
+              
+             } catch (error) {
+               console.log(error);
+               alert("Error al registrar Estudiante");
+             }
+           } else {
+             alert("Correo no valido");
+           }
+         };
+
   return (
     <>
     <h3>Formulario Registro Nuevo Estudiante</h3>
@@ -21,11 +68,9 @@ const Estudiante = () => {
           CUI 
         </Label>
         <Input
-          id="CUI"
-          name="CUI"
           placeholder="CUI"
           type="text-area"
-         
+          onChange={(e) => setCuiestudiante(e.target.value)}
         />
       </FormGroup>
     </Col>
@@ -35,10 +80,9 @@ const Estudiante = () => {
           Nombres 
         </Label>
         <Input
-          id="nombres"
-          name="nombres"
           placeholder="Nombres"
           type="text-area"
+          onChange={(e) => setNombresestudiante(e.target.value)}
         />
       </FormGroup>
     </Col>
@@ -48,26 +92,23 @@ const Estudiante = () => {
           Apellidos 
         </Label>
         <Input
-          id="apellidos"
-          name="apellidos"
           placeholder="Apellidos"
           type="text-area"
+          onChange={(e) => setApellidosestudiante(e.target.value)}
         />
       </FormGroup>
     </Col>
   </Row>
   <Row>
-   
     <Col md={3}>
       <FormGroup>
       <Label for="fechaNac">
           Fecha Nacimiento
         </Label>
         <Input
-          id="fechanac"
-          name="fechanac"
           placeholder="Fecha Nacimiento"
           type="date"
+          onChange={(e) => setFechanacestudiante(e.target.value)}
         />
       </FormGroup>
     </Col>
@@ -77,10 +118,9 @@ const Estudiante = () => {
          Direccion
         </Label>
         <Input
-          id="direccion"
-          name="direccion"
           placeholder="Dirección"
           type="text-area"
+          onChange={(e) => setDireccionestudiante(e.target.value)}
         />
       </FormGroup>
     </Col> 
@@ -90,10 +130,9 @@ const Estudiante = () => {
           Nacionalidad
         </Label>
         <Input
-          id="nacionalidad"
-          name="nacionalidad"
           placeholder="Nacionalidad"
           type="text-area"
+          onChange={(e) => setNacionalidadestudiante(e.target.value)}
         />
       </FormGroup>
     </Col>
@@ -108,17 +147,13 @@ const Estudiante = () => {
           Código Mineduc
         </Label>
         <Input
-          id="codigomineduc"
-          name="codigomineduc"
           placeholder="Código Mineduc"
           type="text-area"
+          onChange={(e) => setCodigomineducestudiante(e.target.value)}
         />
       </FormGroup>
     </Col>
-    
-    
   </Row>
-  
   <Row>
     <Col md={3}>
       <FormGroup>
@@ -126,10 +161,9 @@ const Estudiante = () => {
           CUI Encargado
         </Label>
         <Input md={2}
-          id="cuiencargado"
-          name="cuiencargado"
           placeholder="CUI Encargado"
           type="text-area"
+          onChange={(e) => setCuiencargadoestudiante(e.target.value)}
         />
       </FormGroup>
     </Col>
@@ -139,10 +173,9 @@ const Estudiante = () => {
           Nombres Encargado
         </Label>
         <Input
-          id="nombresencargado"
-          name="nombresencargado"
           placeholder="Nombres Encargado"
           type="text-area"
+          onChange={(e) => setNombreencargadoestudiante(e.target.value)}
         />
       </FormGroup>
     </Col>
@@ -152,15 +185,13 @@ const Estudiante = () => {
           Apellidos Encargado
         </Label>
         <Input
-          id="apellidosencargado"
-          name="apellidosencargado"
           placeholder="Apellidos Encargado"
           type="text-area"
+          onChange={(e) => setApellidoencargadoestudiante(e.target.value)}
         />
       </FormGroup>
     </Col>
   </Row>
-
   <Row>
   <Col md={5}>
       <FormGroup>
@@ -168,10 +199,9 @@ const Estudiante = () => {
          Direccion
         </Label>
         <Input
-          id="direccion"
-          name="direccion"
           placeholder="Dirección"
           type="text-area"
+          onChange={(e) => setDireccionencargadoestudiante(e.target.value)}
         />
       </FormGroup>
     </Col>
@@ -183,6 +213,7 @@ const Estudiante = () => {
         <Input
           placeholder="telefono"
           type="number"
+          onChange={(e) => setTelefonoencargadoestudiante(e.target.value)}
         />
       </FormGroup>
     </Col>
@@ -192,18 +223,16 @@ const Estudiante = () => {
          Correo
         </Label>
         <Input
-          id="correo"
-          name="correo"
           placeholder="ejemplo@gmail.com"
           type="email"
+          onChange={(e) => setCorreoencargadoestudiante(e.target.value)}
         />
       </FormGroup>
     </Col>
   </Row>
-  
-  <Button color="success">
-    Registrar estudiante
-  </Button>
+  <Button color="success" onClick={handleSubmit}>
+   Registrar Estudiante
+   </Button>
 </div>
     
     
