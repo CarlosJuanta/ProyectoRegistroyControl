@@ -43,7 +43,7 @@ const Home = () => {
           <Route exact path='/asistencia' element={< Asistencia />}/> 
           <Route exact path='/calificaciones' element={< Calificaciones />}/>  
           <Route exact path='/verestudiante' element={< VerEstudiante />}/>
-          <Route exact path='/encargadoinfo' element={< EncargadoInfo />}/>
+          <Route exact path='/encargadoinfo/:id' element={< EncargadoInfo />}/>
           <Route exact path='/verdocente' element={< VerDocente />}/>
           <Route exact path='/gradodocente' element={< GradoDocente />}/>
           <Route exact path='/vergrado' element={< VerGrado />}/>
