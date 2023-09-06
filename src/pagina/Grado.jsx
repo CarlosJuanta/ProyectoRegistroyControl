@@ -1,18 +1,44 @@
-import React from 'react'
-import {
-  FormGroup,
-  Label,
-  Input,
-  Col,
-  Row,
-  Button,
-  Form,
+import React, {useState} from 'react'
+import {FormGroup,Label,Input,Col,Row,Button,Form,
 } from 'reactstrap';
-const Estudiante = () => {
+
+const Grado = () => {
+  const [codigogrado, setCodigogrado] = useState('')
+  const [nombregrado, setNombregrado] = useState('')
+  const [descripciongrado, setDescripciongrado] = useState('')
+  const [secciongrado, setSecciongrado] = useState('')
+  const [cuidocente, setCuidocente] = useState('')
+  
+  const handleSubmit = async (e) => {
+    
+    try {
+      const data = {
+        codigoGrado: codigogrado,
+        nombreGrado: nombregrado,
+        descripcionGrado: descripciongrado,
+        seccionGrado: secciongrado,
+        cuiDocente: cuidocente,
+      };
+
+      const response = await fetch(`${"http://localhost:3000/api/"}/grado/add`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      console.log(response.status);
+      alert("Grado Registrado");
+     
+    } catch (error) {
+      console.log(error);
+      alert("Error al registrar Grado");
+    }
+  };
   return (
     <>
     <h3>Formulario Crear Grado</h3>
-    <Form className="bg-light p-4">
+    <div className="bg-light p-4">
 
   <Row>
     <Col md={3}>
@@ -21,11 +47,9 @@ const Estudiante = () => {
           Código Grado
         </Label>
         <Input
-          id="codigogrado"
-          name="codigogrado"
           placeholder="Código Grado"
           type="text-area"
-         
+          onChange={(e) => setCodigogrado(e.target.value)}
         />
       </FormGroup>
     </Col>
@@ -35,9 +59,9 @@ const Estudiante = () => {
       Nombre Grado
     </Label>
     <Input
-      id="nombregrado"
-      name="nombregrado"
       type="select"
+      onChange={(e) => setNombregrado(e.target.value)}
+      value={nombregrado} 
     >
       <option value="primero">Primero</option>
       <option value="segundo">Segundo</option>
@@ -49,16 +73,16 @@ const Estudiante = () => {
   </FormGroup>
 </Col>
 
+ 
     <Col md={3}>
       <FormGroup>
         <Label for="descripciongrado">
           Descripcion 
         </Label>
         <Input
-          id="descripciongrado"
-          name="descripciongrado"
           placeholder="Descripcion "
           type="textarea"
+          onChange= {(e) => setDescripciongrado(e.target.value)}
         />
       </FormGroup>
     </Col>
@@ -71,10 +95,9 @@ const Estudiante = () => {
           Sección
         </Label>
         <Input
-          id="seccion"
-          name="seccion"
           placeholder="Sección"
           type="text-area"
+          onChange={(e) => setSecciongrado(e.target.value)}
         />
       </FormGroup>
     </Col>
@@ -84,20 +107,19 @@ const Estudiante = () => {
          CUI docente asignado
         </Label>
         <Input
-          id="cuidocenteasignado"
-          name="cuidocenteasignado"
           placeholder="CUI Docente Asignado"
           type="text-area"
+          onChange= {(e) => setCuidocente(e.target.value)}
         />
       </FormGroup>
     </Col> 
     </Row>
-  <Button color="success">
+  <Button color="success" onClick={handleSubmit}>
     Registrar Grado
   </Button>
-</Form>
+</div>
     </>
   )
 }
 
-export default Estudiante
+export default Grado
