@@ -129,7 +129,7 @@ const VerGrado = () => {
       </div>
 
       <Modal isOpen={modal} toggle={toggleModal}>
-  <ModalHeader toggle={toggleModal}>Detalles del Grado</ModalHeader>
+  <ModalHeader toggle={toggleModal}>Información del Docente</ModalHeader>
   <ModalBody>
     {selectedGrado && (
       <>

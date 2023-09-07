@@ -17,7 +17,7 @@ const VerDocente = () => {
   const [selectedDocente, setSelectedDocente] = useState();
   const [filtroNombre, setFiltroNombre] = useState("");
   const [datos, setDatos] = useState([]);
-  const [busquedaRealizada, setBusquedaRealizada] = useState(false);
+  
 
   const toggleModal = () => {
     setModal(!modal);
@@ -53,7 +53,7 @@ const VerDocente = () => {
           <Button
           color="primary"
           onClick={() => {
-          setBusquedaRealizada(true);
+         
           getDocentes();
           }}
           >

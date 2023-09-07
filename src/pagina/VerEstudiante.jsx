@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   FormGroup,
   Label,
@@ -19,7 +19,7 @@ const VerEstudiante = () => {
   const [selectedEncargado, setSelectedEncargado] = useState();
   const [filtroNombre, setFiltroNombre] = useState("");
   const [datos, setDatos] = useState([]);
-  const [busquedaRealizada, setBusquedaRealizada] = useState(false);
+  
 
   const toggleModal = () => {
     setModal(!modal);
@@ -32,7 +32,7 @@ const VerEstudiante = () => {
 
   const getEstudiantes = async () => {
     try {
-      if (busquedaRealizada) {
+      
         const response = await fetch(`${"http://localhost:3000/api/"}/estudiante/getall`);
         const data = await response.json();
         const estudiantesFiltrados = filtroNombre
@@ -42,7 +42,7 @@ const VerEstudiante = () => {
           : [];
         setDatos(estudiantesFiltrados);
       }
-    } catch (error) {
+    catch (error) {
       console.log(error);
     }
   };
@@ -56,7 +56,6 @@ const VerEstudiante = () => {
           <Button
           color="primary"
           onClick={() => {
-          setBusquedaRealizada(true);
           getEstudiantes();
           }}
           >
