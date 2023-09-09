@@ -135,9 +135,18 @@ const VerCurso = () => {
         {selectedCurso.codigoGrado.map((grado, index) => (
           <div key={index}>
             <p><strong>Código Grado:</strong> {grado.codigoGrado}</p>
-            <p><strong>Nombre :</strong> {grado.nombreGrado}</p>
-            <p><strong>Descripción:</strong> {grado.descripcionGrado}</p>
-           
+            <p><strong>Nombre del Grado:</strong> {grado.nombreGrado}</p>
+            <p><strong>Descripción del Grado:</strong> {grado.descripcionGrado}</p>
+            
+            {/* Muestra los datos del docente */}
+            {grado.cuiDocente.map((docente, docenteIndex) => (
+              <div key={docenteIndex}>
+                <p><strong>CUI del Docente:</strong> {docente.cuiDocente}</p>
+                <p><strong>Nombre del Docente:</strong> {docente.nombreDocente}</p>
+                <p><strong>Apellido del Docente:</strong> {docente.apellidoDocente}</p>
+                {/* Agrega aquí más campos del docente si es necesario */}
+              </div>
+            ))}
           </div>
         ))}
       </>
@@ -149,6 +158,7 @@ const VerCurso = () => {
     </Button>
   </ModalFooter>
 </Modal>
+
 
 
     </>
