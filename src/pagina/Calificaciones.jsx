@@ -39,15 +39,7 @@ const Calificaciones = () => {
      <option value="sexto">Sexto</option>
    </Input>
      </Col>
-     <Col>
-     <h5>Sección</h5>
-       <Input 
-       type="select"
-       placeholder="Unidad">
-       <option value="primera">A</option>
-     <option value="segunda">B</option>
-      </Input>
-     </Col>
+    
      </Row>
    </div>
      <div class="table-responsive p-5">

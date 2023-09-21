@@ -102,9 +102,8 @@ const Asistencia = () => {
               <th scope="col">Nombre</th>
               <th scope="col">Apellido</th>
               <th scope="col">Grado</th>
-              <th scope="col">Fecha</th>
               <th scope="col">Asistencia</th>
-              <th scope="col">Falta</th>
+              <th scope="col">Llamado de atención</th>
             </tr>
           </thead>
           <tbody className="table text-center table-primary">
@@ -115,9 +114,6 @@ const Asistencia = () => {
                 <td>{estudiante.nombreEstudiante}</td>
                 <td>{estudiante.apellidoEstudiante}</td>
                 <td>{estudiante.codigoGrado[0].nombreGrado}</td>
-                
-                
-                <td>24/08/2023</td>
                 <td>
                   <input type="checkbox" />
                 </td>

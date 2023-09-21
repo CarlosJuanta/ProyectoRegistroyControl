@@ -253,7 +253,7 @@ const Estudiante = () => {
                 <option value="">Selecciona un grado</option>
                 {grados.map((grado) => (
                   <option key={grado.codigoGrado} value={grado.codigoGrado}>
-                    {grado.nombreGrado}
+                    {grado.nombreGrado} {grado.seccionGrado}
                   </option>
                 ))}
               </Input>

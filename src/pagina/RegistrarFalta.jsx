@@ -11,7 +11,7 @@ import {
 const RegistrarFalta = () => {
   return (
     <>
-    <h3>Formulario Registrar Falta </h3>
+    <h3>Formulario Registrar LLamado de Atención </h3>
     <Form className="bg-light p-4">
 
   <Row>

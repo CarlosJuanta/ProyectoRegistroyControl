@@ -20,6 +20,7 @@ const VerEstudiante = () => {
   const [filtroNombre, setFiltroNombre] = useState("");
   const [datos, setDatos] = useState([]);
   
+  
 
   const toggleModal = () => {
     setModal(!modal);
@@ -93,6 +94,7 @@ const VerEstudiante = () => {
                 <th scope="col">Nacionalidad</th>
                 <th scope="col">Código MINEDUC</th>
                 <th scope="col">Encargado</th>
+                <th scope="col">Asignar grado</th>
               </tr>
             </thead>
             <tbody className="table text-center">
@@ -115,6 +117,16 @@ const VerEstudiante = () => {
                       <FaIcons.FaEye className="me-2" />
                       Ver
                     </Button>
+                  </td> 
+                  <td>
+                    <Button color="success"
+                    onClick={() => {
+                      handleVerClick(estudiante);
+                    }}  
+                    >
+                      <FaIcons.FaEye className="me-2" />
+                      Asignar
+                      </Button>
                   </td>
                 </tr>
               ))}

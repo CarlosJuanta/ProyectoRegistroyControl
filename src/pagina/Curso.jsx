@@ -128,7 +128,7 @@ const VerCurso = () => {
       </div>
 
       <Modal isOpen={modal} toggle={toggleModal}>
-  <ModalHeader toggle={toggleModal}>Información del docente asignado</ModalHeader>
+  <ModalHeader toggle={toggleModal}>Información del grado y docente asignado</ModalHeader>
   <ModalBody>
     {selectedCurso && (
       <>
