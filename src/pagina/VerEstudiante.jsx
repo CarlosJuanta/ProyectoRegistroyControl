@@ -155,7 +155,6 @@ const VerEstudiante = () => {
                 <th scope="col">Dirección</th>
                 <th scope="col">Nacionalidad</th>
                 <th scope="col">Código MINEDUC</th>
-                <th scope="col">Grado Asignado</th> {/* Nuevo encabezado */}
                 <th scope="col">Encargado</th>
                 <th scope="col">Asignar grado</th>
               </tr>
@@ -170,7 +169,6 @@ const VerEstudiante = () => {
                   <td>{estudiante.direccionEstudiante}</td>
                   <td>{estudiante.nacionalidadEstudiante}</td>
                   <td>{estudiante.codigomineducEstudiante}</td>
-                  <td>{estudiante.codigoGrado.nombreGrado}</td> {/* Mostrar el grado asignado */}
                   <td>
                     <Button
                       color="success"

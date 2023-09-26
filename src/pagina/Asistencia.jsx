@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import * as FaIcons from 'react-icons/fa';
 import { Button, Input, Col, Row } from 'reactstrap';
-
+import jsPDF from 'jspdf';
+import 'jspdf-autotable'; // Importa la librería
 const Asistencia = () => {
   const [grados, setGrados] = useState([]);
   const [selectedGrado, setSelectedGrado] = useState('');
   const [estudiantes, setEstudiantes] = useState([]);
+  const [asistencias, setAsistencias] = useState([]);
+  const [registroExitoso, setRegistroExitoso] = useState(false);
 
-  // Función para cargar los grados
   const cargarGrados = async () => {
     try {
       const response = await fetch(`${"http://localhost:3000/api/"}/grado/getall`);
@@ -23,7 +25,6 @@ const Asistencia = () => {
     }
   };
 
-  // Función para cargar estudiantes por grado seleccionado
   const cargarEstudiantesPorGrado = async () => {
     if (!selectedGrado) return;
 
@@ -40,7 +41,6 @@ const Asistencia = () => {
       if (response.status === 200) {
         const data = await response.json();
         setEstudiantes(data.gradosAsignados);
-        console.log(data);
       } else {
         console.log("Error al cargar los estudiantes asignados al grado");
       }
@@ -49,15 +49,106 @@ const Asistencia = () => {
     }
   };
 
-  // Cargar los grados al cargar el componente
+  const handleAsistenciaChange = (estudianteId, checked) => {
+    const updatedAsistencias = [...asistencias];
+    const index = updatedAsistencias.findIndex((asistencia) => asistencia.estudiante === estudianteId);
+
+    if (index !== -1) {
+      updatedAsistencias[index].estado = checked;
+    } else {
+      updatedAsistencias.push({ estudiante: estudianteId, estado: checked, fecha: obtenerFechaSistema() });
+    }
+
+    setAsistencias(updatedAsistencias);
+  };
+
+  const obtenerFechaSistema = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  const guardarAsistencias = async () => {
+    try {
+      for (const asistencia of asistencias) {
+        const idEstudiante = asistencia.estudiante;
+        const { estado, fecha } = asistencia;
+
+        const response = await fetch(`${"http://localhost:3000/api"}/estudiante/agregarAsistencia/${idEstudiante}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ estado, fecha }),
+        });
+
+        if (response.status === 200) {
+          setRegistroExitoso(true);
+        } else {
+          console.log("Error al guardar la asistencia para el estudiante:", idEstudiante);
+        }
+      }
+    } catch (error) {
+      console.error("Hubo un error al guardar las asistencias:", error);
+    }
+  };
+
+  const generarPDF = () => {
+    const doc = new jsPDF();
+       
+    // Agrega el encabezado
+    doc.setFont('times');
+doc.setFontSize(12);
+doc.text('ESCUELA OFICIAL URBANA MIXTA JOSÉ JOAQUÍN PALMA"', 10, 10);
+doc.text(`Grado: ${grados.find((grado) => grado.codigoGrado === selectedGrado)?.nombreGrado}`, 10, 20);
+doc.text(`Fecha: ${obtenerFechaSistema()}`, 10, 30);
+doc.text('Asistencia', 10, 40);
+
+    const headers = ['CUI', 'Nombre', 'Apellido', 'Asistencia', 'Fecha'];
+    const data = estudiantes.map((estudiante) => {
+    const asistencia = asistencias.find((asis) => asis.estudiante === estudiante._id);
+    const asistenciaTexto = asistencia ? (asistencia.estado ? 'Presente' : 'Ausente') : 'Ausente';
+
+      return [
+        estudiante.cuiEstudiante,
+        estudiante.nombreEstudiante,
+        estudiante.apellidoEstudiante,
+        asistenciaTexto,
+        asistencia ? asistencia.fecha : obtenerFechaSistema(),
+      ];
+    });
+
+    doc.autoTable({
+      head: [headers],
+      body: data,
+      startY: 50,
+      styles: {
+        font: 'times', // Establece la fuente para la tabla como Times New Roman
+        fontSize: 12, 
+        }, // Establece el tamaño de fuente
+    });
+
+    doc.save('reporte_asistencia.pdf');
+  };
   useEffect(() => {
     cargarGrados();
   }, []);
 
-  // Cargar estudiantes cuando se seleccione un grado
   useEffect(() => {
     cargarEstudiantesPorGrado();
   }, [selectedGrado]);
+
+  useEffect(() => {
+    let timer;
+    if (registroExitoso) {
+      timer = setTimeout(() => {
+        setRegistroExitoso(false);
+      }, 3000);
+    }
+    return () => clearTimeout(timer);
+  }, [registroExitoso]);
 
   return (
     <>
@@ -66,7 +157,8 @@ const Asistencia = () => {
       <div className="p-5">
         <Row>
           <Col>
-            <Button color="success">Guardar Asistencia</Button>
+            <Button color="success" onClick={guardarAsistencias}>Guardar Asistencia</Button>
+            <Button color="primary" onClick={generarPDF} style={{ marginLeft: '10px' }}>Generar PDF</Button>
           </Col>
         </Row>
 
@@ -74,7 +166,12 @@ const Asistencia = () => {
 
         <Row>
           <Col>
-            <Input type="date" placeholder="Fecha" />
+            <Input
+              type="date"
+              placeholder="Fecha"
+              value={obtenerFechaSistema()}
+              readOnly
+            />
           </Col>
           <Col className="text-end">
             <Input
@@ -94,6 +191,12 @@ const Asistencia = () => {
         </Row>
       </div>
 
+      {registroExitoso && (
+        <div className="alert alert-success" role="alert">
+          Registro exitoso.
+        </div>
+      )}
+
       <div className="table-responsive p-4">
         <table className="table table-light table-sm align-middle">
           <thead className="table-dark table text-center">
@@ -107,15 +210,18 @@ const Asistencia = () => {
             </tr>
           </thead>
           <tbody className="table text-center table-primary">
-            
-                {estudiantes.map((estudiante, index) => (
-              <tr key={index._id}>
+            {estudiantes.map((estudiante) => (
+              <tr key={estudiante._id}>
                 <td>{estudiante.cuiEstudiante}</td>
                 <td>{estudiante.nombreEstudiante}</td>
                 <td>{estudiante.apellidoEstudiante}</td>
                 <td>{estudiante.codigoGrado[0].nombreGrado}</td>
                 <td>
-                  <input type="checkbox" />
+                  <input
+                    type="checkbox"
+                    checked={asistencias.some((asistencia) => asistencia.estudiante === estudiante._id && asistencia.estado)}
+                    onChange={(e) => handleAsistenciaChange(estudiante._id, e.target.checked)}
+                  />
                 </td>
                 <td>
                   <th>
