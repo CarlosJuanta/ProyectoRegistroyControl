@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import * as FaIcons from 'react-icons/fa';
-import { Button, Input, Col, Row } from 'reactstrap';
+import { Button, Input, Col, Row, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable'; // Importa la librería
+import 'jspdf-autotable';
+
 const Asistencia = () => {
   const [grados, setGrados] = useState([]);
   const [selectedGrado, setSelectedGrado] = useState('');
   const [estudiantes, setEstudiantes] = useState([]);
   const [asistencias, setAsistencias] = useState([]);
   const [registroExitoso, setRegistroExitoso] = useState(false);
+  const [modal, setModal] = useState(false);
+  const [selectedEstudianteId, setSelectedEstudianteId] = useState('');
+  const [motivo, setMotivo] = useState('');
+  const [descripcion, setDescripcion] = useState('');
 
   const cargarGrados = async () => {
     try {
@@ -70,7 +75,13 @@ const Asistencia = () => {
     return `${year}-${month}-${day}`;
   };
 
-  const guardarAsistencias = async () => {
+  const guardarAsistencias = async () => { 
+     // Pregunta al usuario si realmente quiere guardar la asistencia
+  const confirmarGuardar = window.confirm("¿Estás seguro de que quieres guardar la asistencia?");
+
+  if (!confirmarGuardar) {
+    return; 
+    }
     try {
       for (const asistencia of asistencias) {
         const idEstudiante = asistencia.estudiante;
@@ -100,16 +111,16 @@ const Asistencia = () => {
        
     // Agrega el encabezado
     doc.setFont('times');
-doc.setFontSize(12);
-doc.text('ESCUELA OFICIAL URBANA MIXTA JOSÉ JOAQUÍN PALMA"', 10, 10);
-doc.text(`Grado: ${grados.find((grado) => grado.codigoGrado === selectedGrado)?.nombreGrado}`, 10, 20);
-doc.text(`Fecha: ${obtenerFechaSistema()}`, 10, 30);
-doc.text('Asistencia', 10, 40);
+    doc.setFontSize(12);
+    doc.text('ESCUELA OFICIAL URBANA MIXTA JOSÉ JOAQUÍN PALMA"', 10, 10);
+    doc.text(`Grado: ${grados.find((grado) => grado.codigoGrado === selectedGrado)?.nombreGrado}`, 10, 20);
+    doc.text(`Fecha: ${obtenerFechaSistema()}`, 10, 30);
+    doc.text('Asistencia', 10, 40);
 
     const headers = ['CUI', 'Nombre', 'Apellido', 'Asistencia', 'Fecha'];
     const data = estudiantes.map((estudiante) => {
-    const asistencia = asistencias.find((asis) => asis.estudiante === estudiante._id);
-    const asistenciaTexto = asistencia ? (asistencia.estado ? 'Presente' : 'Ausente') : 'Ausente';
+      const asistencia = asistencias.find((asis) => asis.estudiante === estudiante._id);
+      const asistenciaTexto = asistencia ? (asistencia.estado ? 'Presente' : 'Ausente') : 'Ausente';
 
       return [
         estudiante.cuiEstudiante,
@@ -125,13 +136,46 @@ doc.text('Asistencia', 10, 40);
       body: data,
       startY: 50,
       styles: {
-        font: 'times', // Establece la fuente para la tabla como Times New Roman
-        fontSize: 12, 
-        }, // Establece el tamaño de fuente
+        font: 'times',
+        fontSize: 12,
+      },
     });
 
     doc.save('reporte_asistencia.pdf');
   };
+
+  const toggleModal = (estudianteId) => {
+    setSelectedEstudianteId(estudianteId);
+    setModal(!modal);
+  };
+
+  const registrarFalta = async () => {
+    try {
+      const idEstudiante = selectedEstudianteId;
+      const data = { motivo, descripcion };
+
+      const response = await fetch(`${"http://localhost:3000/api"}/estudiante/agregarReporte/${idEstudiante}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.status === 200) {
+        setRegistroExitoso(true);
+        setModal(false); 
+        setMotivo('');
+        setDescripcion('');
+
+      } else {
+        console.log("Error al registrar el reporte para el estudiante:", idEstudiante);
+      }
+    } catch (error) {
+      console.error("Hubo un error al registrar el reporte:", error);
+    }
+  };
+
   useEffect(() => {
     cargarGrados();
   }, []);
@@ -224,32 +268,52 @@ doc.text('Asistencia', 10, 40);
                   />
                 </td>
                 <td>
-                  <th>
-                    <NavLink
-                      to="/verfalta"
-                      className="text-dark rounded py-2 w-100 d-inline-block px-2"
-                      style={{ textDecoration: 'none' }}
-                    >
-                      <FaIcons.FaEye className="me-2" />
-                      Ver
-                    </NavLink>
-                  </th>
-                  <th>
-                    <NavLink
-                      to="/registrarfalta"
-                      className="text-dark rounded py-2 w-100 d-inline-block px-2"
-                      style={{ textDecoration: 'none' }}
-                    >
-                      <FaIcons.FaPenAlt className="me-2" />
-                      Registrar
-                    </NavLink>
-                  </th>
+                  <Button
+                    color="success"
+                    onClick={() => {
+                      toggleModal(estudiante._id); // Abre el modal para registrar falta
+                    }}
+                  >
+                    <FaIcons.FaPenAlt className="me-2" />
+                    Registrar
+                  </Button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      {/* Modal para registrar falta */}
+      <Modal isOpen={modal} toggle={() => toggleModal('')}>
+        <ModalHeader toggle={() => toggleModal('')}>Registrar Falta</ModalHeader>
+        <ModalBody>
+          <div className="mb-3">
+            <label htmlFor="motivo" className="form-label">Motivo</label>
+            <input
+              type="text"
+              className="form-control"
+              id="motivo"
+              value={motivo}
+              onChange={(e) => setMotivo(e.target.value)}
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="descripcion" className="form-label">Descripción</label>
+            <textarea
+              className="form-control"
+              id="descripcion"
+              rows="3"
+              value={descripcion}
+              onChange={(e) => setDescripcion(e.target.value)}
+            ></textarea>
+          </div>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="primary" onClick={registrarFalta}>Registrar</Button>
+          <Button color="secondary" onClick={() => toggleModal('')}>Cancelar</Button>
+        </ModalFooter>
+      </Modal>
     </>
   );
 };
