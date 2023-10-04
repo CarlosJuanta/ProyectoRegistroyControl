@@ -1,14 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  FormGroup,
-  Label,
-  Input,
-  Col,
-  Row,
-  Button,
-  Form,
-  Select,
-} from 'reactstrap';
+import {FormGroup,Label, Input,Col,Row,Button,} from 'reactstrap';
 
 const Estudiante = () => {
   const [cuiestudiante, setCuiestudiante] = useState('');
@@ -28,7 +19,6 @@ const Estudiante = () => {
   const [codigoGradoSeleccionado, setCodigoGradoSeleccionado] = useState('');
   
   const handleSubmit = async (e) => {
-   
       try {
         const data = {
           cuiEstudiante: cuiestudiante,
@@ -108,6 +98,7 @@ const Estudiante = () => {
                 placeholder="CUI"
                 type="text-area"
                 onChange={(e) => setCuiestudiante(e.target.value)}
+                value={cuiestudiante}
               />
             </FormGroup>
           </Col>
@@ -118,6 +109,7 @@ const Estudiante = () => {
                 placeholder="Nombres"
                 type="text-area"
                 onChange={(e) => setNombresestudiante(e.target.value)}
+                value={nombreestudiante}
               />
             </FormGroup>
           </Col>
@@ -128,7 +120,8 @@ const Estudiante = () => {
                 placeholder="Apellidos"
                 type="text-area"
                 onChange={(e) => setApellidosestudiante(e.target.value)}
-              />
+                value={apellidoestudiante} 
+             />
             </FormGroup>
           </Col>
         </Row>
@@ -140,6 +133,7 @@ const Estudiante = () => {
                 placeholder="Fecha Nacimiento"
                 type="date"
                 onChange={(e) => setFechanacestudiante(e.target.value)}
+                value = {fechanacestudiante}
               />
             </FormGroup>
           </Col>
@@ -150,7 +144,8 @@ const Estudiante = () => {
                 placeholder="Dirección"
                 type="text-area"
                 onChange={(e) => setDireccionestudiante(e.target.value)}
-              />
+                value = {direccionestudiante}
+             />
             </FormGroup>
           </Col>
           <Col md={3}>
@@ -160,6 +155,7 @@ const Estudiante = () => {
                 placeholder="Nacionalidad"
                 type="text-area"
                 onChange={(e) => setNacionalidadestudiante(e.target.value)}
+                value = {nacionalidadestudiante}             
               />
             </FormGroup>
           </Col>
@@ -172,6 +168,7 @@ const Estudiante = () => {
                 placeholder="Código Mineduc"
                 type="text-area"
                 onChange={(e) => setCodigomineducestudiante(e.target.value)}
+                value = {codigomineducestudiante}
               />
             </FormGroup>
           </Col>
@@ -185,6 +182,7 @@ const Estudiante = () => {
                 placeholder="CUI Encargado"
                 type="text-area"
                 onChange={(e) => setCuiencargadoestudiante(e.target.value)}
+                value = {cuiencargadoestudiante}
               />
             </FormGroup>
           </Col>
@@ -195,6 +193,7 @@ const Estudiante = () => {
                 placeholder="Nombres Encargado"
                 type="text-area"
                 onChange={(e) => setNombreencargadoestudiante(e.target.value)}
+                value = {nombreencargadoestudiante}
               />
             </FormGroup>
           </Col>
@@ -205,6 +204,7 @@ const Estudiante = () => {
                 placeholder="Apellidos Encargado"
                 type="text-area"
                 onChange={(e) => setApellidoencargadoestudiante(e.target.value)}
+                value = {apellidoencargadoestudiante}
               />
             </FormGroup>
           </Col>
@@ -217,6 +217,7 @@ const Estudiante = () => {
                 placeholder="Dirección"
                 type="text-area"
                 onChange={(e) => setDireccionencargadoestudiante(e.target.value)}
+                value = {direccionencargadoestudiante}
               />
             </FormGroup>
           </Col>
@@ -227,6 +228,7 @@ const Estudiante = () => {
                 placeholder="telefono"
                 type="number"
                 onChange={(e) => setTelefonoencargadoestudiante(e.target.value)}
+                value = {telefonoencargadoestudiante}
               />
             </FormGroup>
           </Col>
@@ -237,6 +239,7 @@ const Estudiante = () => {
                 placeholder="ejemplo@gmail.com"
                 type="email"
                 onChange={(e) => setCorreencargadoestudiante(e.target.value)}
+                value = {correencargadoestudiante}
               />
             </FormGroup>
           </Col>

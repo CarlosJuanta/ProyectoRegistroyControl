@@ -1,42 +1,50 @@
 import React, { useState, useEffect } from "react";
-import {
-  FormGroup,
-  Label,
-  Input,
-  Col,
-  Row,
-  Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-} from "reactstrap";
+import { FormGroup, Label, Input, Col, Row, Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import { NavLink } from "react-router-dom";
-import * as FaIcons from "react-icons/fa";
 
 const VerEstudiante = () => {
   const [modal, setModal] = useState(false);
   const [secondModal, setSecondModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
   const [selectedEncargado, setSelectedEncargado] = useState();
   const [filtroNombre, setFiltroNombre] = useState("");
   const [datos, setDatos] = useState([]);
   const [gradoSeleccionado, setGradoSeleccionado] = useState("");
-  const [selectedGradoAsignado, setSelectedGradoAsignado] = useState(""); // Nuevo estado para el grado asignado
-  const [grados, setGrados] = useState([]); // Nuevo estado para almacenar los grados disponibles
+  const [selectedGradoAsignado, setSelectedGradoAsignado] = useState("");
+  const [selectedEstudiante, setSelectedEstudiante] = useState(null);
+  const [grados, setGrados] = useState([]);
+
+  // Estado local para los campos de edición
+  const [editedEstudiante, setEditedEstudiante] = useState({
+    nombreEstudiante: "",
+    apellidoEstudiante: "",
+    fechanacEstudiante: "",
+    direccionEstudiante: "",
+    nacionalidadEstudiante: "",
+    codigomineducEstudiante: "",
+    cuiencargadoEstudiante: "",
+    nombreencargadoEstudiante: "",
+    apellidoencargadoEstudiante: "",
+    direccionencargadoEstudiante: "",
+    telefonoencargadoEstudiante: "",
+    correencargadoEstudiante: "",
+    gradoEstudiante: "",
+
+    // Agrega otros campos de edición aquí
+  });
 
   useEffect(() => {
-    // Esta función se ejecuta al cargar el componente y obtiene los grados disponibles
     async function fetchGrados() {
       try {
         const response = await fetch("http://localhost:3000/api/grado/getall");
         const data = await response.json();
-        setGrados(data.resultado || []); // Almacena los grados en el estado
+        setGrados(data.resultado || []);
       } catch (error) {
         console.log(error);
       }
     }
 
-    fetchGrados(); // Llama a la función para obtener los grados al cargar el componente
+    fetchGrados();
   }, []);
 
   const toggleModal = () => {
@@ -45,6 +53,10 @@ const VerEstudiante = () => {
 
   const toggleSecondModal = () => {
     setSecondModal(!secondModal);
+  };
+
+  const toggleEditModal = () => {
+    setEditModal(!editModal);
   };
 
   const handleVerClick = (estudiante) => {
@@ -57,13 +69,34 @@ const VerEstudiante = () => {
     toggleSecondModal();
   };
 
+  const handleEditarClick = (estudiante) => {
+    setSelectedEstudiante(estudiante);
+    // Carga los valores del estudiante seleccionado en el estado local de edición
+    setEditedEstudiante({
+      nombreEstudiante: estudiante.nombreEstudiante,
+      apellidoEstudiante: estudiante.apellidoEstudiante,
+      fechanacEstudiante: estudiante.fechanacEstudiante,
+      direccionEstudiante: estudiante.direccionEstudiante,
+      nacionalidadEstudiante: estudiante.nacionalidadEstudiante,
+      codigomineducEstudiante: estudiante.codigomineducEstudiante,
+      cuiencargadoEstudiante: estudiante.cuiencargadoEstudiante,
+      nombreencargadoEstudiante: estudiante.nombreencargadoEstudiante,
+      apellidoencargadoEstudiante: estudiante.apellidoencargadoEstudiante,
+      direccionencargadoEstudiante: estudiante.direccionencargadoEstudiante,
+      telefonoencargadoEstudiante: estudiante.telefonoencargadoEstudiante,
+      correencargadoEstudiante: estudiante.correencargadoEstudiante,
+      gradoEstudiante: estudiante.gradoEstudiante,
+      // Carga otros valores aquí
+    });
+    toggleEditModal();
+  };
+
   const handleChangeGrado = (e) => {
     setGradoSeleccionado(e.target.value);
   };
 
   const agregarGradoAEstudiante = async () => {
     try {
-      // Verifica si el grado seleccionado está vacío
       if (!gradoSeleccionado) {
         console.log("Selecciona un grado antes de guardar.");
         return;
@@ -72,7 +105,6 @@ const VerEstudiante = () => {
       const idEstudiante = selectedGradoAsignado._id;
       const gradoData = { codigoGrado: gradoSeleccionado };
 
-      // Realiza la solicitud POST para agregar el grado al estudiante
       const response = await fetch(`http://localhost:3000/api/estudiante/agregarGrado/${idEstudiante}`, {
         method: "POST",
         headers: {
@@ -82,13 +114,41 @@ const VerEstudiante = () => {
       });
 
       if (response.status === 200) {
-        // Actualiza los datos del estudiante con el nuevo grado asignado
         const updatedEstudiante = await response.json();
         setSelectedGradoAsignado(updatedEstudiante.estudiante);
-        toggleSecondModal(); // Cierra el modal después de agregar el grado
-        alert("Asignación exitosa"); // Muestra un alert de asignación exitosa
+        toggleSecondModal();
+        alert("Asignación exitosa");
       } else {
         console.log("Error al agregar el grado al estudiante.");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleEditarEstudiante = async () => {
+    try {
+      if (!selectedEstudiante || !editedEstudiante) {
+        console.log("No se ha seleccionado un estudiante o no se han editado datos.");
+        return;
+      }
+
+      // Realiza una solicitud PUT para actualizar los datos del estudiante
+      const response = await fetch(`http://localhost:3000/api/estudiante/update/${selectedEstudiante._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(editedEstudiante),
+      });
+
+      if (response.status === 200) {
+        // Actualiza la lista de estudiantes después de la edición
+        getEstudiantes();
+        toggleEditModal();
+        alert("Edición exitosa");
+      } else {
+        console.log("Error al editar el estudiante.");
       }
     } catch (error) {
       console.log(error);
@@ -109,6 +169,15 @@ const VerEstudiante = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  // Función de manejo de cambios para los campos de edición
+  const handleEditInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditedEstudiante({
+      ...editedEstudiante,
+      [name]: value,
+    });
   };
 
   return (
@@ -156,7 +225,8 @@ const VerEstudiante = () => {
                 <th scope="col">Nacionalidad</th>
                 <th scope="col">Código MINEDUC</th>
                 <th scope="col">Encargado</th>
-                <th scope="col">Asignar grado</th>
+                <th scope="col">Asignar</th>
+                <th scope="col">Editar</th>
               </tr>
             </thead>
             <tbody className="table text-center">
@@ -176,19 +246,27 @@ const VerEstudiante = () => {
                         handleVerClick(estudiante);
                       }}
                     >
-                      <FaIcons.FaEye className="me-2" />
                       Ver
                     </Button>
                   </td>
                   <td>
                     <Button
-                      color="success"
+                      color="info"
                       onClick={() => {
                         handleAsignarGrado(estudiante);
                       }}
                     >
-                      <FaIcons.FaEye className="me-2" />
                       Asignar
+                    </Button>
+                  </td>
+                  <td>
+                    <Button
+                      color="warning"
+                      onClick={() => {
+                        handleEditarClick(estudiante);
+                      }}
+                    >
+                      Editar
                     </Button>
                   </td>
                 </tr>
@@ -255,6 +333,124 @@ const VerEstudiante = () => {
             Guardar
           </Button>
           <Button color="secondary" onClick={toggleSecondModal}>
+            Cancelar
+          </Button>
+        </ModalFooter>
+      </Modal>
+
+      <Modal isOpen={editModal} toggle={toggleEditModal}>
+        <ModalHeader toggle={toggleEditModal}>Editar Estudiante</ModalHeader>
+        <ModalBody>
+          {selectedEstudiante && (
+            <>
+              {/* Campos de edición */}
+              <FormGroup>
+                <Label for="nombreEstudiante">Nombre</Label>
+                <Input
+                  type="text-area"
+                  id="nombreEstudiante"
+                  name="nombreEstudiante"
+                  value={editedEstudiante.nombreEstudiante}
+                  onChange={handleEditInputChange}
+                />
+                <Label for="apellidoEstudiante">Apellido</Label>
+                <Input
+                  type="text-area"
+                  id="apellidoEstudiante"
+                  name="apellidoEstudiante"
+                  value={editedEstudiante.apellidoEstudiante}
+                  onChange={handleEditInputChange}
+                />
+                <Label for="fechanacEstudiante">Fecha de Nacimiento</Label>
+                <Input
+                  type="date"
+                  id="fechanacEstudiante"
+                  name="fechanacEstudiante"
+                  value={editedEstudiante.fechanacEstudiante}
+                  onChange={handleEditInputChange}
+                />
+                <Label for="direccionEstudiante">Dirección</Label>
+                <Input
+                  type="text-area"
+                  id="direccionEstudiante"
+                  name="direccionEstudiante"
+                  value={editedEstudiante.direccionEstudiante}
+                  onChange={handleEditInputChange}
+                />
+                <Label for="nacionalidadEstudiante">Nacionalidad</Label>
+                <Input
+                  type="text-area"
+                  id="nacionalidadEstudiante"
+                  name="nacionalidadEstudiante"
+                  value={editedEstudiante.nacionalidadEstudiante}
+                  onChange={handleEditInputChange}
+                />
+                <Label for="codigomineducEstudiante">Código MINEDUC</Label>
+                <Input
+                  type="text-area"
+                  id="codigomineducEstudiante"
+                  name="codigomineducEstudiante"
+                  value={editedEstudiante.codigomineducEstudiante}
+                  onChange={handleEditInputChange}
+                />
+                <Label for="cuiencargadoEstudiante">CUI Encargado</Label>
+                <Input
+                  type="text-area"
+                  id="cuiencargadoEstudiante"
+                  name="cuiencargadoEstudiante"
+                  value={editedEstudiante.cuiencargadoEstudiante}
+                  onChange={handleEditInputChange}
+                />
+                <Label for="nombreencargadoEstudiante">Nombre Encargado</Label>
+                <Input
+                  type="text-area"
+                  id="nombreencargadoEstudiante"
+                  name="nombreencargadoEstudiante"
+                  value={editedEstudiante.nombreencargadoEstudiante}
+                  onChange={handleEditInputChange}
+                />
+                <Label for="apellidoencargadoEstudiante">Apellido Encargado</Label>
+                <Input
+                  type="text-area"
+                  id="apellidoencargadoEstudiante"
+                  name="apellidoencargadoEstudiante"
+                  value={editedEstudiante.apellidoencargadoEstudiante}
+                  onChange={handleEditInputChange}
+                />
+                <Label for="direccionencargadoEstudiante">Dirección Encargado</Label>
+                <Input
+                  type="text-area"
+                  id="direccionencargadoEstudiante"
+                  name="direccionencargadoEstudiante"
+                  value={editedEstudiante.direccionencargadoEstudiante}
+                  onChange={handleEditInputChange}
+                />
+                <Label for="telefonoencargadoEstudiante">Teléfono Encargado</Label>
+                <Input
+                  type="text-area"
+                  id="telefonoencargadoEstudiante"
+                  name="telefonoencargadoEstudiante"
+                  value={editedEstudiante.telefonoencargadoEstudiante}
+                  onChange={handleEditInputChange}
+                />
+                <Label for="correencargadoEstudiante">Correo Encargado</Label>
+                <Input
+                  type="text-area"
+                  id="correencargadoEstudiante"
+                  name="correencargadoEstudiante"
+                  value={editedEstudiante.correencargadoEstudiante}
+                  onChange={handleEditInputChange}
+                />
+                {/* Agrega más campos de edición aquí */}
+              </FormGroup>
+            </>
+          )}
+        </ModalBody>
+        <ModalFooter>
+          <Button color="primary" onClick={handleEditarEstudiante}>
+            Guardar
+          </Button>
+          <Button color="secondary" onClick={toggleEditModal}>
             Cancelar
           </Button>
         </ModalFooter>
