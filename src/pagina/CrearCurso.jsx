@@ -74,7 +74,7 @@ const Curso = () => {
               <Label for="codigoCurso">Código Curso</Label>
               <Input
                 placeholder="Código Curso"
-                type="text"
+                type="text-area"
                 onChange={(e) => setCodigoCurso(e.target.value)}
                 value={codigoCurso}
               />
@@ -85,7 +85,7 @@ const Curso = () => {
               <Label for="nombreCurso">Nombre Curso</Label>
               <Input
                 placeholder="Nombre Curso"
-                type="text"
+                type="text-area"
                 onChange={(e) => setNombreCurso(e.target.value)}
                 value={nombreCurso}
               />

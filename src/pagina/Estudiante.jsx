@@ -1,90 +1,99 @@
-import React, { useState, useEffect } from 'react';
-import {FormGroup,Label, Input,Col,Row,Button,} from 'reactstrap';
+import React, { useState, useEffect } from "react";
+import { FormGroup, Label, Input, Col, Row, Button } from "reactstrap";
 
 const Estudiante = () => {
-  const [cuiestudiante, setCuiestudiante] = useState('');
-  const [nombreestudiante, setNombresestudiante] = useState('');
-  const [apellidoestudiante, setApellidosestudiante] = useState('');
-  const [fechanacestudiante, setFechanacestudiante] = useState('');
-  const [direccionestudiante, setDireccionestudiante] = useState('');
-  const [nacionalidadestudiante, setNacionalidadestudiante] = useState('');
-  const [codigomineducestudiante, setCodigomineducestudiante] = useState('');
-  const [cuiencargadoestudiante, setCuiencargadoestudiante] = useState('');
-  const [nombreencargadoestudiante, setNombreencargadoestudiante] = useState('');
-  const [apellidoencargadoestudiante, setApellidoencargadoestudiante] = useState('');
-  const [direccionencargadoestudiante, setDireccionencargadoestudiante] = useState('');
-  const [telefonoencargadoestudiante, setTelefonoencargadoestudiante] = useState('');
-  const [correencargadoestudiante, setCorreencargadoestudiante] = useState('');
+  const [cuiestudiante, setCuiestudiante] = useState("");
+  const [nombreestudiante, setNombresestudiante] = useState("");
+  const [apellidoestudiante, setApellidosestudiante] = useState("");
+  const [fechanacestudiante, setFechanacestudiante] = useState("");
+  const [direccionestudiante, setDireccionestudiante] = useState("");
+  const [nacionalidadestudiante, setNacionalidadestudiante] = useState("");
+  const [codigomineducestudiante, setCodigomineducestudiante] = useState("");
+  const [cuiencargadoestudiante, setCuiencargadoestudiante] = useState("");
+  const [nombreencargadoestudiante, setNombreencargadoestudiante] =
+    useState("");
+  const [apellidoencargadoestudiante, setApellidoencargadoestudiante] =
+    useState("");
+  const [direccionencargadoestudiante, setDireccionencargadoestudiante] =
+    useState("");
+  const [telefonoencargadoestudiante, setTelefonoencargadoestudiante] =
+    useState("");
+  const [correencargadoestudiante, setCorreencargadoestudiante] = useState("");
   const [grados, setGrados] = useState([]); // Estado para almacenar la lista de grados
-  const [codigoGradoSeleccionado, setCodigoGradoSeleccionado] = useState('');
-  
-  const handleSubmit = async (e) => {
-      try {
-        const data = {
-          cuiEstudiante: cuiestudiante,
-          nombreEstudiante: nombreestudiante,
-          apellidoEstudiante: apellidoestudiante,
-          fechanacEstudiante: fechanacestudiante,
-          direccionEstudiante: direccionestudiante,
-          nacionalidadEstudiante: nacionalidadestudiante,
-          codigomineducEstudiante: codigomineducestudiante,
-          cuiencargadoEstudiante: cuiencargadoestudiante,
-          nombreencargadoEstudiante: nombreencargadoestudiante,
-          apellidoencargadoEstudiante: apellidoencargadoestudiante,
-          direccionencargadoEstudiante: direccionencargadoestudiante,
-          telefonoencargadoEstudiante: telefonoencargadoestudiante,
-          correencargadoEstudiante: correencargadoestudiante,
-          codigoGrado: codigoGradoSeleccionado,
-        };
+  const [codigoGradoSeleccionado, setCodigoGradoSeleccionado] = useState("");
 
-        const response = await fetch(`${"http://localhost:3000/api/"}/estudiante/add`, {
+  const handleSubmit = async (e) => {
+    try {
+      const data = {
+        cuiEstudiante: cuiestudiante,
+        nombreEstudiante: nombreestudiante,
+        apellidoEstudiante: apellidoestudiante,
+        fechanacEstudiante: fechanacestudiante,
+        direccionEstudiante: direccionestudiante,
+        nacionalidadEstudiante: nacionalidadestudiante,
+        codigomineducEstudiante: codigomineducestudiante,
+        cuiencargadoEstudiante: cuiencargadoestudiante,
+        nombreencargadoEstudiante: nombreencargadoestudiante,
+        apellidoencargadoEstudiante: apellidoencargadoestudiante,
+        direccionencargadoEstudiante: direccionencargadoestudiante,
+        telefonoencargadoEstudiante: telefonoencargadoestudiante,
+        correencargadoEstudiante: correencargadoestudiante,
+        codigoGrado: codigoGradoSeleccionado,
+      };
+
+      const response = await fetch(
+        `${"http://localhost:3000/api/"}/estudiante/add`,
+        {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(data),
-        });
-        if (response.status === 200){
-        alert('Estudiante Registrado');
+        }
+      );
+      if (response.status === 200) {
+        alert("Estudiante Registrado");
         // Limpia el formulario después de registrar
-        setCuiestudiante('');
-        setNombresestudiante('');
-        setApellidosestudiante('');
-        setFechanacestudiante('');
-        setDireccionestudiante('');
-        setNacionalidadestudiante('');
-        setCodigomineducestudiante('');
-        setCuiencargadoestudiante('');
-        setNombreencargadoestudiante('');
-        setApellidoencargadoestudiante('');
-        setDireccionencargadoestudiante('');
-        setTelefonoencargadoestudiante('');
-        setCorreencargadoestudiante('');
-        setCodigoGradoSeleccionado('');
+        setCuiestudiante("");
+        setNombresestudiante("");
+        setApellidosestudiante("");
+        setFechanacestudiante("");
+        setDireccionestudiante("");
+        setNacionalidadestudiante("");
+        setCodigomineducestudiante("");
+        setCuiencargadoestudiante("");
+        setNombreencargadoestudiante("");
+        setApellidoencargadoestudiante("");
+        setDireccionencargadoestudiante("");
+        setTelefonoencargadoestudiante("");
+        setCorreencargadoestudiante("");
+        setCodigoGradoSeleccionado("");
       } else {
-        alert('Error al registrar Estudiante');
+        alert("Error al registrar Estudiante");
       }
+    } catch (error) {
+      console.log(error);
+      alert("Error al registrar Estudiante");
+    }
+  };
+
+  useEffect(() => {
+    // Obtener la lista de grados al cargar el componente
+    const getGrados = async () => {
+      try {
+        const response = await fetch(
+          `${"http://localhost:3000/api/"}/grado/getall`
+        );
+        const data = await response.json();
+        // Almacena la lista de grados en el estado grados
+        setGrados(data.resultado);
       } catch (error) {
         console.log(error);
-        alert('Error al registrar Estudiante');
       }
     };
- 
-    useEffect(() => {
-      // Obtener la lista de grados al cargar el componente
-      const getGrados = async () => {
-        try {
-          const response = await fetch(`${"http://localhost:3000/api/"}/grado/getall`);
-          const data = await response.json();
-          // Almacena la lista de grados en el estado grados
-          setGrados(data.resultado);
-        } catch (error) {
-          console.log(error);
-        }
-      };
-  
-      getGrados();
-    }, []);
+
+    getGrados();
+  }, []);
 
   return (
     <>
@@ -97,8 +106,15 @@ const Estudiante = () => {
               <Input
                 placeholder="CUI"
                 type="text-area"
-                onChange={(e) => setCuiestudiante(e.target.value)}
+                onChange={(e) => {
+                  // Utiliza una expresión regular para permitir solo números
+                  const inputValue = e.target.value.replace(/\D/g, ""); // Elimina todo lo que no sea número
+                  if (inputValue.length <= 13) {
+                    setCuiestudiante(inputValue);
+                  }
+                }}
                 value={cuiestudiante}
+                maxLength={13}
               />
             </FormGroup>
           </Col>
@@ -120,8 +136,8 @@ const Estudiante = () => {
                 placeholder="Apellidos"
                 type="text-area"
                 onChange={(e) => setApellidosestudiante(e.target.value)}
-                value={apellidoestudiante} 
-             />
+                value={apellidoestudiante}
+              />
             </FormGroup>
           </Col>
         </Row>
@@ -133,7 +149,7 @@ const Estudiante = () => {
                 placeholder="Fecha Nacimiento"
                 type="date"
                 onChange={(e) => setFechanacestudiante(e.target.value)}
-                value = {fechanacestudiante}
+                value={fechanacestudiante}
               />
             </FormGroup>
           </Col>
@@ -144,8 +160,8 @@ const Estudiante = () => {
                 placeholder="Dirección"
                 type="text-area"
                 onChange={(e) => setDireccionestudiante(e.target.value)}
-                value = {direccionestudiante}
-             />
+                value={direccionestudiante}
+              />
             </FormGroup>
           </Col>
           <Col md={3}>
@@ -155,7 +171,7 @@ const Estudiante = () => {
                 placeholder="Nacionalidad"
                 type="text-area"
                 onChange={(e) => setNacionalidadestudiante(e.target.value)}
-                value = {nacionalidadestudiante}             
+                value={nacionalidadestudiante}
               />
             </FormGroup>
           </Col>
@@ -168,7 +184,7 @@ const Estudiante = () => {
                 placeholder="Código Mineduc"
                 type="text-area"
                 onChange={(e) => setCodigomineducestudiante(e.target.value)}
-                value = {codigomineducestudiante}
+                value={codigomineducestudiante}
               />
             </FormGroup>
           </Col>
@@ -178,11 +194,17 @@ const Estudiante = () => {
             <FormGroup>
               <Label for="cuiencargado">CUI Encargado</Label>
               <Input
-                md={2}
-                placeholder="CUI Encargado"
+                placeholder="CUI"
                 type="text-area"
-                onChange={(e) => setCuiencargadoestudiante(e.target.value)}
-                value = {cuiencargadoestudiante}
+                onChange={(e) => {
+                  // Utiliza una expresión regular para permitir solo números
+                  const inputValue = e.target.value.replace(/\D/g, ""); // Elimina todo lo que no sea número
+                  if (inputValue.length <= 13) {
+                    setCuiencargadoestudiante(inputValue);
+                  }
+                }}
+                value={cuiencargadoestudiante}
+                maxLength={13}
               />
             </FormGroup>
           </Col>
@@ -193,7 +215,7 @@ const Estudiante = () => {
                 placeholder="Nombres Encargado"
                 type="text-area"
                 onChange={(e) => setNombreencargadoestudiante(e.target.value)}
-                value = {nombreencargadoestudiante}
+                value={nombreencargadoestudiante}
               />
             </FormGroup>
           </Col>
@@ -204,7 +226,7 @@ const Estudiante = () => {
                 placeholder="Apellidos Encargado"
                 type="text-area"
                 onChange={(e) => setApellidoencargadoestudiante(e.target.value)}
-                value = {apellidoencargadoestudiante}
+                value={apellidoencargadoestudiante}
               />
             </FormGroup>
           </Col>
@@ -216,8 +238,10 @@ const Estudiante = () => {
               <Input
                 placeholder="Dirección"
                 type="text-area"
-                onChange={(e) => setDireccionencargadoestudiante(e.target.value)}
-                value = {direccionencargadoestudiante}
+                onChange={(e) =>
+                  setDireccionencargadoestudiante(e.target.value)
+                }
+                value={direccionencargadoestudiante}
               />
             </FormGroup>
           </Col>
@@ -228,7 +252,7 @@ const Estudiante = () => {
                 placeholder="telefono"
                 type="number"
                 onChange={(e) => setTelefonoencargadoestudiante(e.target.value)}
-                value = {telefonoencargadoestudiante}
+                value={telefonoencargadoestudiante}
               />
             </FormGroup>
           </Col>
@@ -239,7 +263,7 @@ const Estudiante = () => {
                 placeholder="ejemplo@gmail.com"
                 type="email"
                 onChange={(e) => setCorreencargadoestudiante(e.target.value)}
-                value = {correencargadoestudiante}
+                value={correencargadoestudiante}
               />
             </FormGroup>
           </Col>

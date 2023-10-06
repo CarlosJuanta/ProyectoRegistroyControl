@@ -1,11 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { FormGroup, Label, Input, Col, Row, Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+import {
+  FormGroup,
+  Label,
+  Input,
+  Col,
+  Row,
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+} from "reactstrap";
 import { NavLink } from "react-router-dom";
 
 const VerEstudiante = () => {
   const [modal, setModal] = useState(false);
   const [secondModal, setSecondModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
   const [selectedEncargado, setSelectedEncargado] = useState();
   const [filtroNombre, setFiltroNombre] = useState("");
   const [datos, setDatos] = useState([]);
@@ -29,7 +41,7 @@ const VerEstudiante = () => {
     telefonoencargadoEstudiante: "",
     correencargadoEstudiante: "",
     gradoEstudiante: "",
-
+    estadoEstudiante: false, // Estado por defecto es falso (inactivo)
     // Agrega otros campos de edición aquí
   });
 
@@ -58,6 +70,9 @@ const VerEstudiante = () => {
   const toggleEditModal = () => {
     setEditModal(!editModal);
   };
+  const toggleDeleteModal = () => {
+    setDeleteModal(!deleteModal);
+  };
 
   const handleVerClick = (estudiante) => {
     setSelectedEncargado(estudiante);
@@ -67,6 +82,11 @@ const VerEstudiante = () => {
   const handleAsignarGrado = (estudiante) => {
     setSelectedGradoAsignado(estudiante);
     toggleSecondModal();
+  };
+
+  const handleEliminarGrado = (estudiante) => {
+    setSelectedGradoAsignado(estudiante);
+    toggleDeleteModal();
   };
 
   const handleEditarClick = (estudiante) => {
@@ -86,6 +106,7 @@ const VerEstudiante = () => {
       telefonoencargadoEstudiante: estudiante.telefonoencargadoEstudiante,
       correencargadoEstudiante: estudiante.correencargadoEstudiante,
       gradoEstudiante: estudiante.gradoEstudiante,
+      estadoEstudiante: estudiante.estadoEstudiante,
       // Carga otros valores aquí
     });
     toggleEditModal();
@@ -105,13 +126,16 @@ const VerEstudiante = () => {
       const idEstudiante = selectedGradoAsignado._id;
       const gradoData = { codigoGrado: gradoSeleccionado };
 
-      const response = await fetch(`http://localhost:3000/api/estudiante/agregarGrado/${idEstudiante}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(gradoData),
-      });
+      const response = await fetch(
+        `http://localhost:3000/api/estudiante/agregarGrado/${idEstudiante}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(gradoData),
+        }
+      );
 
       if (response.status === 200) {
         const updatedEstudiante = await response.json();
@@ -126,21 +150,67 @@ const VerEstudiante = () => {
     }
   };
 
+  const eliminarGradoDeEstudiante = async () => {
+    try {
+      if (!gradoSeleccionado) {
+        console.log("Selecciona un grado antes de eliminar.");
+        return;
+      }
+
+      // Mostrar una alerta de confirmación
+      const confirmacion = window.confirm(
+        "¿Estás seguro de que deseas eliminar este grado del estudiante?"
+      );
+
+      if (confirmacion) {
+        const idEstudiante = selectedGradoAsignado._id;
+        const gradoData = { codigoGrado: gradoSeleccionado };
+
+        const response = await fetch(
+          `http://localhost:3000/api/estudiante/quitarGrado/${idEstudiante}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(gradoData),
+          }
+        );
+
+        if (response.status === 200) {
+          const updatedEstudiante = await response.json();
+          setSelectedGradoAsignado(updatedEstudiante.estudiante);
+          toggleDeleteModal();
+          alert("Eliminación de grado exitosa");
+        } else {
+          console.log("Error al eliminar el grado del estudiante.");
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleEditarEstudiante = async () => {
     try {
       if (!selectedEstudiante || !editedEstudiante) {
-        console.log("No se ha seleccionado un estudiante o no se han editado datos.");
+        console.log(
+          "No se ha seleccionado un estudiante o no se han editado datos."
+        );
         return;
       }
 
       // Realiza una solicitud PUT para actualizar los datos del estudiante
-      const response = await fetch(`http://localhost:3000/api/estudiante/update/${selectedEstudiante._id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(editedEstudiante),
-      });
+      const response = await fetch(
+        `http://localhost:3000/api/estudiante/update/${selectedEstudiante._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(editedEstudiante),
+        }
+      );
 
       if (response.status === 200) {
         // Actualiza la lista de estudiantes después de la edición
@@ -157,11 +227,13 @@ const VerEstudiante = () => {
 
   const getEstudiantes = async () => {
     try {
-      const response = await fetch("http://localhost:3000/api/estudiante/getall");
+      const response = await fetch(
+        "http://localhost:3000/api/estudiante/getall"
+      );
       const data = await response.json();
       const estudiantesFiltrados = filtroNombre
         ? data.resultado.filter((estudiante) =>
-            new RegExp(filtroNombre, 'i').test(estudiante.nombreEstudiante)
+            new RegExp(filtroNombre, "i").test(estudiante.nombreEstudiante)
           )
         : [];
       setDatos(estudiantesFiltrados);
@@ -196,11 +268,12 @@ const VerEstudiante = () => {
             </Button>
           </Col>
         </Row>
+        <div style={{ marginTop: "20px" }}></div>
         <Row>
           <Col sm={12} md={6}>
             <Input
               placeholder="Buscar Estudiante por Nombre"
-              type="text"
+              type="text-area"
               value={filtroNombre}
               onChange={(e) => setFiltroNombre(e.target.value)}
             />
@@ -225,8 +298,8 @@ const VerEstudiante = () => {
                 <th scope="col">Nacionalidad</th>
                 <th scope="col">Código MINEDUC</th>
                 <th scope="col">Encargado</th>
-                <th scope="col">Asignar</th>
-                <th scope="col">Editar</th>
+                <th scope="col">Grados</th>
+                <th scope="col">Estudiante</th>
               </tr>
             </thead>
             <tbody className="table text-center">
@@ -250,24 +323,45 @@ const VerEstudiante = () => {
                     </Button>
                   </td>
                   <td>
-                    <Button
-                      color="info"
-                      onClick={() => {
-                        handleAsignarGrado(estudiante);
-                      }}
-                    >
-                      Asignar
-                    </Button>
+                    <td>
+                      <Button
+                        color="info"
+                        onClick={() => {
+                          handleAsignarGrado(estudiante);
+                        }}
+                      >
+                        Asignar
+                      </Button>
+                    </td>
+                    <td>
+                      <Button
+                        color="danger"
+                        onClick={() => {
+                          handleEliminarGrado(estudiante);
+                        }}
+                      >
+                        Eliminar
+                      </Button>
+                    </td>
                   </td>
                   <td>
-                    <Button
-                      color="warning"
-                      onClick={() => {
-                        handleEditarClick(estudiante);
-                      }}
-                    >
-                      Editar
-                    </Button>
+                    <td>
+                      <Button
+                        color="warning"
+                        onClick={() => {
+                          handleEditarClick(estudiante);
+                        }}
+                      >
+                        Editar
+                      </Button>
+                    </td>
+                    <td>
+                      {estudiante.estadoEstudiante === false ? (
+                        <span className="text-danger">Inactivo</span>
+                      ) : (
+                        <span className="text-success">Activo</span>
+                      )}
+                    </td>
                   </td>
                 </tr>
               ))}
@@ -283,12 +377,29 @@ const VerEstudiante = () => {
         <ModalBody>
           {selectedEncargado && (
             <>
-              <p><strong>CUI:</strong> {selectedEncargado.cuiencargadoEstudiante}</p>
-              <p><strong>Nombre:</strong> {selectedEncargado.nombreencargadoEstudiante}</p>
-              <p><strong>Apellido:</strong> {selectedEncargado.apellidoencargadoEstudiante}</p>
-              <p><strong>Dirección:</strong> {selectedEncargado.direccionencargadoEstudiante}</p>
-              <p><strong>Teléfono:</strong> {selectedEncargado.telefonoencargadoEstudiante}</p>
-              <p><strong>Correo:</strong> {selectedEncargado.correencargadoEstudiante}</p>
+              <p>
+                <strong>CUI:</strong> {selectedEncargado.cuiencargadoEstudiante}
+              </p>
+              <p>
+                <strong>Nombre:</strong>{" "}
+                {selectedEncargado.nombreencargadoEstudiante}
+              </p>
+              <p>
+                <strong>Apellido:</strong>{" "}
+                {selectedEncargado.apellidoencargadoEstudiante}
+              </p>
+              <p>
+                <strong>Dirección:</strong>{" "}
+                {selectedEncargado.direccionencargadoEstudiante}
+              </p>
+              <p>
+                <strong>Teléfono:</strong>{" "}
+                {selectedEncargado.telefonoencargadoEstudiante}
+              </p>
+              <p>
+                <strong>Correo:</strong>{" "}
+                {selectedEncargado.correencargadoEstudiante}
+              </p>
             </>
           )}
         </ModalBody>
@@ -300,11 +411,11 @@ const VerEstudiante = () => {
       </Modal>
 
       <Modal isOpen={secondModal} toggle={toggleSecondModal}>
-        <ModalHeader toggle={toggleSecondModal}>Asignar Grado</ModalHeader>
+        <ModalHeader toggle={toggleSecondModal}>Asignar</ModalHeader>
         <ModalBody>
           {selectedGradoAsignado && (
             <>
-              <strong>Grado Anterior:</strong>
+              <strong>Grados Asignados:</strong>
               {selectedGradoAsignado.codigoGrado.map((grado, index) => (
                 <p key={index._id}>{grado.nombreGrado}</p>
               ))}
@@ -323,6 +434,7 @@ const VerEstudiante = () => {
               {grados.map((grado) => (
                 <option key={grado._id} value={grado.codigoGrado}>
                   {grado.nombreGrado}
+                  {grado.seccion}
                 </option>
               ))}
             </Input>
@@ -333,6 +445,48 @@ const VerEstudiante = () => {
             Guardar
           </Button>
           <Button color="secondary" onClick={toggleSecondModal}>
+            Cancelar
+          </Button>
+        </ModalFooter>
+      </Modal>
+
+      <Modal isOpen={deleteModal} toggle={toggleDeleteModal}>
+        <ModalHeader toggle={toggleDeleteModal}>
+          Quitar Grado a Estudiante
+        </ModalHeader>
+        <ModalBody>
+          {selectedGradoAsignado && (
+            <>
+              <strong>Grados Asignados:</strong>
+              {selectedGradoAsignado.codigoGrado.map((grado, index) => (
+                <p key={index._id}>{grado.nombreGrado}</p>
+              ))}
+            </>
+          )}
+          <FormGroup>
+            <Label for="gradoSelect">Seleccionar Grado</Label>
+            <Input
+              type="select"
+              name="gradoSelect"
+              id="gradoSelect"
+              value={gradoSeleccionado}
+              onChange={handleChangeGrado}
+            >
+              <option value="">Seleccionar...</option>
+              {grados.map((grado) => (
+                <option key={grado._id} value={grado._id}>
+                  {grado.nombreGrado}
+                  {grado.seccion}
+                </option>
+              ))}
+            </Input>
+          </FormGroup>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="primary" onClick={eliminarGradoDeEstudiante}>
+            Eliminar
+          </Button>
+          <Button color="secondary" onClick={toggleDeleteModal}>
             Cancelar
           </Button>
         </ModalFooter>
@@ -409,7 +563,9 @@ const VerEstudiante = () => {
                   value={editedEstudiante.nombreencargadoEstudiante}
                   onChange={handleEditInputChange}
                 />
-                <Label for="apellidoencargadoEstudiante">Apellido Encargado</Label>
+                <Label for="apellidoencargadoEstudiante">
+                  Apellido Encargado
+                </Label>
                 <Input
                   type="text-area"
                   id="apellidoencargadoEstudiante"
@@ -417,7 +573,9 @@ const VerEstudiante = () => {
                   value={editedEstudiante.apellidoencargadoEstudiante}
                   onChange={handleEditInputChange}
                 />
-                <Label for="direccionencargadoEstudiante">Dirección Encargado</Label>
+                <Label for="direccionencargadoEstudiante">
+                  Dirección Encargado
+                </Label>
                 <Input
                   type="text-area"
                   id="direccionencargadoEstudiante"
@@ -425,7 +583,9 @@ const VerEstudiante = () => {
                   value={editedEstudiante.direccionencargadoEstudiante}
                   onChange={handleEditInputChange}
                 />
-                <Label for="telefonoencargadoEstudiante">Teléfono Encargado</Label>
+                <Label for="telefonoencargadoEstudiante">
+                  Teléfono Encargado
+                </Label>
                 <Input
                   type="text-area"
                   id="telefonoencargadoEstudiante"
@@ -441,7 +601,17 @@ const VerEstudiante = () => {
                   value={editedEstudiante.correencargadoEstudiante}
                   onChange={handleEditInputChange}
                 />
-                {/* Agrega más campos de edición aquí */}
+                <Label for="estadoEstudiante" style={{ color: "red" }}>
+                  Estado: Para inactivar al estudiante escriba la palabra false
+                  | para activar al estudiante escriba la palabra true
+                </Label>
+                <Input
+                  type="text-area"
+                  id="estadoEstudiante"
+                  name="estadoEstudiante"
+                  checked={editedEstudiante.estadoEstudiante}
+                  onChange={handleEditInputChange}
+                />
               </FormGroup>
             </>
           )}

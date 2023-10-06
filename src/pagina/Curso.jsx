@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState, useEffect } from "react";
 import {
   Input,
   Col,
@@ -8,32 +8,76 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
+  Label,
+  FormGroup,
 } from "reactstrap";
 import { NavLink } from "react-router-dom";
-import * as FaIcons from "react-icons/fa";
 
 const VerCurso = () => {
   const [modal, setModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
+  const [thirdModal, setThirdModal] = useState(false);
   const [selectedCurso, setSelectedCurso] = useState(null);
   const [filtroNombre, setFiltroNombre] = useState("");
   const [datos, setDatos] = useState([]);
+  const [editedCurso, setEditedCurso] = useState({
+    codigoCurso: "",
+    nombreCurso: "",
+    descripcionCurso: "",
+  });
+  const [gradoSeleccionado, setGradoSeleccionado] = useState(""); // Nuevo estado para almacenar el grado seleccionado
+  const [grados, setGrados] = useState([]); // Nuevo estado para almacenar la lista de grados
 
   const toggleModal = () => {
     setModal(!modal);
+  };
+
+  const toggleEditModal = () => {
+    setEditModal(!editModal);
+  };
+
+  const toggleThirdModal = () => {
+    setThirdModal(!thirdModal);
   };
 
   const handleVerClick = (curso) => {
     setSelectedCurso(curso);
     toggleModal();
   };
+  const handleEditClick = (curso) => {
+    setSelectedCurso(curso);
+    // Carga los valores del docente seleccionado en el estado local de edición
+    setEditedCurso({
+      codigoCurso: curso.codigoCurso,
+      nombreCurso: curso.nombreCurso,
+      descripcionCurso: curso.descripcionCurso,
+      // Carga otros valores aquí
+    });
+    toggleEditModal();
+  };
+
+  const handleEliminarClick = (curso) => {
+    setSelectedCurso(curso);
+    toggleThirdModal();
+  };
+
+  const handleEditInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditedCurso({
+      ...editedCurso,
+      [name]: value,
+    });
+  };
 
   const getCursos = async () => {
     try {
-      // Reemplaza la URL de la API con la correcta para obtener grados
-      const response = await fetch(`${"http://localhost:3000/api/"}/curso/getall`);
+      // Reemplaza la URL de la API con la correcta para obtener cursos
+      const response = await fetch(
+        `${"http://localhost:3000/api/"}/curso/getall`
+      );
       const data = await response.json();
 
-      // Filtra los grados por nombre si se ha ingresado un valor en el campo de búsqueda
+      // Filtra los cursos por nombre si se ha ingresado un valor en el campo de búsqueda
       const cursosFiltrados = filtroNombre
         ? data.resultado.filter((curso) =>
             curso.nombreCurso.toLowerCase().includes(filtroNombre.toLowerCase())
@@ -46,6 +90,129 @@ const VerCurso = () => {
     }
   };
 
+  const handleEditarCurso = async () => {
+    try {
+      if (!selectedCurso || !editedCurso) {
+        console.log(
+          "No se ha seleccionado un curso o no se han editado datos."
+        );
+        return;
+      }
+
+      // Realiza una solicitud PUT para actualizar los datos del curso
+      const response = await fetch(
+        `http://localhost:3000/api/curso/update/${selectedCurso._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(editedCurso),
+        }
+      );
+
+      if (response.status === 200) {
+        // Actualiza la lista de cursos después de la edición
+        getCursos();
+        toggleEditModal();
+        alert("Edición exitosa");
+      } else {
+        console.log("Error al editar el curso.");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleChangeGrado = (e) => {
+    setGradoSeleccionado(e.target.value);
+  };
+
+  const agregarGradoACurso = async () => {
+    try {
+      if (!gradoSeleccionado) {
+        console.log("Selecciona un grado antes de guardar.");
+        return;
+      }
+
+      const idCurso = selectedCurso._id;
+      const gradoData = { codigoGrado: gradoSeleccionado };
+      console.log("ID del Curso:", idCurso);
+      console.log("Datos del Grado:", gradoData);
+
+      const response = await fetch(
+        `http://localhost:3000/api/curso/asignarGrado/${idCurso}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(gradoData),
+        }
+      );
+
+      if (response.status === 200) {
+        const updatedCurso = await response.json();
+        setSelectedCurso(updatedCurso.curso);
+        toggleModal();
+        alert("Asignación de grado exitosa");
+      } else {
+        console.log("Error al asignar el grado al curso.");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const eliminiarGradodeCurso = async () => {
+    try {
+      if (!gradoSeleccionado) {
+        console.log("Selecciona un grado antes de guardar.");
+        return;
+      }
+
+      const idCurso = selectedCurso._id;
+      const gradoData = { codigoGrado: gradoSeleccionado };
+      console.log("ID del Curso:", idCurso);
+      console.log("Datos del Grado:", gradoData);
+
+      const response = await fetch(
+        `http://localhost:3000/api/curso/quitarGrado/${idCurso}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(gradoData),
+        }
+      );
+      if (response.status === 200) {
+        const updatedCurso = await response.json();
+        setSelectedCurso(updatedCurso.curso);
+        toggleThirdModal();
+        alert("Eliminación de grado exitosa");
+      } else {
+        console.log("Error al eliminar el grado al curso.");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    async function fetchGrados() {
+      try {
+        const response = await fetch("http://localhost:3000/api/grado/getall");
+        const data = await response.json();
+        setGrados(data.resultado || []);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    fetchGrados();
+  }, []);
+
   return (
     <>
       <h4>Curso</h4>
@@ -55,19 +222,19 @@ const VerCurso = () => {
             <Button
               color="primary"
               onClick={() => {
-                
-              getCursos();
+                getCursos();
               }}
             >
               Buscar
             </Button>
           </Col>
         </Row>
+        <div style={{ marginTop: "20px" }}></div>
         <Row>
           <Col sm={12} md={6}>
             <Input
               placeholder="Buscar Curso por Nombre"
-              type="text"
+              type="text-area"
               value={filtroNombre}
               onChange={(e) => setFiltroNombre(e.target.value)}
             />
@@ -89,6 +256,7 @@ const VerCurso = () => {
                 <th scope="col">Nombre</th>
                 <th scope="col">Descripción</th>
                 <th scope="col">Grado Asignado </th>
+                <th scope="col">Acciones</th>
               </tr>
             </thead>
             <tbody className="table text-center">
@@ -97,25 +265,34 @@ const VerCurso = () => {
                   <td>{curso.codigoCurso}</td>
                   <td>{curso.nombreCurso}</td>
                   <td>{curso.descripcionCurso}</td>
-                  
-                 {/* 
                   <td>
-                  {grado.cuiDocente.map((docente) => (
-                  <div key={docente._id}>
-                  {docente.cuiDocente} 
-                  </div>
-                  ))}
-                  </td>
-                    */}
-                    <td>
                     <Button
                       color="success"
                       onClick={() => {
                         handleVerClick(curso);
                       }}
                     >
-                      <FaIcons.FaEye className="me-2" />
                       Ver
+                    </Button>
+                  </td>
+                  <td>
+                    <Button
+                      color="warning mr-2"
+                      onClick={() => {
+                        handleEditClick(curso);
+                      }}
+                    >
+                      Editar
+                    </Button>
+                  </td>
+                  <td>
+                    <Button
+                      color="danger"
+                      onClick={() => {
+                        handleEliminarClick(curso);
+                      }}
+                    >
+                      Eliminar
                     </Button>
                   </td>
                 </tr>
@@ -127,40 +304,163 @@ const VerCurso = () => {
         )}
       </div>
 
-      <Modal isOpen={modal} toggle={toggleModal}>
-  <ModalHeader toggle={toggleModal}>Información del grado y docente asignado</ModalHeader>
-  <ModalBody>
-    {selectedCurso && (
-      <>
-        {selectedCurso.codigoGrado.map((grado, index) => (
-          <div key={index}>
-            <p><strong>Código Grado:</strong> {grado.codigoGrado}</p>
-            <p><strong>Nombre del Grado:</strong> {grado.nombreGrado}</p>
-            <p><strong>Descripción del Grado:</strong> {grado.descripcionGrado}</p>
-            
-            {/* Muestra los datos del docente */}
-            {grado.cuiDocente.map((docente, docenteIndex) => (
-              <div key={docenteIndex}>
-                <p><strong>CUI del Docente:</strong> {docente.cuiDocente}</p>
-                <p><strong>Nombre del Docente:</strong> {docente.nombreDocente}</p>
-                <p><strong>Apellido del Docente:</strong> {docente.apellidoDocente}</p>
-                {/* Agrega aquí más campos del docente si es necesario */}
+      <Modal isOpen={thirdModal} toggle={toggleThirdModal}>
+        <ModalHeader toggle={toggleThirdModal}>
+          Quitar grado de curso
+        </ModalHeader>
+        <ModalBody>
+          {selectedCurso && (
+            <>
+              <div style={{ maxHeight: "200px", overflowY: "auto" }}>
+                <table className="table">
+                  <thead>
+                    <tr>
+                      <th>Código Grado</th>
+                      <th>Nombre del Grado</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {selectedCurso.codigoGrado.map((grado, index) => (
+                      <tr key={index}>
+                        <td>{grado.codigoGrado}</td>
+                        <td>{grado.nombreGrado}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
-            ))}
-          </div>
-        ))}
-      </>
-    )}
-  </ModalBody>
-  <ModalFooter>
-    <Button color="secondary" onClick={toggleModal}>
-      Cerrar
-    </Button>
-  </ModalFooter>
-</Modal>
+              <FormGroup>
+                <Label for="gradoSelect">Seleccionar Grado</Label>
+                <Input
+                  type="select"
+                  name="gradoSelect"
+                  id="gradoSelect"
+                  value={gradoSeleccionado}
+                  onChange={handleChangeGrado}
+                >
+                  <option value="">Seleccionar...</option>
+                  {grados.map((grado) => (
+                    <option key={grado.codigoGrado} value={grado._id}>
+                      {grado.nombreGrado}
+                    </option>
+                  ))}
+                </Input>
+              </FormGroup>
+            </>
+          )}
+        </ModalBody>
+        <ModalFooter>
+          <Button color="primary" onClick={eliminiarGradodeCurso}>
+            Guardar
+          </Button>
+          <Button color="secondary" onClick={toggleThirdModal}>
+            Cancelar
+          </Button>
+        </ModalFooter>
+      </Modal>
 
+      <Modal isOpen={modal} toggle={toggleModal}>
+        <ModalHeader toggle={toggleModal}>
+          Información del grado y docente asignado
+        </ModalHeader>
+        <ModalBody>
+          {selectedCurso && (
+            <>
+              <div style={{ maxHeight: "200px", overflowY: "auto" }}>
+                <table className="table">
+                  <thead>
+                    <tr>
+                      <th>Código Grado</th>
+                      <th>Nombre del Grado</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {selectedCurso.codigoGrado.map((grado, index) => (
+                      <tr key={index}>
+                        <td>{grado.codigoGrado}</td>
+                        <td>{grado.nombreGrado}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <FormGroup>
+                <Label for="gradoSelect">Seleccionar Grado</Label>
+                <Input
+                  type="select"
+                  name="gradoSelect"
+                  id="gradoSelect"
+                  value={gradoSeleccionado}
+                  onChange={handleChangeGrado}
+                >
+                  <option value="">Seleccionar...</option>
+                  {grados.map((grado) => (
+                    <option key={grado.codigoGrado} value={grado.codigoGrado}>
+                      {grado.nombreGrado}
+                    </option>
+                  ))}
+                </Input>
+              </FormGroup>
+            </>
+          )}
+        </ModalBody>
+        <ModalFooter>
+          <Button color="primary" onClick={agregarGradoACurso}>
+            Guardar
+          </Button>
+          <Button color="secondary" onClick={toggleModal}>
+            Cancelar
+          </Button>
+        </ModalFooter>
+      </Modal>
 
-
+      <Modal isOpen={editModal} toggle={toggleEditModal}>
+        <ModalHeader toggle={toggleEditModal}>Editar Curso</ModalHeader>
+        <ModalBody>
+          {selectedCurso && (
+            <>
+              <FormGroup>
+                <Label for="codigoCurso">Código del Curso</Label>
+                <Input
+                  type="text-area"
+                  id="codigoCurso"
+                  name="codigoCurso"
+                  value={editedCurso.codigoCurso}
+                  onChange={handleEditInputChange}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label for="nombreCurso">Nombre del Curso</Label>
+                <Input
+                  type="text-area"
+                  id="nombreCurso"
+                  name="nombreCurso"
+                  value={editedCurso.nombreCurso}
+                  onChange={handleEditInputChange}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label for="descripcionCurso">Descripción del Curso</Label>
+                <Input
+                  type="textarea"
+                  id="descripcionCurso"
+                  name="descripcionCurso"
+                  value={editedCurso.descripcionCurso}
+                  onChange={handleEditInputChange}
+                />
+              </FormGroup>
+            </>
+          )}
+        </ModalBody>
+        <ModalFooter>
+          <Button color="primary" onClick={handleEditarCurso}>
+            Guardar
+          </Button>
+          <Button color="secondary" onClick={toggleEditModal}>
+            Cancelar
+          </Button>
+        </ModalFooter>
+      </Modal>
     </>
   );
 };
