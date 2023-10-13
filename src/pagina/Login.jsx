@@ -42,19 +42,19 @@ const Login = () => {
         <h2>Bienvenido</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="username">username</label>
+            <label htmlFor="username"></label>
             <input
               type="text"
               id="username"
               name="username"
-              placeholder="username"
+              placeholder="usuario"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
             />
           </div>
           <div className="form-group">
-            <label htmlFor="contrasena">Contraseña</label>
+            <label htmlFor="contrasena"></label>
             <input
               type="password"
               id="contrasena"

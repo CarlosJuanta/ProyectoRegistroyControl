@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { Contexto } from "../Context/ContextProvider";
 import {
   Input,
   Col,
@@ -11,7 +12,7 @@ import {
   Label,
   FormGroup,
 } from "reactstrap";
-import { NavLink } from "react-router-dom";
+import { NavLink, Navigate, useNavigate } from "react-router-dom";
 
 const VerCurso = () => {
   const [modal, setModal] = useState(false);
@@ -25,6 +26,8 @@ const VerCurso = () => {
     nombreCurso: "",
     descripcionCurso: "",
   });
+  const { usuario } = useContext(Contexto);
+  const navigate = useNavigate();
   const [gradoSeleccionado, setGradoSeleccionado] = useState(""); // Nuevo estado para almacenar el grado seleccionado
   const [grados, setGrados] = useState([]); // Nuevo estado para almacenar la lista de grados
 
@@ -213,256 +216,269 @@ const VerCurso = () => {
     fetchGrados();
   }, []);
 
-  return (
-    <>
-      <h4>Curso</h4>
-      <div className="p-5">
-        <Row>
-          <Col>
-            <Button
-              color="primary"
-              onClick={() => {
-                getCursos();
-              }}
-            >
-              Buscar
-            </Button>
-          </Col>
-        </Row>
-        <div style={{ marginTop: "20px" }}></div>
-        <Row>
-          <Col sm={12} md={6}>
-            <Input
-              placeholder="Buscar Curso por Nombre"
-              type="text-area"
-              value={filtroNombre}
-              onChange={(e) => setFiltroNombre(e.target.value)}
-            />
-          </Col>
-          <Col className="text-end">
-            <NavLink to="/crearcurso">
-              <Button color="success">Registrar Curso</Button>
-            </NavLink>
-          </Col>
-        </Row>
-      </div>
-      <div className="table-responsive p-5">
-        {datos.length > 0 ? (
-          <table className="table table-hover table-light table-sm align-middle table-striped">
-            {/* El contenido de la tabla se mostrará solo si hay datos */}
-            <thead className="table-dark table text-center">
-              <tr>
-                <th scope="col">Código</th>
-                <th scope="col">Nombre</th>
-                <th scope="col">Descripción</th>
-                <th scope="col">Grado Asignado </th>
-                <th scope="col">Acciones</th>
-              </tr>
-            </thead>
-            <tbody className="table text-center">
-              {datos.map((curso) => (
-                <tr key={curso.codigoCurso}>
-                  <td>{curso.codigoCurso}</td>
-                  <td>{curso.nombreCurso}</td>
-                  <td>{curso.descripcionCurso}</td>
-                  <td>
-                    <Button
-                      color="success"
-                      onClick={() => {
-                        handleVerClick(curso);
-                      }}
-                    >
-                      Ver
-                    </Button>
-                  </td>
-                  <td>
-                    <Button
-                      color="warning mr-2"
-                      onClick={() => {
-                        handleEditClick(curso);
-                      }}
-                    >
-                      Editar
-                    </Button>
-                  </td>
-                  <td>
-                    <Button
-                      color="danger"
-                      onClick={() => {
-                        handleEliminarClick(curso);
-                      }}
-                    >
-                      Eliminar
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        ) : (
-          <p>No se encontraron resultados.</p>
-        )}
-      </div>
-
-      <Modal isOpen={thirdModal} toggle={toggleThirdModal}>
-        <ModalHeader toggle={toggleThirdModal}>
-          Quitar grado de curso
-        </ModalHeader>
-        <ModalBody>
-          {selectedCurso && (
-            <>
-              <div style={{ maxHeight: "200px", overflowY: "auto" }}>
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th>Código Grado</th>
-                      <th>Nombre del Grado</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {selectedCurso.codigoGrado.map((grado, index) => (
-                      <tr key={index}>
-                        <td>{grado.codigoGrado}</td>
-                        <td>{grado.nombreGrado}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <FormGroup>
-                <Label for="gradoSelect">Seleccionar Grado</Label>
-                <Input
-                  type="select"
-                  name="gradoSelect"
-                  id="gradoSelect"
-                  value={gradoSeleccionado}
-                  onChange={handleChangeGrado}
+  if (!usuario) {
+    navigate("/login");
+  } else {
+    if (usuario.rol === "admin") {
+      return (
+        <>
+          <h4>Curso</h4>
+          <div className="p-5">
+            <Row>
+              <Col>
+                <Button
+                  color="primary"
+                  onClick={() => {
+                    getCursos();
+                  }}
                 >
-                  <option value="">Seleccionar...</option>
-                  {grados.map((grado) => (
-                    <option key={grado.codigoGrado} value={grado._id}>
-                      {grado.nombreGrado}
-                    </option>
-                  ))}
-                </Input>
-              </FormGroup>
-            </>
-          )}
-        </ModalBody>
-        <ModalFooter>
-          <Button color="primary" onClick={eliminiarGradodeCurso}>
-            Guardar
-          </Button>
-          <Button color="secondary" onClick={toggleThirdModal}>
-            Cancelar
-          </Button>
-        </ModalFooter>
-      </Modal>
-
-      <Modal isOpen={modal} toggle={toggleModal}>
-        <ModalHeader toggle={toggleModal}>
-          Información del grado y docente asignado
-        </ModalHeader>
-        <ModalBody>
-          {selectedCurso && (
-            <>
-              <div style={{ maxHeight: "200px", overflowY: "auto" }}>
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th>Código Grado</th>
-                      <th>Nombre del Grado</th>
+                  Buscar
+                </Button>
+              </Col>
+            </Row>
+            <div style={{ marginTop: "20px" }}></div>
+            <Row>
+              <Col sm={12} md={6}>
+                <Input
+                  placeholder="Buscar Curso por Nombre"
+                  type="text-area"
+                  value={filtroNombre}
+                  onChange={(e) => setFiltroNombre(e.target.value)}
+                />
+              </Col>
+              <Col className="text-end">
+                <NavLink to="/crearcurso">
+                  <Button color="success">Registrar Curso</Button>
+                </NavLink>
+              </Col>
+            </Row>
+          </div>
+          <div className="table-responsive p-5">
+            {datos.length > 0 ? (
+              <table className="table table-hover table-light table-sm align-middle table-striped">
+                {/* El contenido de la tabla se mostrará solo si hay datos */}
+                <thead className="table-dark table text-center">
+                  <tr>
+                    <th scope="col">Código</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Descripción</th>
+                    <th scope="col">Grado Asignado </th>
+                    <th scope="col">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody className="table text-center">
+                  {datos.map((curso) => (
+                    <tr key={curso.codigoCurso}>
+                      <td>{curso.codigoCurso}</td>
+                      <td>{curso.nombreCurso}</td>
+                      <td>{curso.descripcionCurso}</td>
+                      <td>
+                        <Button
+                          color="success"
+                          onClick={() => {
+                            handleVerClick(curso);
+                          }}
+                        >
+                          Ver
+                        </Button>
+                      </td>
+                      <td>
+                        <td>
+                          <Button
+                            color="warning mr-2"
+                            onClick={() => {
+                              handleEditClick(curso);
+                            }}
+                          >
+                            Editar
+                          </Button>
+                        </td>
+                        <td>
+                          <Button
+                            color="danger"
+                            onClick={() => {
+                              handleEliminarClick(curso);
+                            }}
+                          >
+                            Eliminar
+                          </Button>
+                        </td>
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {selectedCurso.codigoGrado.map((grado, index) => (
-                      <tr key={index}>
-                        <td>{grado.codigoGrado}</td>
-                        <td>{grado.nombreGrado}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <FormGroup>
-                <Label for="gradoSelect">Seleccionar Grado</Label>
-                <Input
-                  type="select"
-                  name="gradoSelect"
-                  id="gradoSelect"
-                  value={gradoSeleccionado}
-                  onChange={handleChangeGrado}
-                >
-                  <option value="">Seleccionar...</option>
-                  {grados.map((grado) => (
-                    <option key={grado.codigoGrado} value={grado.codigoGrado}>
-                      {grado.nombreGrado}
-                    </option>
                   ))}
-                </Input>
-              </FormGroup>
-            </>
-          )}
-        </ModalBody>
-        <ModalFooter>
-          <Button color="primary" onClick={agregarGradoACurso}>
-            Guardar
-          </Button>
-          <Button color="secondary" onClick={toggleModal}>
-            Cancelar
-          </Button>
-        </ModalFooter>
-      </Modal>
+                </tbody>
+              </table>
+            ) : (
+              <p>No se encontraron resultados.</p>
+            )}
+          </div>
 
-      <Modal isOpen={editModal} toggle={toggleEditModal}>
-        <ModalHeader toggle={toggleEditModal}>Editar Curso</ModalHeader>
-        <ModalBody>
-          {selectedCurso && (
-            <>
-              <FormGroup>
-                <Label for="codigoCurso">Código del Curso</Label>
-                <Input
-                  type="text-area"
-                  id="codigoCurso"
-                  name="codigoCurso"
-                  value={editedCurso.codigoCurso}
-                  onChange={handleEditInputChange}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="nombreCurso">Nombre del Curso</Label>
-                <Input
-                  type="text-area"
-                  id="nombreCurso"
-                  name="nombreCurso"
-                  value={editedCurso.nombreCurso}
-                  onChange={handleEditInputChange}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="descripcionCurso">Descripción del Curso</Label>
-                <Input
-                  type="textarea"
-                  id="descripcionCurso"
-                  name="descripcionCurso"
-                  value={editedCurso.descripcionCurso}
-                  onChange={handleEditInputChange}
-                />
-              </FormGroup>
-            </>
-          )}
-        </ModalBody>
-        <ModalFooter>
-          <Button color="primary" onClick={handleEditarCurso}>
-            Guardar
-          </Button>
-          <Button color="secondary" onClick={toggleEditModal}>
-            Cancelar
-          </Button>
-        </ModalFooter>
-      </Modal>
-    </>
-  );
+          <Modal isOpen={thirdModal} toggle={toggleThirdModal}>
+            <ModalHeader toggle={toggleThirdModal}>
+              Quitar grado de curso
+            </ModalHeader>
+            <ModalBody>
+              {selectedCurso && (
+                <>
+                  <div style={{ maxHeight: "200px", overflowY: "auto" }}>
+                    <table className="table">
+                      <thead>
+                        <tr>
+                          <th>Código Grado</th>
+                          <th>Nombre del Grado</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {selectedCurso.codigoGrado.map((grado, index) => (
+                          <tr key={index}>
+                            <td>{grado.codigoGrado}</td>
+                            <td>{grado.nombreGrado}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <FormGroup>
+                    <Label for="gradoSelect">Seleccionar Grado</Label>
+                    <Input
+                      type="select"
+                      name="gradoSelect"
+                      id="gradoSelect"
+                      value={gradoSeleccionado}
+                      onChange={handleChangeGrado}
+                    >
+                      <option value="">Seleccionar...</option>
+                      {grados.map((grado) => (
+                        <option key={grado.codigoGrado} value={grado._id}>
+                          {grado.nombreGrado}
+                        </option>
+                      ))}
+                    </Input>
+                  </FormGroup>
+                </>
+              )}
+            </ModalBody>
+            <ModalFooter>
+              <Button color="primary" onClick={eliminiarGradodeCurso}>
+                Guardar
+              </Button>
+              <Button color="secondary" onClick={toggleThirdModal}>
+                Cancelar
+              </Button>
+            </ModalFooter>
+          </Modal>
+
+          <Modal isOpen={modal} toggle={toggleModal}>
+            <ModalHeader toggle={toggleModal}>
+              Información del grado y docente asignado
+            </ModalHeader>
+            <ModalBody>
+              {selectedCurso && (
+                <>
+                  <div style={{ maxHeight: "200px", overflowY: "auto" }}>
+                    <table className="table">
+                      <thead>
+                        <tr>
+                          <th>Código Grado</th>
+                          <th>Nombre del Grado</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {selectedCurso.codigoGrado.map((grado, index) => (
+                          <tr key={index}>
+                            <td>{grado.codigoGrado}</td>
+                            <td>{grado.nombreGrado}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <FormGroup>
+                    <Label for="gradoSelect">Seleccionar Grado</Label>
+                    <Input
+                      type="select"
+                      name="gradoSelect"
+                      id="gradoSelect"
+                      value={gradoSeleccionado}
+                      onChange={handleChangeGrado}
+                    >
+                      <option value="">Seleccionar...</option>
+                      {grados.map((grado) => (
+                        <option
+                          key={grado.codigoGrado}
+                          value={grado.codigoGrado}
+                        >
+                          {grado.nombreGrado}
+                        </option>
+                      ))}
+                    </Input>
+                  </FormGroup>
+                </>
+              )}
+            </ModalBody>
+            <ModalFooter>
+              <Button color="primary" onClick={agregarGradoACurso}>
+                Guardar
+              </Button>
+              <Button color="secondary" onClick={toggleModal}>
+                Cancelar
+              </Button>
+            </ModalFooter>
+          </Modal>
+
+          <Modal isOpen={editModal} toggle={toggleEditModal}>
+            <ModalHeader toggle={toggleEditModal}>Editar Curso</ModalHeader>
+            <ModalBody>
+              {selectedCurso && (
+                <>
+                  <FormGroup>
+                    <Label for="codigoCurso">Código del Curso</Label>
+                    <Input
+                      type="text-area"
+                      id="codigoCurso"
+                      name="codigoCurso"
+                      value={editedCurso.codigoCurso}
+                      onChange={handleEditInputChange}
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label for="nombreCurso">Nombre del Curso</Label>
+                    <Input
+                      type="text-area"
+                      id="nombreCurso"
+                      name="nombreCurso"
+                      value={editedCurso.nombreCurso}
+                      onChange={handleEditInputChange}
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label for="descripcionCurso">Descripción del Curso</Label>
+                    <Input
+                      type="textarea"
+                      id="descripcionCurso"
+                      name="descripcionCurso"
+                      value={editedCurso.descripcionCurso}
+                      onChange={handleEditInputChange}
+                    />
+                  </FormGroup>
+                </>
+              )}
+            </ModalBody>
+            <ModalFooter>
+              <Button color="primary" onClick={handleEditarCurso}>
+                Guardar
+              </Button>
+              <Button color="secondary" onClick={toggleEditModal}>
+                Cancelar
+              </Button>
+            </ModalFooter>
+          </Modal>
+        </>
+      );
+    } else {
+      return <Navigate to="/" />;
+    }
+  }
 };
 
 export default VerCurso;

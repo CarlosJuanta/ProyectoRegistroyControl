@@ -42,10 +42,7 @@ const VerDocente = () => {
 
   const handleEditInputChange = (e) => {
     const { name, value } = e.target;
-    setEditedDocente({
-      ...editedDocente,
-      [name]: value,
-    });
+    setEditedDocente({ ...editedDocente, [name]: value });
   };
   const handleVerClick = (docente) => {
     setSelectedDocente(docente);
@@ -326,7 +323,7 @@ const VerDocente = () => {
                     />
                   </FormGroup>
                   <FormGroup>
-                    <Label for="username">Username</Label>
+                    <Label for="username">Usuario</Label>
                     <Input
                       type="text-area"
                       id="username"
@@ -336,7 +333,7 @@ const VerDocente = () => {
                     />
                   </FormGroup>
                   <FormGroup>
-                    <Label for="password">Password</Label>
+                    <Label for="password">Contraseña</Label>
                     <Input
                       type="text-area"
                       id="password"

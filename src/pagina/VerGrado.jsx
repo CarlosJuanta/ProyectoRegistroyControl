@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { Contexto } from "../Context/ContextProvider";
 import {
   FormGroup,
   Label,
@@ -11,7 +12,7 @@ import {
   ModalBody,
   ModalFooter,
 } from "reactstrap";
-import { NavLink } from "react-router-dom";
+import { NavLink, Navigate, useNavigate } from "react-router-dom";
 import * as FaIcons from "react-icons/fa";
 
 const VerGrado = () => {
@@ -29,6 +30,8 @@ const VerGrado = () => {
     descripcionGrado: "",
     seccionGrado: "",
   });
+  const { usuario } = useContext(Contexto);
+  const navigate = useNavigate();
 
   const toggleModal = () => {
     setModal(!modal);
@@ -222,283 +225,296 @@ const VerGrado = () => {
     }
   };
 
-  return (
-    <>
-      <h4>Grado</h4>
-      <div className="p-5">
-        <Row>
-          <Col>
-            <Button
-              color="primary"
-              onClick={() => {
-                getGrados();
-              }}
-            >
-              Buscar
-            </Button>
-          </Col>
-        </Row>
-        <div style={{ marginTop: "20px" }}></div>
-        <Row>
-          <Col sm={12} md={6}>
-            <Input
-              placeholder="Buscar Grado por Nombre"
-              type="text-area"
-              value={filtroNombre}
-              onChange={(e) => setFiltroNombre(e.target.value)}
-            />
-          </Col>
-          <Col className="text-end">
-            <NavLink to="/grado">
-              <Button color="success">Registrar Grado</Button>
-            </NavLink>
-          </Col>
-        </Row>
-      </div>
-      <div className="table-responsive p-5">
-        {datos.length > 0 ? (
-          <table className="table table-hover table-light table-sm align-middle table-striped">
-            <thead className="table-dark table text-center">
-              <tr>
-                <th scope="col">Código</th>
-                <th scope="col">Nombre</th>
-                <th scope="col">Descripción</th>
-                <th scope="col">Sección</th>
-                <th scope="col">Docentes Asignado</th>
-                <th scope="col">Asignaciones Docentes</th>
-                <th scope="col">Acciones</th>
-              </tr>
-            </thead>
-            <tbody className="table text-center">
-              {datos.map((grado) => (
-                <tr key={grado.codigoGrado}>
-                  <td>{grado.codigoGrado}</td>
-                  <td>{grado.nombreGrado}</td>
-                  <td>{grado.descripcionGrado}</td>
-                  <td>{grado.seccionGrado}</td>
-                  <td>
-                    {grado.cuiDocente.length > 0 ? (
-                      <Button
-                        color="success"
-                        onClick={() => {
-                          handleVerClick(grado);
-                        }}
-                      >
-                        Ver
-                      </Button>
-                    ) : (
-                      "No asignado"
-                    )}
-                  </td>
-                  <td>
-                    <td>
-                      {grado.cuiDocente.length > 0 ? (
-                        <Button
-                          color="warning"
-                          onClick={() => {
-                            handleAsignarClick(grado);
-                          }}
-                        >
-                          Asignar
-                        </Button>
-                      ) : (
-                        "No asignado"
-                      )}
-                    </td>
-                    <td>
-                      {grado.cuiDocente.length > 0 ? (
-                        <Button
-                          color="danger"
-                          onClick={() => {
-                            handleEliminarClick(grado);
-                          }}
-                        >
-                          Eliminar
-                        </Button>
-                      ) : (
-                        "No asignado"
-                      )}
-                    </td>
-                  </td>
-                  <td>
-                    {grado.cuiDocente.length > 0 ? (
-                      <Button
-                        color="success"
-                        onClick={() => {
-                          handleEditClick(grado);
-                        }}
-                      >
-                        Editar
-                      </Button>
-                    ) : (
-                      "No asignado"
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        ) : (
-          <p>No se encontraron resultados.</p>
-        )}
-      </div>
-
-      <Modal isOpen={modal} toggle={toggleModal}>
-        <ModalHeader toggle={toggleModal}>Información del Docente</ModalHeader>
-        <ModalBody>
-          {selectedGrado && (
-            <>
-              <table className="table">
-                <thead>
+  if (!usuario) {
+    navigate("/login");
+  } else {
+    if ((usuario.rol = "admin")) {
+      return (
+        <>
+          <h4>Grado</h4>
+          <div className="p-5">
+            <Row>
+              <Col>
+                <Button
+                  color="primary"
+                  onClick={() => {
+                    getGrados();
+                  }}
+                >
+                  Buscar
+                </Button>
+              </Col>
+            </Row>
+            <div style={{ marginTop: "20px" }}></div>
+            <Row>
+              <Col sm={12} md={6}>
+                <Input
+                  placeholder="Buscar Grado por Nombre"
+                  type="text-area"
+                  value={filtroNombre}
+                  onChange={(e) => setFiltroNombre(e.target.value)}
+                />
+              </Col>
+              <Col className="text-end">
+                <NavLink to="/grado">
+                  <Button color="success">Registrar Grado</Button>
+                </NavLink>
+              </Col>
+            </Row>
+          </div>
+          <div className="table-responsive p-5">
+            {datos.length > 0 ? (
+              <table className="table table-hover table-light table-sm align-middle table-striped">
+                <thead className="table-dark table text-center">
                   <tr>
-                    <th>CUI Docente</th>
-                    <th>Nombre Docente</th>
-                    <th>Apellido Docente</th>
+                    <th scope="col">Código</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Descripción</th>
+                    <th scope="col">Sección</th>
+                    <th scope="col">Docentes Asignado</th>
+                    <th scope="col">Asignaciones Docentes</th>
+                    <th scope="col">Acciones</th>
                   </tr>
                 </thead>
-                <tbody>
-                  {selectedGrado.cuiDocente.map((docente, index) => (
-                    <tr key={index}>
-                      <td>{docente.cuiDocente}</td>
-                      <td>{docente.nombreDocente}</td>
-                      <td>{docente.apellidoDocente}</td>
+                <tbody className="table text-center">
+                  {datos.map((grado) => (
+                    <tr key={grado.codigoGrado}>
+                      <td>{grado.codigoGrado}</td>
+                      <td>{grado.nombreGrado}</td>
+                      <td>{grado.descripcionGrado}</td>
+                      <td>{grado.seccionGrado}</td>
+                      <td>
+                        {grado.cuiDocente.length > 0 ? (
+                          <Button
+                            color="success"
+                            onClick={() => {
+                              handleVerClick(grado);
+                            }}
+                          >
+                            Ver
+                          </Button>
+                        ) : (
+                          "No asignado"
+                        )}
+                      </td>
+                      <td>
+                        <td>
+                          {grado.cuiDocente.length > 0 ? (
+                            <Button
+                              color="warning"
+                              onClick={() => {
+                                handleAsignarClick(grado);
+                              }}
+                            >
+                              Asignar
+                            </Button>
+                          ) : (
+                            "No asignado"
+                          )}
+                        </td>
+                        <td>
+                          {grado.cuiDocente.length > 0 ? (
+                            <Button
+                              color="danger"
+                              onClick={() => {
+                                handleEliminarClick(grado);
+                              }}
+                            >
+                              Eliminar
+                            </Button>
+                          ) : (
+                            "No asignado"
+                          )}
+                        </td>
+                      </td>
+                      <td>
+                        {grado.cuiDocente.length > 0 ? (
+                          <Button
+                            color="success"
+                            onClick={() => {
+                              handleEditClick(grado);
+                            }}
+                          >
+                            Editar
+                          </Button>
+                        ) : (
+                          "No asignado"
+                        )}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-            </>
-          )}
-        </ModalBody>
-        <ModalFooter>
-          <Button color="secondary" onClick={toggleModal}>
-            Cerrar
-          </Button>
-        </ModalFooter>
-      </Modal>
+            ) : (
+              <p>No se encontraron resultados.</p>
+            )}
+          </div>
 
-      <Modal isOpen={secondModal} toggle={togglesecondModal}>
-        <ModalHeader toggle={togglesecondModal}>
-          Asignar Docente a Grado
-        </ModalHeader>
-        <ModalBody>
-          {selectedGrado && (
-            <>
-              <FormGroup>
-                <Label for="gradoSelect">Seleccionar Docente</Label>
-                <Input
-                  type="select"
-                  name="gradoSelect"
-                  id="gradoSelect"
-                  value={gradoSeleccionado}
-                  onChange={handleChangeGrado}
-                >
-                  <option value="">Seleccionar...</option>
-                  {docentes.map((docente) => (
-                    <option key={docente.cuiDocente} value={docente.cuiDocente}>
-                      {docente.nombreDocente} {docente.apellidoDocente}
-                    </option>
-                  ))}
-                </Input>
-              </FormGroup>
-            </>
-          )}
-        </ModalBody>
-        <ModalFooter>
-          <Button color="primary" onClick={agregarDocenteAGrado}>
-            Guardar
-          </Button>
-          <Button color="secondary" onClick={togglesecondModal}>
-            Cancelar
-          </Button>
-        </ModalFooter>
-      </Modal>
-      <Modal isOpen={thirdModal} toggle={togglethirdModal}>
-        <ModalHeader toggle={togglethirdModal}>
-          Quitar Docente de Grado
-        </ModalHeader>
-        <ModalBody>
-          {selectedGrado && (
-            <>
-              <FormGroup>
-                <Label for="gradoSelect">Seleccionar Docente</Label>
-                <Input
-                  type="select"
-                  name="gradoSelect"
-                  id="gradoSelect"
-                  value={gradoSeleccionado}
-                  onChange={handleChangeGrado}
-                >
-                  <option value="">Seleccionar...</option>
-                  {docentes.map((docente) => (
-                    <option key={docente.cuiDocente} value={docente._id}>
-                      {docente.nombreDocente} {docente.apellidoDocente}
-                    </option>
-                  ))}
-                </Input>
-              </FormGroup>
-            </>
-          )}
-        </ModalBody>
-        <ModalFooter>
-          <Button color="primary" onClick={eliminarDocenteAGrado}>
-            Guardar
-          </Button>
-          <Button color="secondary" onClick={togglethirdModal}>
-            Cancelar
-          </Button>
-        </ModalFooter>
-      </Modal>
-      <Modal isOpen={editModal} toggle={toggleEditModal}>
-        <ModalHeader toggle={toggleEditModal}>Editar Grado</ModalHeader>
-        <ModalBody>
-          {selectedGrado && (
-            <>
-              {/* Campos de edición */}
-              <FormGroup>
-                <Label for="nombreGrado">Nombre del Grado</Label>
-                <Input
-                  type="text-area"
-                  id="nombreGrado"
-                  name="nombreGrado"
-                  value={editedGrado.nombreGrado}
-                  onChange={handleEditInputChange}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="descripcionGrado">Descripción del Grado</Label>
-                <Input
-                  type="text-area"
-                  id="descripcionGrado"
-                  name="descripcionGrado"
-                  value={editedGrado.descripcionGrado}
-                  onChange={handleEditInputChange}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="nivelGrado">Sección</Label>
-                <Input
-                  type="text-area"
-                  id="seccionGrado"
-                  name="seccionGrado"
-                  value={editedGrado.seccionGrado}
-                  onChange={handleEditInputChange}
-                />
-              </FormGroup>
-              {/* Agrega otros campos de edición aquí */}
-            </>
-          )}
-        </ModalBody>
-        <ModalFooter>
-          <Button color="primary" onClick={handleEditarGrado}>
-            Guardar
-          </Button>
-          <Button color="secondary" onClick={toggleEditModal}>
-            Cancelar
-          </Button>
-        </ModalFooter>
-      </Modal>
-    </>
-  );
+          <Modal isOpen={modal} toggle={toggleModal}>
+            <ModalHeader toggle={toggleModal}>
+              Información del Docente
+            </ModalHeader>
+            <ModalBody>
+              {selectedGrado && (
+                <>
+                  <table className="table">
+                    <thead>
+                      <tr>
+                        <th>CUI Docente</th>
+                        <th>Nombre Docente</th>
+                        <th>Apellido Docente</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {selectedGrado.cuiDocente.map((docente, index) => (
+                        <tr key={index}>
+                          <td>{docente.cuiDocente}</td>
+                          <td>{docente.nombreDocente}</td>
+                          <td>{docente.apellidoDocente}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </>
+              )}
+            </ModalBody>
+            <ModalFooter>
+              <Button color="secondary" onClick={toggleModal}>
+                Cerrar
+              </Button>
+            </ModalFooter>
+          </Modal>
+
+          <Modal isOpen={secondModal} toggle={togglesecondModal}>
+            <ModalHeader toggle={togglesecondModal}>
+              Asignar Docente a Grado
+            </ModalHeader>
+            <ModalBody>
+              {selectedGrado && (
+                <>
+                  <FormGroup>
+                    <Label for="gradoSelect">Seleccionar Docente</Label>
+                    <Input
+                      type="select"
+                      name="gradoSelect"
+                      id="gradoSelect"
+                      value={gradoSeleccionado}
+                      onChange={handleChangeGrado}
+                    >
+                      <option value="">Seleccionar...</option>
+                      {docentes.map((docente) => (
+                        <option
+                          key={docente.cuiDocente}
+                          value={docente.cuiDocente}
+                        >
+                          {docente.nombreDocente} {docente.apellidoDocente}
+                        </option>
+                      ))}
+                    </Input>
+                  </FormGroup>
+                </>
+              )}
+            </ModalBody>
+            <ModalFooter>
+              <Button color="primary" onClick={agregarDocenteAGrado}>
+                Guardar
+              </Button>
+              <Button color="secondary" onClick={togglesecondModal}>
+                Cancelar
+              </Button>
+            </ModalFooter>
+          </Modal>
+          <Modal isOpen={thirdModal} toggle={togglethirdModal}>
+            <ModalHeader toggle={togglethirdModal}>
+              Quitar Docente de Grado
+            </ModalHeader>
+            <ModalBody>
+              {selectedGrado && (
+                <>
+                  <FormGroup>
+                    <Label for="gradoSelect">Seleccionar Docente</Label>
+                    <Input
+                      type="select"
+                      name="gradoSelect"
+                      id="gradoSelect"
+                      value={gradoSeleccionado}
+                      onChange={handleChangeGrado}
+                    >
+                      <option value="">Seleccionar...</option>
+                      {docentes.map((docente) => (
+                        <option key={docente.cuiDocente} value={docente._id}>
+                          {docente.nombreDocente} {docente.apellidoDocente}
+                        </option>
+                      ))}
+                    </Input>
+                  </FormGroup>
+                </>
+              )}
+            </ModalBody>
+            <ModalFooter>
+              <Button color="primary" onClick={eliminarDocenteAGrado}>
+                Guardar
+              </Button>
+              <Button color="secondary" onClick={togglethirdModal}>
+                Cancelar
+              </Button>
+            </ModalFooter>
+          </Modal>
+          <Modal isOpen={editModal} toggle={toggleEditModal}>
+            <ModalHeader toggle={toggleEditModal}>Editar Grado</ModalHeader>
+            <ModalBody>
+              {selectedGrado && (
+                <>
+                  {/* Campos de edición */}
+                  <FormGroup>
+                    <Label for="nombreGrado">Nombre del Grado</Label>
+                    <Input
+                      type="text-area"
+                      id="nombreGrado"
+                      name="nombreGrado"
+                      value={editedGrado.nombreGrado}
+                      onChange={handleEditInputChange}
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label for="descripcionGrado">Descripción del Grado</Label>
+                    <Input
+                      type="text-area"
+                      id="descripcionGrado"
+                      name="descripcionGrado"
+                      value={editedGrado.descripcionGrado}
+                      onChange={handleEditInputChange}
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label for="nivelGrado">Sección</Label>
+                    <Input
+                      type="text-area"
+                      id="seccionGrado"
+                      name="seccionGrado"
+                      value={editedGrado.seccionGrado}
+                      onChange={handleEditInputChange}
+                    />
+                  </FormGroup>
+                  {/* Agrega otros campos de edición aquí */}
+                </>
+              )}
+            </ModalBody>
+            <ModalFooter>
+              <Button color="primary" onClick={handleEditarGrado}>
+                Guardar
+              </Button>
+              <Button color="secondary" onClick={toggleEditModal}>
+                Cancelar
+              </Button>
+            </ModalFooter>
+          </Modal>
+        </>
+      );
+    } else {
+      return <Navigate to="/" />;
+    }
+  }
 };
 
 export default VerGrado;

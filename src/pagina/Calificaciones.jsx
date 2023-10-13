@@ -1,9 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Input, Col, Row, Modal, ModalHeader, ModalBody, Table, ModalFooter, Spinner } from 'reactstrap';
+import React, { useState, useEffect } from "react";
+import {
+  Button,
+  Input,
+  Col,
+  Row,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  Table,
+  ModalFooter,
+  Spinner,
+} from "reactstrap";
 
 const Asistencia = () => {
   const [grados, setGrados] = useState([]);
-  const [selectedGrado, setSelectedGrado] = useState('');
+  const [selectedGrado, setSelectedGrado] = useState("");
   const [estudiantes, setEstudiantes] = useState([]);
   const [selectedEstudiante, setSelectedEstudiante] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -12,14 +23,16 @@ const Asistencia = () => {
 
   // Estados para el modal de registro de notas
   const [cursosPorGrado, setCursosPorGrado] = useState([]);
-  const [selectedCurso, setSelectedCurso] = useState('');
-  const [selectedBloque, setSelectedBloque] = useState('1');
-  const [nota, setNota] = useState('');
+  const [selectedCurso, setSelectedCurso] = useState("");
+  const [selectedBloque, setSelectedBloque] = useState("1");
+  const [nota, setNota] = useState("");
   const [loadingCursos, setLoadingCursos] = useState(false); // Estado para indicar la carga de cursos
 
   const cargarGrados = async () => {
     try {
-      const response = await fetch(`${"http://localhost:3000/api/"}/grado/getall`);
+      const response = await fetch(
+        `${"http://localhost:3000/api/"}/grado/getall`
+      );
       if (response.status === 200) {
         const data = await response.json();
         setGrados(data.resultado);
@@ -36,13 +49,16 @@ const Asistencia = () => {
 
     try {
       const data = { codigoGrado: selectedGrado };
-      const response = await fetch(`${"http://localhost:3000/api"}/estudiante/getbygrado`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        `${"http://localhost:3000/api"}/estudiante/getbygrado`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
       if (response.status === 200) {
         const data = await response.json();
@@ -52,22 +68,28 @@ const Asistencia = () => {
         console.log("Error al cargar los estudiantes asignados al grado");
       }
     } catch (error) {
-      console.error("Hubo un error al cargar los estudiantes asignados al grado:", error);
+      console.error(
+        "Hubo un error al cargar los estudiantes asignados al grado:",
+        error
+      );
     }
   };
 
   const cargarCursosPorGrado = async (codigoGrado) => {
     setLoadingCursos(true); // Indicar que se está cargando
     try {
-      const response = await fetch(`${"http://localhost:3000/api/curso/getbygrado"}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          codigoGrado,
-        }),
-      });
+      const response = await fetch(
+        `${"http://localhost:3000/api/curso/getbygrado"}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            codigoGrado,
+          }),
+        }
+      );
 
       if (response.status === 200) {
         const data = await response.json();
@@ -80,28 +102,33 @@ const Asistencia = () => {
     } finally {
       setLoadingCursos(false); // Indicar que la carga ha finalizado
     }
-  }; 
+  };
   // Nueva función para registrar notas
   const registrarNotas = async () => {
     try {
-      const response = await fetch(`${"http://localhost:3000/api/"}/estudiante/notas/${selectedEstudiante._id}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          cursoId: selectedCurso, // Utiliza el curso seleccionado
-          bloque: selectedBloque, // Utiliza el bloque seleccionado
-          nota: parseFloat(nota), // Utiliza la nota ingresada como número decimal
-        }),
-      });
+      const response = await fetch(
+        `${"http://localhost:3000/api/"}/estudiante/notas/${
+          selectedEstudiante._id
+        }`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            cursoId: selectedCurso, // Utiliza el curso seleccionado
+            bloque: selectedBloque, // Utiliza el bloque seleccionado
+            nota: parseFloat(nota), // Utiliza la nota ingresada como número decimal
+          }),
+        }
+      );
 
       if (response.status === 200) {
-         setNotaIngresada(true); // Muestra el mensaje de nota ingresada
+        setNotaIngresada(true); // Muestra el mensaje de nota ingresada
         //setModalRegistrarNotasOpen(false); // Cierra el modal después de registrar notas
-        setSelectedCurso(''); // Limpia el curso seleccionado
-        setSelectedBloque('1'); // Limpia el bloque seleccionado
-        setNota(''); // Limpia la nota ingresada
+        setSelectedCurso(""); // Limpia el curso seleccionado
+        setSelectedBloque("1"); // Limpia el bloque seleccionado
+        setNota(""); // Limpia la nota ingresada
         // Puedes agregar aquí una lógica adicional si es necesario
       } else {
         console.log("Error al registrar las notas");
@@ -145,7 +172,6 @@ const Asistencia = () => {
   return (
     <>
       <h4>Calificaciones</h4>
-
       <div className="p-5">
         <Row>
           <Col className="text-end">
@@ -165,7 +191,6 @@ const Asistencia = () => {
           </Col>
         </Row>
       </div>
-
       <div className="table-responsive p-4">
         <table className="table table-light table-sm align-middle">
           <thead className="table-dark table text-center">
@@ -177,7 +202,7 @@ const Asistencia = () => {
               <th scope="col">Acciones</th>
             </tr>
           </thead>
-          <tbody className="table text-center table-primary">
+          <tbody className="table text-center ">
             {estudiantes.map((estudiante, index) => (
               <tr key={estudiante._id}>
                 <td>{estudiante.cuiEstudiante}</td>
@@ -185,15 +210,21 @@ const Asistencia = () => {
                 <td>{estudiante.apellidoEstudiante}</td>
                 <td>{estudiante.codigoGrado[0].nombreGrado}</td>
                 <td>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "10px",
+                    }}
+                  >
                     <Button
-                      color="primary"
+                      color="success"
                       onClick={() => abrirModal(estudiante)}
                     >
                       Ver
                     </Button>
                     <Button
-                      color="primary"
+                      color="warning"
                       onClick={() => abrirModalRegistrarNotas(estudiante)}
                     >
                       Registrar
@@ -205,10 +236,14 @@ const Asistencia = () => {
           </tbody>
         </table>
       </div>
-
-      <Modal isOpen={modalOpen} toggle={() => setModalOpen(!modalOpen)} size="lg">
+      <Modal
+        isOpen={modalOpen}
+        toggle={() => setModalOpen(!modalOpen)}
+        size="lg"
+      >
         <ModalHeader toggle={() => setModalOpen(!modalOpen)}>
-          Reportes de {selectedEstudiante && selectedEstudiante.nombreEstudiante}
+          Reportes de{" "}
+          {selectedEstudiante && selectedEstudiante.nombreEstudiante}
         </ModalHeader>
         <ModalBody>
           <Table>
@@ -217,9 +252,7 @@ const Asistencia = () => {
                 <th>Curso</th>
                 {selectedEstudiante &&
                   selectedEstudiante.notas[0]?.notas.map((nota, indexNota) => (
-                    <th key={indexNota}>
-                      {`Bloque ${nota.bloque}`}
-                    </th>
+                    <th key={indexNota}>{`Bloque ${nota.bloque}`}</th>
                   ))}
                 <th>Promedio</th>
               </tr>
@@ -230,13 +263,14 @@ const Asistencia = () => {
                   <tr key={indexCurso}>
                     <td>{notaCurso.curso.nombreCurso}</td>
                     {notaCurso.notas.map((nota, indexNota) => (
-                      <td key={indexNota}>
-                        {`${nota.nota}`}
-                      </td>
+                      <td key={indexNota}>{`${nota.nota}`}</td>
                     ))}
                     <td>
                       {(() => {
-                        const sum = notaCurso.notas.reduce((acc, nota) => acc + nota.nota, 0);
+                        const sum = notaCurso.notas.reduce(
+                          (acc, nota) => acc + nota.nota,
+                          0
+                        );
                         const promedio = sum / notaCurso.notas.length;
                         return promedio.toFixed(2); // Mostrar el promedio con 2 decimales
                       })()}
@@ -247,19 +281,25 @@ const Asistencia = () => {
           </Table>
         </ModalBody>
       </Modal>
-
       {/* Modal para registrar notas */}
-      <Modal isOpen={modalRegistrarNotasOpen} toggle={() => setModalRegistrarNotasOpen(!modalRegistrarNotasOpen)} size="lg">
-        <ModalHeader toggle={() => setModalRegistrarNotasOpen(!modalRegistrarNotasOpen)}>
-          Registrar Notas para {selectedEstudiante && selectedEstudiante.nombreEstudiante}
+      <Modal
+        isOpen={modalRegistrarNotasOpen}
+        toggle={() => setModalRegistrarNotasOpen(!modalRegistrarNotasOpen)}
+        size="lg"
+      >
+        <ModalHeader
+          toggle={() => setModalRegistrarNotasOpen(!modalRegistrarNotasOpen)}
+        >
+          Registrar Notas para{" "}
+          {selectedEstudiante && selectedEstudiante.nombreEstudiante}
         </ModalHeader>
         <ModalBody>
           {/* Agregar un div para mostrar el mensaje */}
-    {notaIngresada && (
-      <div className="alert alert-success" role="alert">
-        Nota ingresada con éxito.
-      </div>
-    )}
+          {notaIngresada && (
+            <div className="alert alert-success" role="alert">
+              Nota ingresada con éxito.
+            </div>
+          )}
           <Input
             type="select"
             value={selectedCurso}
@@ -290,10 +330,7 @@ const Asistencia = () => {
           />
         </ModalBody>
         <ModalFooter>
-          <Button
-            color="primary"
-            onClick={() => registrarNotas()}
-          >
+          <Button color="primary" onClick={() => registrarNotas()}>
             Guardar Notas
           </Button>
           <Button
@@ -304,7 +341,8 @@ const Asistencia = () => {
           </Button>
         </ModalFooter>
       </Modal>
-      {loadingCursos && <Spinner color="primary" />} {/* Mostrar spinner mientras se cargan los cursos */}
+      {loadingCursos && <Spinner color="primary" />}{" "}
+      {/* Mostrar spinner mientras se cargan los cursos */}
     </>
   );
 };

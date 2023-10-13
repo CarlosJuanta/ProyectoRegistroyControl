@@ -1,24 +1,35 @@
-import React, { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
-import * as FaIcons from 'react-icons/fa';
-import { Button, Input, Col, Row, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import React, { useState, useEffect } from "react";
+import { NavLink } from "react-router-dom";
+import * as FaIcons from "react-icons/fa";
+import {
+  Button,
+  Input,
+  Col,
+  Row,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+} from "reactstrap";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 const Asistencia = () => {
   const [grados, setGrados] = useState([]);
-  const [selectedGrado, setSelectedGrado] = useState('');
+  const [selectedGrado, setSelectedGrado] = useState("");
   const [estudiantes, setEstudiantes] = useState([]);
   const [asistencias, setAsistencias] = useState([]);
   const [registroExitoso, setRegistroExitoso] = useState(false);
   const [modal, setModal] = useState(false);
-  const [selectedEstudianteId, setSelectedEstudianteId] = useState('');
-  const [motivo, setMotivo] = useState('');
-  const [descripcion, setDescripcion] = useState('');
+  const [selectedEstudianteId, setSelectedEstudianteId] = useState("");
+  const [motivo, setMotivo] = useState("");
+  const [descripcion, setDescripcion] = useState("");
 
   const cargarGrados = async () => {
     try {
-      const response = await fetch(`${"http://localhost:3000/api/"}/grado/getall`);
+      const response = await fetch(
+        `${"http://localhost:3000/api/"}/grado/getall`
+      );
       if (response.status === 200) {
         const data = await response.json();
         setGrados(data.resultado);
@@ -35,13 +46,16 @@ const Asistencia = () => {
 
     try {
       const data = { codigoGrado: selectedGrado };
-      const response = await fetch(`${"http://localhost:3000/api"}/estudiante/getbygrado`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        `${"http://localhost:3000/api"}/estudiante/getbygrado`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
       if (response.status === 200) {
         const data = await response.json();
@@ -50,18 +64,27 @@ const Asistencia = () => {
         console.log("Error al cargar los estudiantes asignados al grado");
       }
     } catch (error) {
-      console.error("Hubo un error al cargar los estudiantes asignados al grado:", error);
+      console.error(
+        "Hubo un error al cargar los estudiantes asignados al grado:",
+        error
+      );
     }
   };
 
   const handleAsistenciaChange = (estudianteId, checked) => {
     const updatedAsistencias = [...asistencias];
-    const index = updatedAsistencias.findIndex((asistencia) => asistencia.estudiante === estudianteId);
+    const index = updatedAsistencias.findIndex(
+      (asistencia) => asistencia.estudiante === estudianteId
+    );
 
     if (index !== -1) {
       updatedAsistencias[index].estado = checked;
     } else {
-      updatedAsistencias.push({ estudiante: estudianteId, estado: checked, fecha: obtenerFechaSistema() });
+      updatedAsistencias.push({
+        estudiante: estudianteId,
+        estado: checked,
+        fecha: obtenerFechaSistema(),
+      });
     }
 
     setAsistencias(updatedAsistencias);
@@ -70,35 +93,43 @@ const Asistencia = () => {
   const obtenerFechaSistema = () => {
     const today = new Date();
     const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
 
-  const guardarAsistencias = async () => { 
-     // Pregunta al usuario si realmente quiere guardar la asistencia
-  const confirmarGuardar = window.confirm("¿Estás seguro de que quieres guardar la asistencia?");
+  const guardarAsistencias = async () => {
+    // Pregunta al usuario si realmente quiere guardar la asistencia
+    const confirmarGuardar = window.confirm(
+      "¿Estás seguro de que quieres guardar la asistencia?"
+    );
 
-  if (!confirmarGuardar) {
-    return; 
+    if (!confirmarGuardar) {
+      return;
     }
     try {
       for (const asistencia of asistencias) {
         const idEstudiante = asistencia.estudiante;
         const { estado, fecha } = asistencia;
 
-        const response = await fetch(`${"http://localhost:3000/api"}/estudiante/agregarAsistencia/${idEstudiante}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ estado, fecha }),
-        });
+        const response = await fetch(
+          `${"http://localhost:3000/api"}/estudiante/agregarAsistencia/${idEstudiante}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ estado, fecha }),
+          }
+        );
 
         if (response.status === 200) {
           setRegistroExitoso(true);
         } else {
-          console.log("Error al guardar la asistencia para el estudiante:", idEstudiante);
+          console.log(
+            "Error al guardar la asistencia para el estudiante:",
+            idEstudiante
+          );
         }
       }
     } catch (error) {
@@ -108,19 +139,31 @@ const Asistencia = () => {
 
   const generarPDF = () => {
     const doc = new jsPDF();
-       
+
     // Agrega el encabezado
-    doc.setFont('times');
+    doc.setFont("times");
     doc.setFontSize(12);
     doc.text('ESCUELA OFICIAL URBANA MIXTA JOSÉ JOAQUÍN PALMA"', 10, 10);
-    doc.text(`Grado: ${grados.find((grado) => grado.codigoGrado === selectedGrado)?.nombreGrado}`, 10, 20);
+    doc.text(
+      `Grado: ${
+        grados.find((grado) => grado.codigoGrado === selectedGrado)?.nombreGrado
+      }`,
+      10,
+      20
+    );
     doc.text(`Fecha: ${obtenerFechaSistema()}`, 10, 30);
-    doc.text('Asistencia', 10, 40);
+    doc.text("Asistencia", 10, 40);
 
-    const headers = ['CUI', 'Nombre', 'Apellido', 'Asistencia', 'Fecha'];
+    const headers = ["CUI", "Nombre", "Apellido", "Asistencia", "Fecha"];
     const data = estudiantes.map((estudiante) => {
-      const asistencia = asistencias.find((asis) => asis.estudiante === estudiante._id);
-      const asistenciaTexto = asistencia ? (asistencia.estado ? 'Presente' : 'Ausente') : 'Ausente';
+      const asistencia = asistencias.find(
+        (asis) => asis.estudiante === estudiante._id
+      );
+      const asistenciaTexto = asistencia
+        ? asistencia.estado
+          ? "Presente"
+          : "Ausente"
+        : "Ausente";
 
       return [
         estudiante.cuiEstudiante,
@@ -136,12 +179,12 @@ const Asistencia = () => {
       body: data,
       startY: 50,
       styles: {
-        font: 'times',
+        font: "times",
         fontSize: 12,
       },
     });
 
-    doc.save('reporte_asistencia.pdf');
+    doc.save("reporte_asistencia.pdf");
   };
 
   const toggleModal = (estudianteId) => {
@@ -154,22 +197,27 @@ const Asistencia = () => {
       const idEstudiante = selectedEstudianteId;
       const data = { motivo, descripcion };
 
-      const response = await fetch(`${"http://localhost:3000/api"}/estudiante/agregarReporte/${idEstudiante}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        `${"http://localhost:3000/api"}/estudiante/agregarReporte/${idEstudiante}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
       if (response.status === 200) {
         setRegistroExitoso(true);
-        setModal(false); 
-        setMotivo('');
-        setDescripcion('');
-
+        setModal(false);
+        setMotivo("");
+        setDescripcion("");
       } else {
-        console.log("Error al registrar el reporte para el estudiante:", idEstudiante);
+        console.log(
+          "Error al registrar el reporte para el estudiante:",
+          idEstudiante
+        );
       }
     } catch (error) {
       console.error("Hubo un error al registrar el reporte:", error);
@@ -201,12 +249,20 @@ const Asistencia = () => {
       <div className="p-5">
         <Row>
           <Col>
-            <Button color="success" onClick={guardarAsistencias}>Guardar Asistencia</Button>
-            <Button color="primary" onClick={generarPDF} style={{ marginLeft: '10px' }}>Generar PDF</Button>
+            <Button color="success" onClick={guardarAsistencias}>
+              Guardar Asistencia
+            </Button>
+            <Button
+              color="primary"
+              onClick={generarPDF}
+              style={{ marginLeft: "10px" }}
+            >
+              Generar PDF
+            </Button>
           </Col>
         </Row>
 
-        <div style={{ marginTop: '20px' }}></div>
+        <div style={{ marginTop: "20px" }}></div>
 
         <Row>
           <Col>
@@ -250,10 +306,10 @@ const Asistencia = () => {
               <th scope="col">Apellido</th>
               <th scope="col">Grado</th>
               <th scope="col">Asistencia</th>
-              <th scope="col">Llamado de atención</th>
+              <th scope="col">Reporte</th>
             </tr>
           </thead>
-          <tbody className="table text-center table-primary">
+          <tbody className="table text-center ">
             {estudiantes.map((estudiante) => (
               <tr key={estudiante._id}>
                 <td>{estudiante.cuiEstudiante}</td>
@@ -263,20 +319,28 @@ const Asistencia = () => {
                 <td>
                   <input
                     type="checkbox"
-                    checked={asistencias.some((asistencia) => asistencia.estudiante === estudiante._id && asistencia.estado)}
-                    onChange={(e) => handleAsistenciaChange(estudiante._id, e.target.checked)}
+                    checked={asistencias.some(
+                      (asistencia) =>
+                        asistencia.estudiante === estudiante._id &&
+                        asistencia.estado
+                    )}
+                    onChange={(e) =>
+                      handleAsistenciaChange(estudiante._id, e.target.checked)
+                    }
                   />
                 </td>
                 <td>
-                  <Button
-                    color="success"
-                    onClick={() => {
-                      toggleModal(estudiante._id); // Abre el modal para registrar falta
-                    }}
-                  >
-                    <FaIcons.FaPenAlt className="me-2" />
-                    Registrar
-                  </Button>
+                  <td>
+                    <Button
+                      color="warning"
+                      onClick={() => {
+                        toggleModal(estudiante._id); // Abre el modal para registrar falta
+                      }}
+                    >
+                      <FaIcons.FaPenAlt className="me-2" />
+                      Registrar
+                    </Button>
+                  </td>
                 </td>
               </tr>
             ))}
@@ -285,11 +349,15 @@ const Asistencia = () => {
       </div>
 
       {/* Modal para registrar falta */}
-      <Modal isOpen={modal} toggle={() => toggleModal('')}>
-        <ModalHeader toggle={() => toggleModal('')}>Registrar Falta</ModalHeader>
+      <Modal isOpen={modal} toggle={() => toggleModal("")}>
+        <ModalHeader toggle={() => toggleModal("")}>
+          Registrar Falta
+        </ModalHeader>
         <ModalBody>
           <div className="mb-3">
-            <label htmlFor="motivo" className="form-label">Motivo</label>
+            <label htmlFor="motivo" className="form-label">
+              Motivo
+            </label>
             <input
               type="text"
               className="form-control"
@@ -299,7 +367,9 @@ const Asistencia = () => {
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="descripcion" className="form-label">Descripción</label>
+            <label htmlFor="descripcion" className="form-label">
+              Descripción
+            </label>
             <textarea
               className="form-control"
               id="descripcion"
@@ -310,8 +380,12 @@ const Asistencia = () => {
           </div>
         </ModalBody>
         <ModalFooter>
-          <Button color="primary" onClick={registrarFalta}>Registrar</Button>
-          <Button color="secondary" onClick={() => toggleModal('')}>Cancelar</Button>
+          <Button color="primary" onClick={registrarFalta}>
+            Registrar
+          </Button>
+          <Button color="secondary" onClick={() => toggleModal("")}>
+            Cancelar
+          </Button>
         </ModalFooter>
       </Modal>
     </>
