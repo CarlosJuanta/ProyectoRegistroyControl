@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FormGroup, Label, Input, Col, Row, Button, Form } from "reactstrap";
+import { FormGroup, Label, Input, Col, Row, Button } from "reactstrap";
 
 const Docente = () => {
   const [cuidocente, setCuidocente] = useState("");
@@ -9,6 +9,9 @@ const Docente = () => {
   const [correodocente, setCorreodocente] = useState("");
   const [direcciondocente, setDirecciondocente] = useState("");
   const [nacionalidaddocente, setNacionalidaddocente] = useState("");
+  const [rol, setRol] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = async (e) => {
     if (correodocente.includes("@")) {
@@ -21,6 +24,9 @@ const Docente = () => {
           correoDocente: correodocente,
           direccionDocente: direcciondocente,
           nacionalidadDocente: nacionalidaddocente,
+          rol: rol,
+          username: username,
+          password: password,
         };
 
         const response = await fetch(
@@ -133,6 +139,44 @@ const Docente = () => {
               />
             </FormGroup>
           </Col>
+          <Row>
+            <Col>
+              <FormGroup>
+                <Label for="rol">Rol</Label>
+                <Input
+                  type="text-area"
+                  name="rol"
+                  id="rol"
+                  placeholder="Rol"
+                  onChange={(e) => setRol(e.target.value)}
+                />
+              </FormGroup>
+            </Col>
+            <Col>
+              <FormGroup>
+                <Label for="username">Username</Label>
+                <Input
+                  type="text-area"
+                  name="username"
+                  id="username"
+                  placeholder="Username"
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              </FormGroup>
+            </Col>
+            <Col>
+              <FormGroup>
+                <Label for="password">Password</Label>
+                <Input
+                  type="text-area"
+                  name="password"
+                  id="password"
+                  placeholder="Password"
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </FormGroup>
+            </Col>
+          </Row>
         </Row>
         <Button color="success" onClick={handleSubmit}>
           Registrar Docente

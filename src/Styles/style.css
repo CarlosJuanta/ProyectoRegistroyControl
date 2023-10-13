@@ -1,67 +1,82 @@
-
+/* Estilo para el contenedor principal */
 .principal {
-    margin-top: 0px;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-family: cursive;
-    background-color: #ffffff;
-    position:relative;
+  background-image: url("../Imagenes/logoescuela.png");
+  min-height: 100vh; /* Establece un alto mínimo del 100% del alto de la ventana */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: cursive;
+  background-color: #ffffff;
+  position: relative;
+  background-repeat: no-repeat;
+  background-size: 40%;
+  background-position: center center;
 }
 
+/* Estilo para el contenedor del formulario */
 .login-container {
-    text-align: center;
-    padding: 20px;
-    width: 350px;
-    height: 450px;
-    border-radius: 20px;
-    background-color: #ffffff;
-    box-shadow: 0 0 8px rgba(100, 26, 26, 0.5); /* Cambia el color de la sombra a rojo semi-transparente */
+  text-align: center;
+  padding: 20px;
+  width: 90%; /* Utiliza un ancho del 90% para que el formulario sea responsive */
+  max-width: 400px; /* Establece un ancho máximo para evitar que el formulario se ensanche demasiado en pantallas grandes */
+  border-radius: 20px;
+  background-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 8px rgba(100, 26, 26, 0.5);
+  opacity: 0.9;
 }
 
+/* Media query para hacer ajustes en pantallas más pequeñas */
+@media screen and (max-width: 768px) {
+  .login-container {
+    width: 80%; /* Reduce el ancho del formulario en pantallas más pequeñas */
+  }
+}
 
 .logo {
-    width: 120px; /* Ajusta el ancho de acuerdo a tu imagen */
-    height: 120px;
-    margin-bottom: 5px;
+  width: 120px;
+  height: 120px;
+  margin-bottom: 20px; /* Aumenta el espacio entre el logo y el formulario */
 }
 
 .school-name {
-    font-size: 18px;
-    margin-bottom: 20px;
-    font-family: cursive;
-   
+  font-size: 18px;
+  margin-bottom: 20px;
+  font-family: cursive;
 }
 
 .form-group {
-    margin-bottom: 15px;
+  margin-bottom: 20px; /* Aumenta el espacio entre los campos de entrada */
 }
 
 label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
 }
 
 input[type="text"],
-input[type="password"]{
-    text-align: center;
-    width: 80%;
-    height: 50;
-    padding: 15px;
-    border: 1px solid #ccc;
-    border-radius: 15px;
-    border: solid 1px
+input[type="password"] {
+  text-align: center;
+  width: 100%; /* Ajusta el ancho al 100% del contenedor */
+  height: 50px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 15px;
 }
 
+/* Estilo para el botón */
 button {
-    background-color: #2d4b74;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+  background-color: #888888; /* Color de fondo gris */
+  color: #fff; /* Color de texto blanco */
+  border: none; /* Elimina el borde */
+  border-radius: 9999px; /* Hace que las esquinas sean completamente redondas */
+  padding: 10px 20px; /* Añade espacio interno al botón */
+  cursor: pointer; /* Cambia el cursor al pasar por encima */
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Agrega un efecto de relieve */
 }
 
+/* Estilo para el botón al pasar el cursor por encima */
+button:hover {
+  background-color: #666666; /* Cambia el color de fondo al pasar por encima */
+}
