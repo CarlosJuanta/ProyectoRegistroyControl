@@ -26,6 +26,7 @@ const VerGrado = () => {
   const [gradoSeleccionado, setGradoSeleccionado] = useState("");
   const [docentes, setDocentes] = useState([]);
   const [editedGrado, setEditedGrado] = useState({
+    codigoGrado: "",
     nombreGrado: "",
     descripcionGrado: "",
     seccionGrado: "",
@@ -67,6 +68,7 @@ const VerGrado = () => {
   const handleEditClick = (grado) => {
     setSelectedGrado(grado);
     setEditedGrado({
+      codigoGrado: grado.codigoGrado,
       nombreGrado: grado.nombreGrado,
       descripcionGrado: grado.descripcionGrado,
       seccionGrado: grado.seccionGrado,
@@ -228,7 +230,7 @@ const VerGrado = () => {
   if (!usuario) {
     navigate("/login");
   } else {
-    if ((usuario.rol = "admin")) {
+    if (usuario.rol === "admin") {
       return (
         <>
           <h4>Grado</h4>
@@ -465,7 +467,16 @@ const VerGrado = () => {
             <ModalBody>
               {selectedGrado && (
                 <>
-                  {/* Campos de edición */}
+                  <FormGroup>
+                    <Label for="códigoGrado">Código Grado</Label>
+                    <Input
+                      type="text-area"
+                      id="codigoGrado"
+                      name="codigoGrado"
+                      value={editedGrado.codigoGrado}
+                      onChange={handleEditInputChange}
+                    />
+                  </FormGroup>
                   <FormGroup>
                     <Label for="nombreGrado">Nombre del Grado</Label>
                     <Input

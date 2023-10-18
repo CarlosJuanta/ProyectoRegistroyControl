@@ -30,7 +30,7 @@ const Sidebar = () => {
                   className=" rounded py-2 w-100 d-inline-block px-2 linky"
                 >
                   <FaIcons.FaUser className="me-2" />
-                  Login
+                  Iniciar Sesión
                 </NavLink>
               </li>
             ) : null}
@@ -100,7 +100,7 @@ const Sidebar = () => {
             {usuario.rol === "admin" || usuario.rol === "docente" ? (
               <li>
                 <NavLink
-                  to="/asistencia"
+                  to="/verasistencia"
                   className=" rounded py-2 w-100 d-inline-block px-2 linky"
                 >
                   <FaIcons.FaUserEdit className="me-2" />

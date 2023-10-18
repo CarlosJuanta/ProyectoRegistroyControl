@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import * as FaIcons from "react-icons/fa";
+import logo from "../Imagenes/logoescuela.png"; // Importa la imagen
 import {
   Button,
   Input,
@@ -143,6 +144,8 @@ const Asistencia = () => {
     // Agrega el encabezado
     doc.setFont("times");
     doc.setFontSize(12);
+    // Agregar el logo al encabezado
+    doc.addImage(logo, "PNG", 150, 8, 50, 30); // Ajusta las coordenadas y dimensiones según tus necesidades
     doc.text('ESCUELA OFICIAL URBANA MIXTA JOSÉ JOAQUÍN PALMA"', 10, 10);
     doc.text(
       `Grado: ${
@@ -178,6 +181,7 @@ const Asistencia = () => {
       head: [headers],
       body: data,
       startY: 50,
+      theme: "grid",
       styles: {
         font: "times",
         fontSize: 12,

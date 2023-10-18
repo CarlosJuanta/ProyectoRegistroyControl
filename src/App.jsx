@@ -19,7 +19,6 @@ import VerDocente from "./pagina/VerDocente";
 import GradoDocente from "./pagina/GradoDocente";
 import VerGrado from "./pagina/VerGrado";
 import CrearCurso from "./pagina/CrearCurso";
-import RegistrarFalta from "./pagina/RegistrarFalta";
 import VerFalta from "./pagina/VerFalta";
 import VerAsistencia from "./pagina/VerAsistencia";
 import CalificacionCurso from "./pagina/CalificacionCurso";
@@ -61,11 +60,7 @@ const App = () => {
               <Route exact path="/gradodocente" element={<GradoDocente />} />
               <Route exact path="/vergrado" element={<VerGrado />} />
               <Route exact path="/crearcurso" element={<CrearCurso />} />
-              <Route
-                exact
-                path="/registrarfalta"
-                element={<RegistrarFalta />}
-              />
+
               <Route exact path="/verfalta" element={<VerFalta />} />
               <Route exact path="/verasistencia" element={<VerAsistencia />} />
               <Route
