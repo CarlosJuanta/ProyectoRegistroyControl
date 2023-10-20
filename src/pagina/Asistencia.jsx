@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
 import * as FaIcons from "react-icons/fa";
 import logo from "../Imagenes/logoescuela.png"; // Importa la imagen
+import API_URL from "../Configure";
 import {
   Button,
   Input,
@@ -28,9 +28,7 @@ const Asistencia = () => {
 
   const cargarGrados = async () => {
     try {
-      const response = await fetch(
-        `${"http://localhost:3000/api/"}/grado/getall`
-      );
+      const response = await fetch(`${API_URL}/grado/getall`);
       if (response.status === 200) {
         const data = await response.json();
         setGrados(data.resultado);
@@ -47,16 +45,13 @@ const Asistencia = () => {
 
     try {
       const data = { codigoGrado: selectedGrado };
-      const response = await fetch(
-        `${"http://localhost:3000/api"}/estudiante/getbygrado`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      const response = await fetch(`${API_URL}/estudiante/getbygrado`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
       if (response.status === 200) {
         const data = await response.json();
@@ -114,7 +109,7 @@ const Asistencia = () => {
         const { estado, fecha } = asistencia;
 
         const response = await fetch(
-          `${"http://localhost:3000/api"}/estudiante/agregarAsistencia/${idEstudiante}`,
+          `${API_URL}/estudiante/agregarAsistencia/${idEstudiante}`,
           {
             method: "POST",
             headers: {
@@ -148,14 +143,28 @@ const Asistencia = () => {
     doc.addImage(logo, "PNG", 150, 8, 50, 30); // Ajusta las coordenadas y dimensiones según tus necesidades
     doc.text('ESCUELA OFICIAL URBANA MIXTA JOSÉ JOAQUÍN PALMA"', 10, 10);
     doc.text(
+      "3a. Calle 33A-37 zona 8, Colonia La Democracia, Quetzaltenango",
+      10,
+      15
+    );
+    doc.text(
       `Grado: ${
         grados.find((grado) => grado.codigoGrado === selectedGrado)?.nombreGrado
       }`,
       10,
-      20
+      25
+    );
+    // Agregar la sección del grado
+    doc.text(
+      `Sección: ${
+        grados.find((grado) => grado.codigoGrado === selectedGrado)
+          ?.seccionGrado
+      }`,
+      70,
+      25
     );
     doc.text(`Fecha: ${obtenerFechaSistema()}`, 10, 30);
-    doc.text("Asistencia", 10, 40);
+    doc.text("Asistencia", 10, 45);
 
     const headers = ["CUI", "Nombre", "Apellido", "Asistencia", "Fecha"];
     const data = estudiantes.map((estudiante) => {
@@ -202,7 +211,7 @@ const Asistencia = () => {
       const data = { motivo, descripcion };
 
       const response = await fetch(
-        `${"http://localhost:3000/api"}/estudiante/agregarReporte/${idEstudiante}`,
+        `${API_URL}/estudiante/agregarReporte/${idEstudiante}`,
         {
           method: "POST",
           headers: {
@@ -241,7 +250,7 @@ const Asistencia = () => {
     if (registroExitoso) {
       timer = setTimeout(() => {
         setRegistroExitoso(false);
-      }, 3000);
+      }, 100);
     }
     return () => clearTimeout(timer);
   }, [registroExitoso]);
@@ -287,7 +296,7 @@ const Asistencia = () => {
               <option value="">Seleccione un Grado</option>
               {grados.map((grado) => (
                 <option key={grado._id} value={grado.codigoGrado}>
-                  {grado.nombreGrado}
+                  {grado.nombreGrado} {grado.seccionGrado}
                 </option>
               ))}
             </Input>

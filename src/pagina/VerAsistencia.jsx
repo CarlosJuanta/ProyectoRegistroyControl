@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import * as FaIcons from "react-icons/fa";
 import { NavLink } from "react-router-dom";
+import API_URL from "../Configure";
 import logo from "../Imagenes/logoescuela.png"; // Importa la imagen
 import {
   Button,
@@ -25,7 +25,7 @@ const Asistencia = () => {
   useEffect(() => {
     const cargarGrados = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/grado/getall");
+        const response = await fetch(`${API_URL}/grado/getall`);
         if (response.status === 200) {
           const data = await response.json();
           setGrados(data.resultado);
@@ -42,16 +42,13 @@ const Asistencia = () => {
 
       try {
         const data = { codigoGrado: selectedGrado };
-        const response = await fetch(
-          "http://localhost:3000/api/estudiante/getbygrado",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-          }
-        );
+        const response = await fetch(`${API_URL}/estudiante/getbygrado`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
 
         if (response.status === 200) {
           const data = await response.json();
@@ -90,20 +87,34 @@ const Asistencia = () => {
     // Agrega el encabezado
     doc.setFont("times");
     doc.setFontSize(12);
-    // Agregar el logo al PDF
+
     // Agregar el logo al encabezado
     doc.addImage(logo, "PNG", 150, 8, 50, 30); // Ajusta las coordenadas y dimensiones según tus necesidades
 
     doc.text('ESCUELA OFICIAL URBANA MIXTA JOSÉ JOAQUÍN PALMA"', 10, 10);
     doc.text(
+      "3a. Calle 33A-37 zona 8, Colonia La Democracia, Quetzaltenango",
+      10,
+      15
+    );
+    doc.text(
       `Grado: ${
         grados.find((grado) => grado.codigoGrado === selectedGrado)?.nombreGrado
       }`,
       10,
-      20
+      25
+    );
+    // Agregar la sección del grado
+    doc.text(
+      `Sección: ${
+        grados.find((grado) => grado.codigoGrado === selectedGrado)
+          ?.seccionGrado
+      }`,
+      70,
+      25
     );
     doc.text(`Fecha: ${obtenerFechaSistema()}`, 10, 30);
-    doc.text("Asistencia", 10, 40);
+    doc.text("Asistencia", 10, 45);
 
     // Contenido del reporte
     const asistenciasPorEstudiante = estudiantes.map((estudiante) => {
@@ -111,7 +122,7 @@ const Asistencia = () => {
         (asistencia) => asistencia.estado
       ).length;
       return [
-        estudiante.nombreEstudiante + " " + estudiante.apellidoEstudiante,
+        estudiante.apellidoEstudiante + ", " + estudiante.nombreEstudiante,
         totalAsistencias + " asistencias",
       ];
     });
@@ -135,8 +146,10 @@ const Asistencia = () => {
         <Row>
           <Col className="text-end">
             <NavLink to="/asistencia">
-              <Button color="success">Registrar Nueva Asistencia</Button>
+              <Button color="warning">Registrar Nueva Asistencia</Button>
             </NavLink>
+          </Col>
+          <Col>
             <Button color="primary" onClick={generarReportePDF}>
               Generar Reporte PDF
             </Button>
@@ -182,10 +195,10 @@ const Asistencia = () => {
               <th scope="col">Grado</th>
               <th scope="col">Asistencias</th>
               <th scope="col">Total Asistencias</th>
-              <th scope="col">Reportes</th>
+              <th scope="col">Llamados de Atención</th>
             </tr>
           </thead>
-          <tbody className="table text-center table-primary">
+          <tbody className="table text-center table-hover">
             {estudiantes.map((estudiante) => (
               <tr key={estudiante._id}>
                 <td>{estudiante.cuiEstudiante}</td>

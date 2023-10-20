@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
+import API_URL from "../Configure";
 import { Contexto } from "../Context/ContextProvider";
 import {
   Input,
@@ -21,9 +22,11 @@ const VerDocente = () => {
   const [selectedDocente, setSelectedDocente] = useState();
   const [filtroNombre, setFiltroNombre] = useState("");
   const [datos, setDatos] = useState([]);
+  const [totalDocentes, setTotalDocentes] = useState(0); // Nuevo estado para el total
   const { usuario } = useContext(Contexto);
   const navigate = useNavigate();
   const [editedDocente, setEditedDocente] = useState({
+    cuiDocente: "",
     nombreDocente: "",
     apellidoDocente: "",
     telefonoDocente: "",
@@ -44,10 +47,12 @@ const VerDocente = () => {
     const { name, value } = e.target;
     setEditedDocente({ ...editedDocente, [name]: value });
   };
+
   const handleVerClick = (docente) => {
     setSelectedDocente(docente);
     // Carga los valores del docente seleccionado en el estado local de edición
     setEditedDocente({
+      cuiDocente: docente.cuiDocente,
       nombreDocente: docente.nombreDocente,
       apellidoDocente: docente.apellidoDocente,
       telefonoDocente: docente.telefonoDocente,
@@ -65,10 +70,10 @@ const VerDocente = () => {
 
   const getDocentes = async () => {
     try {
-      const response = await fetch(
-        `${"http://localhost:3000/api/"}/docente/getall`
-      );
+      const response = await fetch(`${API_URL}/docente/getall`);
       const data = await response.json();
+      // Calcula el total de docentes registrados
+      const totalDocentesRegistrados = data.resultado.length;
       // Filtra los docentes por nombre si se ha ingresado un valor en el campo de búsqueda
       const docentesFiltrados = filtroNombre
         ? data.resultado.filter((docente) =>
@@ -76,8 +81,9 @@ const VerDocente = () => {
               .toLowerCase()
               .includes(filtroNombre.toLowerCase())
           )
-        : [];
+        : data.resultado;
       setDatos(docentesFiltrados);
+      setTotalDocentes(totalDocentesRegistrados);
     } catch (error) {
       console.log(error);
     }
@@ -94,7 +100,7 @@ const VerDocente = () => {
 
       // Realiza una solicitud PUT para actualizar los datos del docente
       const response = await fetch(
-        `http://localhost:3000/api/docente/update/${selectedDocente._id}`,
+        `${API_URL}/docente/update/${selectedDocente._id}`,
         {
           method: "PUT",
           headers: {
@@ -156,53 +162,58 @@ const VerDocente = () => {
           </div>
           <div className="table-responsive p-5">
             {datos.length > 0 ? (
-              <table className="table table-hover table-light table-sm align-middle table-striped">
-                {/* El contenido de la tabla se mostrará solo si hay datos */}
-                <thead className="table-dark table text-center">
-                  <tr>
-                    <th scope="col">CUI</th>
-                    <th scope="col">Nombres</th>
-                    <th scope="col">Apellidos</th>
-                    <th scope="col">Teléfono</th>
-                    <th scope="col">Correo</th>
-                    <th scope="col">Dirección</th>
-                    <th scope="col">Nacionalidad</th>
-                    <th scope="col">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody className="table text-center">
-                  {datos.map((docente) => (
-                    <tr key={docente.cuiDocente}>
-                      <td>{docente.cuiDocente}</td>
-                      <td>{docente.nombreDocente}</td>
-                      <td>{docente.apellidoDocente}</td>
-                      <td>{docente.telefonoDocente}</td>
-                      <td>{docente.correoDocente}</td>
-                      <td>{docente.direccionDocente}</td>
-                      <td>{docente.nacionalidadDocente}</td>
-                      <td>
-                        <td>
-                          <Button
-                            color="warning"
-                            onClick={() => {
-                              handleVerClick(docente);
-                            }}
-                          >
-                            Editar
-                          </Button>
-                        </td>
-                        <td>
-                          {docente.estadoDocente === false ? (
-                            <span className="text-danger">Inactivo</span>
-                          ) : (
-                            <span className="text-success">Activo</span>
-                          )}
-                        </td>
-                      </td>
+              <>
+                <p className="negrita">
+                  Total de docentes registrados: {totalDocentes}
+                </p>
+                <table className="table table-hover table-light table-sm align-middle table-striped">
+                  {/* El contenido de la tabla se mostrará solo si hay datos */}
+                  <thead className="table-dark table text-center">
+                    <tr>
+                      <th scope="col">CUI</th>
+                      <th scope="col">Nombres</th>
+                      <th scope="col">Apellidos</th>
+                      <th scope="col">Teléfono</th>
+                      <th scope="col">Correo</th>
+                      <th scope="col">Dirección</th>
+                      <th scope="col">Nacionalidad</th>
+                      <th scope="col">Acciones</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="table text-center">
+                    {datos.map((docente) => (
+                      <tr key={docente.cuiDocente}>
+                        <td>{docente.cuiDocente}</td>
+                        <td>{docente.nombreDocente}</td>
+                        <td>{docente.apellidoDocente}</td>
+                        <td>{docente.telefonoDocente}</td>
+                        <td>{docente.correoDocente}</td>
+                        <td>{docente.direccionDocente}</td>
+                        <td>{docente.nacionalidadDocente}</td>
+                        <td>
+                          <td className="negrita">
+                            <Button
+                              color="warning"
+                              onClick={() => {
+                                handleVerClick(docente);
+                              }}
+                            >
+                              Editar
+                            </Button>
+                          </td>
+                          <td className="negrita">
+                            {docente.estadoDocente === false ? (
+                              <span className="text-danger">Inactivo</span>
+                            ) : (
+                              <span className="text-success">Activo</span>
+                            )}
+                          </td>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </>
             ) : (
               <p>No se encontraron resultados.</p>
             )}
@@ -252,6 +263,16 @@ const VerDocente = () => {
             <ModalBody>
               {selectedDocente && (
                 <>
+                  <FormGroup>
+                    <Label for="cuiDocente">CUI</Label>
+                    <Input
+                      type="text-area"
+                      id="cuiDocente"
+                      name="cuiDocente"
+                      value={editedDocente.cuiDocente}
+                      onChange={handleEditInputChange}
+                    />
+                  </FormGroup>
                   <FormGroup>
                     <Label for="nombreDocente">Nombre</Label>
                     <Input

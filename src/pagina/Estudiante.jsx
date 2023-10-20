@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import API_URL from "../Configure";
 import { FormGroup, Label, Input, Col, Row, Button } from "reactstrap";
 
 const Estudiante = () => {
@@ -41,16 +42,13 @@ const Estudiante = () => {
         codigoGrado: codigoGradoSeleccionado,
       };
 
-      const response = await fetch(
-        `${"http://localhost:3000/api/"}/estudiante/add`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      const response = await fetch(`${API_URL}/estudiante/add`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
       if (response.status === 200) {
         alert("Estudiante Registrado");
         // Limpia el formulario después de registrar
@@ -81,9 +79,7 @@ const Estudiante = () => {
     // Obtener la lista de grados al cargar el componente
     const getGrados = async () => {
       try {
-        const response = await fetch(
-          `${"http://localhost:3000/api/"}/grado/getall`
-        );
+        const response = await fetch(`${API_URL}/grado/getall`);
         const data = await response.json();
         // Almacena la lista de grados en el estado grados
         setGrados(data.resultado);

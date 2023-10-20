@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Contexto } from "../Context/ContextProvider";
-import { NavLink, Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
+import logo from "../Imagenes/logoescuela.png"; // Importa la imagen
+import API_URL from "../Configure";
 import {
   Button,
   Input,
@@ -13,6 +15,8 @@ import {
   ModalFooter,
   Spinner,
 } from "reactstrap";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 const Asistencia = () => {
   const [grados, setGrados] = useState([]);
@@ -22,7 +26,6 @@ const Asistencia = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalRegistrarNotasOpen, setModalRegistrarNotasOpen] = useState(false);
   const [notaIngresada, setNotaIngresada] = useState(false); // Estado para mostrar el mensaje de nota ingresada
-
   const { usuario } = useContext(Contexto);
   const navigate = useNavigate();
   // Estados para el modal de registro de notas
@@ -32,11 +35,77 @@ const Asistencia = () => {
   const [nota, setNota] = useState("");
   const [loadingCursos, setLoadingCursos] = useState(false); // Estado para indicar la carga de cursos
 
+  // Función para generar un PDF de las calificaciones del estudiante seleccionado
+  const generarPDFCalificaciones = () => {
+    if (selectedEstudiante) {
+      const doc = new jsPDF();
+
+      // Título del PDF
+      doc.setFont("times");
+      doc.setFontSize(12);
+      // Agregar el logo al encabezado
+      doc.addImage(logo, "PNG", 150, 8, 50, 30); // Ajusta las coordenadas y dimensiones según tus necesidades
+      doc.text('ESCUELA OFICIAL URBANA MIXTA JOSÉ JOAQUÍN PALMA"', 10, 10);
+      doc.text(
+        "3a. Calle 33A-37 zona 8, Colonia La Democracia, Quetzaltenango",
+        10,
+        15
+      );
+
+      // Nombre y apellidos del estudiante
+      const nombreCompleto =
+        selectedEstudiante.nombreEstudiante +
+        " " +
+        selectedEstudiante.apellidoEstudiante;
+      doc.text("Nombre: " + nombreCompleto, 10, 30);
+      // Agrega el encabezado
+
+      doc.text(
+        `Grado: ${
+          grados.find((grado) => grado.codigoGrado === selectedGrado)
+            ?.nombreGrado
+        }`,
+        10,
+        35
+      );
+      // Agregar la sección del grado
+      doc.text(
+        `Sección: ${
+          grados.find((grado) => grado.codigoGrado === selectedGrado)
+            ?.seccionGrado
+        }`,
+        70,
+        35
+      );
+
+      // Datos de las calificaciones en una tabla
+      const calificaciones = selectedEstudiante.notas;
+      const data = [];
+      calificaciones.forEach((calificacion) => {
+        data.push([
+          calificacion.curso.nombreCurso,
+          ...calificacion.notas.map((nota) => nota.nota),
+          calificacion.promedio,
+          calificacion.estado,
+        ]);
+      });
+
+      doc.autoTable({
+        head: [
+          ["Curso", "Bloque 1", "Bloque 2", "Bloque 3", "Bloque 4", "Promedio"],
+        ],
+        body: data,
+        startY: 50,
+      });
+
+      // Guardar el PDF
+      doc.save(`${nombreCompleto}_calificaciones.pdf`);
+    }
+  };
+
   const cargarGrados = async () => {
     try {
-      const response = await fetch(
-        `${"http://localhost:3000/api/"}/grado/getall`
-      );
+      const response = await fetch(`${API_URL}/grado/getall`);
       if (response.status === 200) {
         const data = await response.json();
         setGrados(data.resultado);
@@ -53,16 +122,13 @@ const Asistencia = () => {
 
     try {
       const data = { codigoGrado: selectedGrado };
-      const response = await fetch(
-        `${"http://localhost:3000/api"}/estudiante/getbygrado`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      const response = await fetch(`${API_URL}/estudiante/getbygrado`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
       if (response.status === 200) {
         const data = await response.json();
@@ -82,18 +148,15 @@ const Asistencia = () => {
   const cargarCursosPorGrado = async (codigoGrado) => {
     setLoadingCursos(true); // Indicar que se está cargando
     try {
-      const response = await fetch(
-        `${"http://localhost:3000/api/curso/getbygrado"}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            codigoGrado,
-          }),
-        }
-      );
+      const response = await fetch(`${API_URL}/curso/getbygrado`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          codigoGrado,
+        }),
+      });
 
       if (response.status === 200) {
         const data = await response.json();
@@ -111,9 +174,7 @@ const Asistencia = () => {
   const registrarNotas = async () => {
     try {
       const response = await fetch(
-        `${"http://localhost:3000/api/"}/estudiante/notas/${
-          selectedEstudiante._id
-        }`,
+        `${API_URL}/estudiante/notas/${selectedEstudiante._id}`,
         {
           method: "POST",
           headers: {
@@ -168,7 +229,7 @@ const Asistencia = () => {
     if (notaIngresada) {
       timer = setTimeout(() => {
         setNotaIngresada(false);
-      }, 3000);
+      }, 100);
     }
     return () => clearTimeout(timer);
   }, [notaIngresada]);
@@ -199,7 +260,7 @@ const Asistencia = () => {
           </Row>
         </div>
         <div className="table-responsive p-4">
-          <table className="table table-light table-sm align-middle">
+          <table className="table table-light table-sm align-middle table-striped">
             <thead className="table-dark table text-center">
               <tr>
                 <th scope="col">CUI</th>
@@ -217,26 +278,22 @@ const Asistencia = () => {
                   <td>{estudiante.apellidoEstudiante}</td>
                   <td>{estudiante.codigoGrado[0].nombreGrado}</td>
                   <td>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "10px",
-                      }}
-                    >
+                    <td>
                       <Button
                         color="success"
                         onClick={() => abrirModal(estudiante)}
                       >
                         Ver
                       </Button>
+                    </td>
+                    <td>
                       <Button
                         color="warning"
                         onClick={() => abrirModalRegistrarNotas(estudiante)}
                       >
                         Registrar
                       </Button>
-                    </div>
+                    </td>
                   </td>
                 </tr>
               ))}
@@ -250,8 +307,18 @@ const Asistencia = () => {
         >
           <ModalHeader toggle={() => setModalOpen(!modalOpen)}>
             Calificaciones de{" "}
-            {selectedEstudiante && selectedEstudiante.nombreEstudiante}
+            {selectedEstudiante &&
+              selectedEstudiante.nombreEstudiante +
+                " " +
+                selectedEstudiante.apellidoEstudiante}{" "}
+            {"----------"}
+            <img
+              src={logo}
+              alt="Logo"
+              style={{ width: "80px", height: "60px" }}
+            />
           </ModalHeader>
+
           <ModalBody>
             <Table>
               <thead>
@@ -303,6 +370,9 @@ const Asistencia = () => {
                       </td>
                     </tr>
                   ))}
+                <Button color="primary" onClick={generarPDFCalificaciones}>
+                  Generar PDF de Calificaciones
+                </Button>
               </tbody>
             </Table>
           </ModalBody>

@@ -1,7 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
-import * as FaIcons from "react-icons/fa";
-import { Button, Row, Col, Input } from "reactstrap";
+import { Button } from "reactstrap";
 const Calificaciones = () => {
   return (
     <>

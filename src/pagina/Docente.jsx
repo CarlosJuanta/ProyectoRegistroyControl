@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import API_URL from "../Configure";
 import { FormGroup, Label, Input, Col, Row, Button } from "reactstrap";
 
 const Docente = () => {
@@ -14,38 +15,45 @@ const Docente = () => {
   const [password, setPassword] = useState("");
 
   const handleSubmit = async (e) => {
-    if (correodocente.includes("@")) {
-      try {
-        const data = {
-          cuiDocente: cuidocente,
-          nombreDocente: nombredocente,
-          apellidoDocente: apellidosdocente,
-          telefonoDocente: telefonodocente,
-          correoDocente: correodocente,
-          direccionDocente: direcciondocente,
-          nacionalidadDocente: nacionalidaddocente,
-          rol: rol,
-          username: username,
-          password: password,
-        };
+    try {
+      const data = {
+        cuiDocente: cuidocente,
+        nombreDocente: nombredocente,
+        apellidoDocente: apellidosdocente,
+        telefonoDocente: telefonodocente,
+        correoDocente: correodocente,
+        direccionDocente: direcciondocente,
+        nacionalidadDocente: nacionalidaddocente,
+        rol: rol,
+        username: username,
+        password: password,
+      };
 
-        const response = await fetch(
-          `${"http://localhost:3000/api/"}/docente/add`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-          }
-        );
-        console.log(response.status);
+      const response = await fetch(`${API_URL}/docente/add`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      if (response.status === 200) {
         alert("Docente Registrado");
-      } catch (error) {
-        console.log(error);
+        //Limpia el formulario despúes de registrar
+        setCuidocente("");
+        setNombredocente("");
+        setApellidosdocente("");
+        setTelefonodocente("");
+        setCorreodocente("");
+        setDirecciondocente("");
+        setNacionalidaddocente("");
+        setRol("");
+        setUsername("");
+        setPassword("");
+      } else {
         alert("Error al registrar Docente");
       }
-    } else {
+    } catch (error) {
+      console.log(error);
       alert("Correo no valido");
     }
   };
@@ -80,6 +88,7 @@ const Docente = () => {
                 placeholder="Nombres Docente"
                 type="text-area"
                 onChange={(e) => setNombredocente(e.target.value)}
+                value={nombredocente}
               />
             </FormGroup>
           </Col>
@@ -90,6 +99,7 @@ const Docente = () => {
                 placeholder="Apellidos Docente"
                 type="text-area"
                 onChange={(e) => setApellidosdocente(e.target.value)}
+                value={apellidosdocente}
               />
             </FormGroup>
           </Col>
@@ -104,6 +114,7 @@ const Docente = () => {
                 placeholder="Telefono Docente"
                 type="text-area"
                 onChange={(e) => setTelefonodocente(e.target.value)}
+                value={telefonodocente}
               />
             </FormGroup>
           </Col>
@@ -114,6 +125,7 @@ const Docente = () => {
                 placeholder="ej. correo@gmail.com"
                 type="email"
                 onChange={(e) => setCorreodocente(e.target.value)}
+                value={correodocente}
               />
             </FormGroup>
           </Col>
@@ -124,6 +136,7 @@ const Docente = () => {
                 placeholder="Dirección"
                 type="text-area"
                 onChange={(e) => setDirecciondocente(e.target.value)}
+                value={direcciondocente}
               />
             </FormGroup>
           </Col>
@@ -136,6 +149,7 @@ const Docente = () => {
                 placeholder="Nacionalidad Docente"
                 type="text-area"
                 onChange={(e) => setNacionalidaddocente(e.target.value)}
+                value={nacionalidaddocente}
               />
             </FormGroup>
           </Col>
@@ -149,6 +163,7 @@ const Docente = () => {
                   id="rol"
                   placeholder="Rol"
                   onChange={(e) => setRol(e.target.value)}
+                  value={rol}
                 />
               </FormGroup>
             </Col>
@@ -161,6 +176,7 @@ const Docente = () => {
                   id="username"
                   placeholder="Username"
                   onChange={(e) => setUsername(e.target.value)}
+                  value={username}
                 />
               </FormGroup>
             </Col>
@@ -173,6 +189,7 @@ const Docente = () => {
                   id="password"
                   placeholder="Password"
                   onChange={(e) => setPassword(e.target.value)}
+                  value={password}
                 />
               </FormGroup>
             </Col>

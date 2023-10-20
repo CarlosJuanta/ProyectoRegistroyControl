@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Contexto } from "../Context/ContextProvider";
+import API_URL from "../Configure";
 import {
   FormGroup,
   Label,
@@ -50,7 +51,7 @@ const VerEstudiante = () => {
   useEffect(() => {
     async function fetchGrados() {
       try {
-        const response = await fetch("http://localhost:3000/api/grado/getall");
+        const response = await fetch(`${API_URL}/grado/getall`);
         const data = await response.json();
         setGrados(data.resultado || []);
       } catch (error) {
@@ -229,15 +230,13 @@ const VerEstudiante = () => {
 
   const getEstudiantes = async () => {
     try {
-      const response = await fetch(
-        "http://localhost:3000/api/estudiante/getall"
-      );
+      const response = await fetch(`${API_URL}/estudiante/getall`);
       const data = await response.json();
       const estudiantesFiltrados = filtroNombre
         ? data.resultado.filter((estudiante) =>
             new RegExp(filtroNombre, "i").test(estudiante.nombreEstudiante)
           )
-        : [];
+        : data.resultado;
       setDatos(estudiantesFiltrados);
       console.log(data);
     } catch (error) {

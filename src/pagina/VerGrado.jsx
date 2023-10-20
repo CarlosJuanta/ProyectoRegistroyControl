@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import API_URL from "../Configure";
 import { Contexto } from "../Context/ContextProvider";
 import {
   FormGroup,
@@ -13,7 +14,6 @@ import {
   ModalFooter,
 } from "reactstrap";
 import { NavLink, Navigate, useNavigate } from "react-router-dom";
-import * as FaIcons from "react-icons/fa";
 
 const VerGrado = () => {
   const [modal, setModal] = useState(false);
@@ -87,7 +87,7 @@ const VerGrado = () => {
 
       // Realiza una solicitud PUT para actualizar los datos del grado
       const response = await fetch(
-        `http://localhost:3000/api/grado/update/${selectedGrado._id}`,
+        `${API_URL}/grado/update/${selectedGrado._id}`,
         {
           method: "PUT",
           headers: {
@@ -135,7 +135,7 @@ const VerGrado = () => {
       console.log("Datos del Docente:", docenteData);
 
       const response = await fetch(
-        `http://localhost:3000/api/grado/asignarDocente/${idGrado}`,
+        `${API_URL}/grado/asignarDocente/${idGrado}`,
         {
           method: "POST",
           headers: {
@@ -171,7 +171,7 @@ const VerGrado = () => {
       console.log("Datos del Docente:", docenteData);
 
       const response = await fetch(
-        `http://localhost:3000/api/grado/quitarDocente/${idGrado}`,
+        `${API_URL}/grado/quitarDocente/${idGrado}`,
         {
           method: "DELETE",
           headers: {
@@ -197,9 +197,7 @@ const VerGrado = () => {
   useEffect(() => {
     async function fetchDocentes() {
       try {
-        const response = await fetch(
-          "http://localhost:3000/api/docente/getall"
-        );
+        const response = await fetch(`${API_URL}/docente/getall`);
         const data = await response.json();
         setDocentes(data.resultado || []);
       } catch (error) {
@@ -212,14 +210,14 @@ const VerGrado = () => {
 
   const getGrados = async () => {
     try {
-      const response = await fetch("http://localhost:3000/api/grado/getall");
+      const response = await fetch(`${API_URL}/grado/getall`);
       const data = await response.json();
 
       const gradosFiltrados = filtroNombre
         ? data.resultado.filter((grado) =>
             grado.nombreGrado.toLowerCase().includes(filtroNombre.toLowerCase())
           )
-        : [];
+        : data.resultado;
 
       setDatos(gradosFiltrados);
     } catch (error) {
@@ -281,10 +279,10 @@ const VerGrado = () => {
                 <tbody className="table text-center">
                   {datos.map((grado) => (
                     <tr key={grado.codigoGrado}>
-                      <td>{grado.codigoGrado}</td>
-                      <td>{grado.nombreGrado}</td>
-                      <td>{grado.descripcionGrado}</td>
-                      <td>{grado.seccionGrado}</td>
+                      <td className="negrita">{grado.codigoGrado}</td>
+                      <td className="negrita">{grado.nombreGrado}</td>
+                      <td className="negrita">{grado.descripcionGrado}</td>
+                      <td className="negrita">{grado.seccionGrado}</td>
                       <td>
                         {grado.cuiDocente.length > 0 ? (
                           <Button

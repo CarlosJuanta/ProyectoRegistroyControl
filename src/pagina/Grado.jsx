@@ -1,19 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import {
-  FormGroup,
-  Label,
-  Input,
-  Col,
-  Row,
-  Button,
-} from 'reactstrap';
+import React, { useState, useEffect } from "react";
+import API_URL from "../Configure";
+import { FormGroup, Label, Input, Col, Row, Button } from "reactstrap";
 
 const Grado = () => {
-  const [codigogrado, setCodigogrado] = useState('');
-  const [nombregrado, setNombregrado] = useState('');
-  const [descripciongrado, setDescripciongrado] = useState('');
-  const [secciongrado, setSecciongrado] = useState('');
-  const [cuidocente, setCuidocente] = useState('');
+  const [codigogrado, setCodigogrado] = useState("");
+  const [nombregrado, setNombregrado] = useState("");
+  const [descripciongrado, setDescripciongrado] = useState("");
+  const [secciongrado, setSecciongrado] = useState("");
+  const [cuidocente, setCuidocente] = useState("");
   const [docentes, setDocentes] = useState([]); // Estado para almacenar la lista de docentes
 
   const handleSubmit = async (e) => {
@@ -26,28 +20,28 @@ const Grado = () => {
         cuiDocente: cuidocente,
       };
 
-      const response = await fetch(`${"http://localhost:3000/api/"}/grado/add`, {
-        method: 'POST',
+      const response = await fetch(`${API_URL}/grado/add`, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
 
       if (response.status === 200) {
-        alert('Grado Registrado');
+        alert("Grado Registrado");
         // Limpia el formulario después de registrar
-        setCodigogrado('');
-        setNombregrado('');
-        setDescripciongrado('');
-        setSecciongrado('');
-        setCuidocente('');
+        setCodigogrado("");
+        setNombregrado("");
+        setDescripciongrado("");
+        setSecciongrado("");
+        setCuidocente("");
       } else {
-        alert('Error al registrar Grado');
+        alert("Error al registrar Grado");
       }
     } catch (error) {
       console.log(error);
-      alert('Error al registrar Grado');
+      alert("Error al registrar Grado");
     }
   };
 
@@ -55,7 +49,7 @@ const Grado = () => {
     // Obtener la lista de docentes al cargar el componente
     const getDocentes = async () => {
       try {
-        const response = await fetch(`${"http://localhost:3000/api/"}/docente/getall`);
+        const response = await fetch(`${API_URL}/docente/getall`);
         const data = await response.json();
         // Almacena la lista de docentes en el estado docentes
         setDocentes(data.resultado);
@@ -91,12 +85,15 @@ const Grado = () => {
                 onChange={(e) => setNombregrado(e.target.value)}
                 value={nombregrado}
               >
-                <option value="primero">Primero</option>
-                <option value="segundo">Segundo</option>
-                <option value="tercero">Tercero</option>
-                <option value="cuarto">Cuarto</option>
-                <option value="quinto">Quinto</option>
-                <option value="sexto">Sexto</option>
+                <option value="">Selecciona un grado</option>
+                <option value="PARVULOS">PÁRVULOS</option>
+                <option value="PREPARATORIA">PREPARATORIA</option>
+                <option value="PRIMER GRADO">PRIMER GRADO</option>
+                <option value="SEGUNDO GRADO">SEGUNDO GRADO</option>
+                <option value="TERCER GRADO">TERCER GRADO</option>
+                <option value="CUARTO GRADO">CUARTO GRADO</option>
+                <option value="QUINTO GRADO">QUINTO GRADO</option>
+                <option value="SEXTO GRADO">SEXTO GRADO</option>
               </Input>
             </FormGroup>
           </Col>

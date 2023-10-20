@@ -46,6 +46,13 @@ $gray: rgb(219, 219, 219);
 }
 
 .contenido {
-  background: #dfdfdf;
-  height: 100vh;
+  background: #cfcccc;
+  max-height: 100vh;
+  height: 150vh;
+  overflow-y: auto;
+}
+
+.negrita {
+  font-weight: bold;
+  color: #004904;
 }

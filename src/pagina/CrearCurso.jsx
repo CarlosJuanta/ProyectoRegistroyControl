@@ -1,19 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import {
-  FormGroup,
-  Label,
-  Input,
-  Col,
-  Row,
-  Button,
-} from 'reactstrap';
+import React, { useState, useEffect } from "react";
+import { FormGroup, Label, Input, Col, Row, Button } from "reactstrap";
+import API_URL from "../Configure";
 
 const Curso = () => {
-  const [codigoCurso, setCodigoCurso] = useState('');
-  const [nombreCurso, setNombreCurso] = useState('');
-  const [descripcionCurso, setDescripcionCurso] = useState('');
+  const [codigoCurso, setCodigoCurso] = useState("");
+  const [nombreCurso, setNombreCurso] = useState("");
+  const [descripcionCurso, setDescripcionCurso] = useState("");
   const [grados, setGrados] = useState([]); // Estado para almacenar la lista de grados
-  const [codigoGradoSeleccionado, setCodigoGradoSeleccionado] = useState('');
+  const [codigoGradoSeleccionado, setCodigoGradoSeleccionado] = useState("");
 
   const handleSubmit = async (e) => {
     try {
@@ -24,27 +18,27 @@ const Curso = () => {
         codigoGrado: codigoGradoSeleccionado,
       };
 
-      const response = await fetch(`${"http://localhost:3000/api/"}/curso/add`, {
-        method: 'POST',
+      const response = await fetch(`${API_URL}/curso/add`, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
 
       if (response.status === 200) {
-        alert('Curso Registrado');
+        alert("Curso Registrado");
         // Limpia el formulario después de registrar
-        setCodigoCurso('');
-        setNombreCurso('');
-        setDescripcionCurso('');
-        setCodigoGradoSeleccionado('');
+        setCodigoCurso("");
+        setNombreCurso("");
+        setDescripcionCurso("");
+        setCodigoGradoSeleccionado("");
       } else {
-        alert('Error al registrar Curso');
+        alert("Error al registrar Curso");
       }
     } catch (error) {
       console.log(error);
-      alert('Error al registrar Curso');
+      alert("Error al registrar Curso");
     }
   };
 
@@ -52,7 +46,7 @@ const Curso = () => {
     // Obtener la lista de grados al cargar el componente
     const getGrados = async () => {
       try {
-        const response = await fetch(`${"http://localhost:3000/api/"}/grado/getall`);
+        const response = await fetch(`${API_URL}/grado/getall`);
         const data = await response.json();
         // Almacena la lista de grados en el estado grados
         setGrados(data.resultado);
@@ -106,7 +100,7 @@ const Curso = () => {
         <Row>
           <Col md={3}>
             <FormGroup>
-              <Label for="codigoGrado">Código Grado</Label>
+              <Label for="codigoGrado">Seleccionar Grado</Label>
               <Input
                 type="select"
                 onChange={(e) => setCodigoGradoSeleccionado(e.target.value)}
@@ -115,7 +109,7 @@ const Curso = () => {
                 <option value="">Selecciona un grado</option>
                 {grados.map((grado) => (
                   <option key={grado.codigoGrado} value={grado.codigoGrado}>
-                    {grado.nombreGrado}
+                    {grado.nombreGrado} {grado.seccionGrado}
                   </option>
                 ))}
               </Input>

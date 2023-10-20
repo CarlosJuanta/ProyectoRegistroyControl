@@ -1,13 +1,6 @@
-import React, { useState } from "react";
-import {
-  Navbar,
-  NavbarBrand,
-  NavbarToggler,
-  Collapse,
-  Nav,
-  NavItem,
-  NavLink,
-} from "reactstrap";
+import React, { useState, useContext } from "react";
+
+import { Navbar, NavbarBrand, NavbarToggler } from "reactstrap";
 
 function NavbarNav(props) {
   const [isOpen, setIsOpen] = useState(false);
@@ -21,4 +14,5 @@ function NavbarNav(props) {
     </Navbar>
   );
 }
+
 export default NavbarNav;

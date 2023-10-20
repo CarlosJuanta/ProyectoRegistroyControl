@@ -1,39 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import {
-  FormGroup,
-  Label,
-  Input,
-  Col,
-  Row,
-  Button,
-  Form,
-} from 'reactstrap';
+import React, { useState, useEffect } from "react";
+import API_URL from "../Configure";
+import { useParams } from "react-router-dom";
+import { FormGroup, Label, Input, Col, Row, Button, Form } from "reactstrap";
 
 const EncargadoInfo = () => {
   const { id } = useParams();
   const [encargadoInfo, setEncargadoInfo] = useState({});
   const [loading, setLoading] = useState(true);
 
-  
-    // Realiza una solicitud para obtener la información del encargado por su ID
-    const fetchEncargadoInfo = async () => {
-      try {
-        // Reemplaza la URL con la ruta correcta para obtener la información del encargado
-        const response = await fetch(`http://localhost:3000/api/estudiante/get/${id}`);
+  // Realiza una solicitud para obtener la información del encargado por su ID
+  const fetchEncargadoInfo = async () => {
+    try {
+      // Reemplaza la URL con la ruta correcta para obtener la información del encargado
+      const response = await fetch(`${API_URL}/estudiante/get/${id}`);
 
-        const data = await response.json();
-        setEncargadoInfo(data.resultado);
-        setLoading(false);
-      } catch (error) {
-        console.log(error);
-        setLoading(false);
-      }
-    };
-    
-    useEffect(() => {
+      const data = await response.json();
+      setEncargadoInfo(data.resultado);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchEncargadoInfo();
-    }, [id]);
+  }, [id]);
 
   if (loading) {
     return <h1>Cargando...</h1>;
@@ -41,10 +33,8 @@ const EncargadoInfo = () => {
 
   return (
     <>
-    
       <h3>Información del Encargado</h3>
       <Form className="bg-light p-5">
-     
         <Row>
           <Col md={3}>
             <FormGroup>
@@ -95,7 +85,7 @@ const EncargadoInfo = () => {
                 name="direccion"
                 placeholder="Dirección"
                 type="text"
-                value={encargadoInfo.direccionencargadoEstudiante }
+                value={encargadoInfo.direccionencargadoEstudiante}
                 readOnly
               />
             </FormGroup>
@@ -108,7 +98,7 @@ const EncargadoInfo = () => {
                 name="telefono"
                 placeholder="Teléfono"
                 type="text"
-                value={encargadoInfo.telefonoencargadoEstudiante }
+                value={encargadoInfo.telefonoencargadoEstudiante}
                 readOnly
               />
             </FormGroup>
@@ -127,11 +117,10 @@ const EncargadoInfo = () => {
             </FormGroup>
           </Col>
         </Row>
-          
+
         <Button color="success" disabled>
           Actualizar
         </Button>
-        
       </Form>
     </>
   );

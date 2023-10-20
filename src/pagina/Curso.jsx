@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Contexto } from "../Context/ContextProvider";
+import API_URL from "../Configure";
 import {
   Input,
   Col,
@@ -75,9 +76,7 @@ const VerCurso = () => {
   const getCursos = async () => {
     try {
       // Reemplaza la URL de la API con la correcta para obtener cursos
-      const response = await fetch(
-        `${"http://localhost:3000/api/"}/curso/getall`
-      );
+      const response = await fetch(`${API_URL}/curso/getall`);
       const data = await response.json();
 
       // Filtra los cursos por nombre si se ha ingresado un valor en el campo de búsqueda
@@ -85,7 +84,7 @@ const VerCurso = () => {
         ? data.resultado.filter((curso) =>
             curso.nombreCurso.toLowerCase().includes(filtroNombre.toLowerCase())
           )
-        : [];
+        : data.resultado;
 
       setDatos(cursosFiltrados);
     } catch (error) {
@@ -104,7 +103,7 @@ const VerCurso = () => {
 
       // Realiza una solicitud PUT para actualizar los datos del curso
       const response = await fetch(
-        `http://localhost:3000/api/curso/update/${selectedCurso._id}`,
+        `${API_URL}/curso/update/${selectedCurso._id}`,
         {
           method: "PUT",
           headers: {
@@ -143,16 +142,13 @@ const VerCurso = () => {
       console.log("ID del Curso:", idCurso);
       console.log("Datos del Grado:", gradoData);
 
-      const response = await fetch(
-        `http://localhost:3000/api/curso/asignarGrado/${idCurso}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(gradoData),
-        }
-      );
+      const response = await fetch(`${API_URL}/curso/asignarGrado/${idCurso}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(gradoData),
+      });
 
       if (response.status === 200) {
         const updatedCurso = await response.json();
@@ -179,16 +175,13 @@ const VerCurso = () => {
       console.log("ID del Curso:", idCurso);
       console.log("Datos del Grado:", gradoData);
 
-      const response = await fetch(
-        `http://localhost:3000/api/curso/quitarGrado/${idCurso}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(gradoData),
-        }
-      );
+      const response = await fetch(`${API_URL}/curso/quitarGrado/${idCurso}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(gradoData),
+      });
       if (response.status === 200) {
         const updatedCurso = await response.json();
         setSelectedCurso(updatedCurso.curso);
@@ -205,7 +198,7 @@ const VerCurso = () => {
   useEffect(() => {
     async function fetchGrados() {
       try {
-        const response = await fetch("http://localhost:3000/api/grado/getall");
+        const response = await fetch(`${API_URL}/grado/getall`);
         const data = await response.json();
         setGrados(data.resultado || []);
       } catch (error) {
@@ -269,9 +262,9 @@ const VerCurso = () => {
                 <tbody className="table text-center">
                   {datos.map((curso) => (
                     <tr key={curso.codigoCurso}>
-                      <td>{curso.codigoCurso}</td>
-                      <td>{curso.nombreCurso}</td>
-                      <td>{curso.descripcionCurso}</td>
+                      <td className="negrita">{curso.codigoCurso}</td>
+                      <td className="negrita">{curso.nombreCurso}</td>
+                      <td className="negrita">{curso.descripcionCurso}</td>
                       <td>
                         <Button
                           color="success"
