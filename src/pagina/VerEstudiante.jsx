@@ -205,7 +205,7 @@ const VerEstudiante = () => {
 
       // Realiza una solicitud PUT para actualizar los datos del estudiante
       const response = await fetch(
-        `http://localhost:3000/api/estudiante/update/${selectedEstudiante._id}`,
+        `${API_URL}/estudiante/update/${selectedEstudiante._id}`,
         {
           method: "PUT",
           headers: {
