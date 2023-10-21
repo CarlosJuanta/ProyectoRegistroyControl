@@ -1,4 +1,5 @@
 import React, { useState, createContext } from "react";
+import API_URL from "../Configure";
 export const Contexto = createContext();
 const ContextProvider = ({ children }) => {
   const tipoUsuario = {
