@@ -130,7 +130,7 @@ const VerEstudiante = () => {
       const gradoData = { codigoGrado: gradoSeleccionado };
 
       const response = await fetch(
-        `http://localhost:3000/api/estudiante/agregarGrado/${idEstudiante}`,
+        `${API_URL}/estudiante/agregarGrado/${idEstudiante}`,
         {
           method: "POST",
           headers: {
