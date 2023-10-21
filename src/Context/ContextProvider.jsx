@@ -11,17 +11,14 @@ const ContextProvider = ({ children }) => {
 
   const fetchUser = async (username, password) => {
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/docente/getbyusername`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ username, password }),
-          credentials: "include", // Asegúrate de incluir esta opción
-        }
-      );
+      const response = await fetch(`${API_URL}/docente/getbyusername`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+        credentials: "include", // Asegúrate de incluir esta opción
+      });
 
       if (!response.ok) {
         setUsuario({ rol: null });
