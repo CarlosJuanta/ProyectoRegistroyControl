@@ -170,7 +170,7 @@ const VerEstudiante = () => {
         const gradoData = { codigoGrado: gradoSeleccionado };
 
         const response = await fetch(
-          `http://localhost:3000/api/estudiante/quitarGrado/${idEstudiante}`,
+          `${API_URL}/estudiante/quitarGrado/${idEstudiante}`,
           {
             method: "DELETE",
             headers: {
