@@ -54,7 +54,7 @@ const Docente = () => {
       }
     } catch (error) {
       console.log(error);
-      alert("Correo no valido");
+      alert("Error al registrar docente");
     }
   };
 
