@@ -158,13 +158,14 @@ const Docente = () => {
               <FormGroup>
                 <Label for="rol">Rol</Label>
                 <Input
-                  type="text-area"
-                  name="rol"
-                  id="rol"
-                  placeholder="Rol"
+                  type="select"
                   onChange={(e) => setRol(e.target.value)}
                   value={rol}
-                />
+                >
+                  <option value="">Seleccione un Rol</option>
+                  <option value="admin">Administrador</option>
+                  <option value="docente">Docente</option>
+                </Input>
               </FormGroup>
             </Col>
             <Col>
