@@ -92,6 +92,15 @@ const VerEstudiante = () => {
     toggleDeleteModal();
   };
 
+  // Función de manejo de cambios para el checkbox de estado del estudiante
+  const handleEditCheckboxChange = (e) => {
+    const { name, checked } = e.target;
+    setEditedEstudiante({
+      ...editedEstudiante,
+      [name]: checked,
+    });
+  };
+
   const handleEditarClick = (estudiante) => {
     setSelectedEstudiante(estudiante);
     // Carga los valores del estudiante seleccionado en el estado local de edición
@@ -203,25 +212,32 @@ const VerEstudiante = () => {
         return;
       }
 
-      // Realiza una solicitud PUT para actualizar los datos del estudiante
-      const response = await fetch(
-        `${API_URL}/estudiante/update/${selectedEstudiante._id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(editedEstudiante),
-        }
+      // Pedir confirmación antes de realizar la edición
+      const confirmacion = window.confirm(
+        "¿Estás seguro de que deseas editar este estudiante?"
       );
 
-      if (response.status === 200) {
-        // Actualiza la lista de estudiantes después de la edición
-        getEstudiantes();
-        toggleEditModal();
-        alert("Edición exitosa");
-      } else {
-        console.log("Error al editar el estudiante.");
+      if (confirmacion) {
+        // Realiza una solicitud PUT para actualizar los datos del estudiante
+        const response = await fetch(
+          `${API_URL}/estudiante/update/${selectedEstudiante._id}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(editedEstudiante),
+          }
+        );
+
+        if (response.status === 200) {
+          // Actualiza la lista de estudiantes después de la edición
+          getEstudiantes();
+          toggleEditModal();
+          alert("Edición exitosa");
+        } else {
+          console.log("Error al editar el estudiante.");
+        }
       }
     } catch (error) {
       console.log(error);
@@ -615,16 +631,13 @@ const VerEstudiante = () => {
                       value={editedEstudiante.correencargadoEstudiante}
                       onChange={handleEditInputChange}
                     />
-                    <Label for="estadoEstudiante" style={{ color: "red" }}>
-                      Estado: Para inactivar al estudiante escriba la palabra
-                      false | para activar al estudiante escriba la palabra true
-                    </Label>
+                    <Label for="estadoEstudiante">Estado Estudiante: </Label>
                     <Input
-                      type="text-area"
+                      type="checkbox" // Cambiar el tipo a "checkbox"
                       id="estadoEstudiante"
                       name="estadoEstudiante"
                       checked={editedEstudiante.estadoEstudiante}
-                      onChange={handleEditInputChange}
+                      onChange={handleEditCheckboxChange}
                     />
                   </FormGroup>
                 </>

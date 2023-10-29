@@ -36,6 +36,7 @@ const VerDocente = () => {
     rol: "",
     username: "",
     password: "",
+    estadoDocente: false, // Estado por defecto es falso (inactivo)
     // Agrega otros campos de edición aquí
   });
 
@@ -46,6 +47,15 @@ const VerDocente = () => {
   const handleEditInputChange = (e) => {
     const { name, value } = e.target;
     setEditedDocente({ ...editedDocente, [name]: value });
+  };
+
+  // Función de manejo de cambios para el checkbox de estado del estudiante
+  const handleEditCheckboxChange = (e) => {
+    const { name, checked } = e.target;
+    setEditedDocente({
+      ...editedDocente,
+      [name]: checked,
+    });
   };
 
   const handleVerClick = (docente) => {
@@ -98,25 +108,32 @@ const VerDocente = () => {
         return;
       }
 
-      // Realiza una solicitud PUT para actualizar los datos del docente
-      const response = await fetch(
-        `${API_URL}/docente/update/${selectedDocente._id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(editedDocente),
-        }
+      // Mostrar una ventana emergente de confirmación
+      const confirmacion = window.confirm(
+        "¿Estás seguro de que deseas editar este docente?"
       );
 
-      if (response.status === 200) {
-        // Actualiza la lista de docentes después de la edición
-        getDocentes();
-        toggleModal();
-        alert("Edición exitosa");
-      } else {
-        console.log("Error al editar el docente.");
+      if (confirmacion) {
+        // Realiza una solicitud PUT para actualizar los datos del docente
+        const response = await fetch(
+          `${API_URL}/docente/update/${selectedDocente._id}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(editedDocente),
+          }
+        );
+
+        if (response.status === 200) {
+          // Actualiza la lista de docentes después de la edición
+          getDocentes();
+          toggleModal();
+          alert("Edición exitosa");
+        } else {
+          console.log("Error al editar el docente.");
+        }
       }
     } catch (error) {
       console.log(error);
@@ -364,16 +381,13 @@ const VerDocente = () => {
                     />
                   </FormGroup>
                   <FormGroup>
-                    <Label for="estadoDocente" style={{ color: "red" }}>
-                      Estado: Para inactivar al estudiante escriba la palabra
-                      false | para activar al estudiante escriba la palabra true{" "}
-                    </Label>
+                    <Label for="estadoDocente">Estado Docente: </Label>
                     <Input
-                      type="text-area"
+                      type="checkbox"
                       id="estadoDocente"
                       name="estadoDocente"
-                      value={editedDocente.estadoDocente}
-                      onChange={handleEditInputChange}
+                      checked={editedDocente.estadoDocente}
+                      onChange={handleEditCheckboxChange}
                     />
                   </FormGroup>
                 </>
