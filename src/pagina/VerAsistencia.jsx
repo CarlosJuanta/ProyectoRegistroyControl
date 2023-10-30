@@ -72,12 +72,13 @@ const Asistencia = () => {
     setSelectedEstudiante(estudiante);
     setModalOpen(true);
   };
+  // Función para obtener la fecha en formato día-mes-año
   const obtenerFechaSistema = () => {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, "0");
-    const day = String(today.getDate()).padStart(2, "0");
-    return `${day}-${month}-${year}`;
+    const fechaActual = new Date();
+    const dia = fechaActual.getDate().toString().padStart(2, "0"); // Día con dos dígitos
+    const mes = (fechaActual.getMonth() + 1).toString().padStart(2, "0"); // Mes con dos dígitos
+    const año = fechaActual.getFullYear();
+    return `${dia}-${mes}-${año}`;
   };
 
   const generarReportePDF = () => {
@@ -113,6 +114,7 @@ const Asistencia = () => {
       70,
       25
     );
+    // En tu código existente:
     doc.text(`Fecha: ${obtenerFechaSistema()}`, 10, 30);
     doc.text("Asistencia", 10, 45);
 
@@ -121,15 +123,18 @@ const Asistencia = () => {
       const totalAsistencias = estudiante.asistencias.filter(
         (asistencia) => asistencia.estado
       ).length;
+      const porcentajeAsistencias =
+        ((totalAsistencias / 55) * 100).toFixed(2) + "%";
       return [
         estudiante.apellidoEstudiante + ", " + estudiante.nombreEstudiante,
         totalAsistencias + " asistencias",
+        porcentajeAsistencias,
       ];
     });
 
     // Generar la tabla
     doc.autoTable({
-      head: [["Estudiante", "Total Asistencias"]],
+      head: [["Estudiante", "Total Asistencias", "Porcentaje"]],
       body: asistenciasPorEstudiante,
       startY: 50,
       theme: "grid",
@@ -195,46 +200,48 @@ const Asistencia = () => {
               <th scope="col">Grado</th>
               <th scope="col">Asistencias</th>
               <th scope="col">Total Asistencias</th>
+              <th scope="col">Porcentaje</th>
               <th scope="col">Llamados de Atención</th>
             </tr>
           </thead>
           <tbody className="table text-center table-hover">
-            {estudiantes.map((estudiante) => (
-              <tr key={estudiante._id}>
-                <td>{estudiante.cuiEstudiante}</td>
-                <td>{estudiante.nombreEstudiante}</td>
-                <td>{estudiante.apellidoEstudiante}</td>
-                <td>{estudiante.codigoGrado[0].nombreGrado}</td>
-                <td>
-                  {selectedDate && (
-                    <>
-                      {
-                        estudiante.asistencias.filter(
-                          (asistencia) =>
-                            asistencia.fecha === selectedDate &&
-                            asistencia.estado
-                        ).length
-                      }
-                    </>
-                  )}
-                </td>
-                <td>
-                  {
-                    estudiante.asistencias.filter(
-                      (asistencia) => asistencia.estado
-                    ).length
-                  }
-                </td>
-                <td>
-                  <Button
-                    color="primary"
-                    onClick={() => abrirModal(estudiante)}
-                  >
-                    Ver
-                  </Button>
-                </td>
-              </tr>
-            ))}
+            {estudiantes.map((estudiante) => {
+              const totalAsistencias = estudiante.asistencias.filter(
+                (asistencia) => asistencia.estado
+              ).length;
+
+              return (
+                <tr key={estudiante._id}>
+                  <td>{estudiante.cuiEstudiante}</td>
+                  <td>{estudiante.nombreEstudiante}</td>
+                  <td>{estudiante.apellidoEstudiante}</td>
+                  <td>{estudiante.codigoGrado[0].nombreGrado}</td>
+                  <td>
+                    {selectedDate && (
+                      <>
+                        {
+                          estudiante.asistencias.filter(
+                            (asistencia) =>
+                              asistencia.fecha === selectedDate &&
+                              asistencia.estado
+                          ).length
+                        }
+                      </>
+                    )}
+                  </td>
+                  <td>{totalAsistencias}</td>
+                  <td>{((totalAsistencias / 55) * 100).toFixed(2)}%</td>
+                  <td>
+                    <Button
+                      color="primary"
+                      onClick={() => abrirModal(estudiante)}
+                    >
+                      Ver
+                    </Button>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
