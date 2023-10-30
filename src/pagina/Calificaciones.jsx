@@ -105,7 +105,7 @@ const Asistencia = () => {
       calificaciones.forEach((calificacion) => {
         const notas = calificacion.notas.map((nota) => nota.nota);
         const sum = notas.reduce((acc, nota) => acc + nota, 0);
-        const promedio = (sum / notas.length).toFixed(2); // Calcula el promedio
+        const promedio = (sum / notas.length).toFixed(); // Calcula el promedio
 
         const row = [
           calificacion.curso.nombreCurso,
