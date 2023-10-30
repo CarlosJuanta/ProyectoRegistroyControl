@@ -114,11 +114,17 @@ const Grado = () => {
             <FormGroup>
               <Label for="seccion">Sección</Label>
               <Input
-                placeholder="Sección"
-                type="text-area"
+                type="select"
+                name="seccion"
+                id="seccion"
                 onChange={(e) => setSecciongrado(e.target.value)}
                 value={secciongrado}
-              />
+              >
+                <option value="">Seleccionar sección</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+              </Input>
             </FormGroup>
           </Col>
           <Col md={3}>
