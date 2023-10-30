@@ -86,12 +86,20 @@ const Asistencia = () => {
     setAsistencias(updatedAsistencias);
   };
 
+  // Función para obtener la fecha en formato día-mes-año
+  const obtenerFechaSistemaheader = () => {
+    const fechaActual = new Date();
+    const dia = fechaActual.getDate().toString().padStart(2, "0"); // Día con dos dígitos
+    const mes = (fechaActual.getMonth() + 1).toString().padStart(2, "0"); // Mes con dos dígitos
+    const año = fechaActual.getFullYear();
+    return `${dia}-${mes}-${año}`;
+  };
   const obtenerFechaSistema = () => {
     const today = new Date();
     const year = today.getFullYear();
     const month = String(today.getMonth() + 1).padStart(2, "0");
     const day = String(today.getDate()).padStart(2, "0");
-    return `${day}-${month}-${year}`;
+    return `${year}-${month}-${day}`;
   };
 
   const guardarAsistencias = async () => {
@@ -163,7 +171,7 @@ const Asistencia = () => {
       70,
       25
     );
-    doc.text(`Fecha: ${obtenerFechaSistema()}`, 10, 30);
+    doc.text(`Fecha: ${obtenerFechaSistemaheader()}`, 10, 30);
     doc.text("Asistencia", 10, 45);
 
     const headers = ["CUI", "Nombre", "Apellido", "Asistencia", "Fecha"];
