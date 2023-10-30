@@ -489,8 +489,7 @@ const VerEstudiante = () => {
                   <strong>Grados Asignados:</strong>
                   {selectedGradoAsignado.codigoGrado.map((grado, index) => (
                     <p key={index._id}>
-                      {grado.nombreGrado}
-                      {grado.seccionGrado}
+                      {grado.nombreGrado} {grado.seccionGrado}
                     </p>
                   ))}
                 </>
