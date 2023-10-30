@@ -104,6 +104,7 @@ const Asistencia = () => {
 
   const guardarAsistencias = async () => {
     // Pregunta al usuario si realmente quiere guardar la asistencia
+
     const confirmarGuardar = window.confirm(
       "¿Estás seguro de que quieres guardar la asistencia?"
     );
@@ -112,6 +113,9 @@ const Asistencia = () => {
       return;
     }
     try {
+      const totalRegistros = Object.keys(asistencias).length; // Total de registros
+      let registrosProcesados = 0; // Contador de registros procesados
+
       for (const asistencia of asistencias) {
         const idEstudiante = asistencia.estudiante;
         const { estado, fecha } = asistencia;
@@ -128,7 +132,11 @@ const Asistencia = () => {
         );
 
         if (response.status === 200) {
-          setRegistroExitoso(true);
+          registrosProcesados++;
+
+          if (registrosProcesados === totalRegistros) {
+            alert("Registro Exitoso");
+          }
         } else {
           console.log(
             "Error al guardar la asistencia para el estudiante:",
@@ -252,16 +260,6 @@ const Asistencia = () => {
   useEffect(() => {
     cargarEstudiantesPorGrado();
   });
-
-  useEffect(() => {
-    let timer;
-    if (registroExitoso) {
-      timer = setTimeout(() => {
-        setRegistroExitoso(false);
-      }, 100);
-    }
-    return () => clearTimeout(timer);
-  }, [registroExitoso]);
 
   return (
     <>
