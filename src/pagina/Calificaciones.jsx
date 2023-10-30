@@ -25,14 +25,13 @@ const Asistencia = () => {
   const [selectedEstudiante, setSelectedEstudiante] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalRegistrarNotasOpen, setModalRegistrarNotasOpen] = useState(false);
-  const [notaIngresada, setNotaIngresada] = useState(false); // Estado para mostrar el mensaje de nota ingresada
   const { usuario } = useContext(Contexto);
   const navigate = useNavigate();
   // Estados para el modal de registro de notas
   const [cursosPorGrado, setCursosPorGrado] = useState([]);
-  const [selectedCurso, setSelectedCurso] = useState("");
+
   const [selectedBloque, setSelectedBloque] = useState("1");
-  const [nota, setNota] = useState("");
+
   const [loadingCursos, setLoadingCursos] = useState(false); // Estado para indicar la carga de cursos
 
   // Función para generar un PDF de las calificaciones del estudiante seleccionado
@@ -172,35 +171,67 @@ const Asistencia = () => {
   };
   // Nueva función para registrar notas
   const registrarNotas = async () => {
-    try {
-      const response = await fetch(
-        `${API_URL}/estudiante/notas/${selectedEstudiante._id}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            cursoId: selectedCurso, // Utiliza el curso seleccionado
-            bloque: selectedBloque, // Utiliza el bloque seleccionado
-            nota: parseFloat(nota), // Utiliza la nota ingresada como número decimal
-          }),
-        }
-      );
+    // Pregunta al usuario si realmente quiere guardar las notas
+    const confirmarGuardar = window.confirm(
+      "¿Estás seguro de que quieres guardar las notas?"
+    );
 
-      if (response.status === 200) {
-        setNotaIngresada(true); // Muestra el mensaje de nota ingresada
-        //setModalRegistrarNotasOpen(false); // Cierra el modal después de registrar notas
-        setSelectedCurso(""); // Limpia el curso seleccionado
-        setSelectedBloque("1"); // Limpia el bloque seleccionado
-        setNota(""); // Limpia la nota ingresada
-        // Puedes agregar aquí una lógica adicional si es necesario
-      } else {
-        console.log("Error al registrar las notas");
+    if (!confirmarGuardar) {
+      return;
+    }
+
+    try {
+      const totalRegistros = Object.keys(notasPorCurso).length; // Total de registros
+      let registrosProcesados = 0; // Contador de registros procesados
+
+      for (const cursoId in notasPorCurso) {
+        const nota = notasPorCurso[cursoId];
+
+        const requestBody = {
+          cursoId: cursoId,
+          bloque: selectedBloque, // Usas el bloque seleccionado
+          nota: nota,
+        };
+
+        const response = await fetch(
+          `${API_URL}/estudiante/notas/${selectedEstudiante._id}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestBody),
+          }
+        );
+
+        if (response.status === 200) {
+          registrosProcesados++;
+
+          if (registrosProcesados === totalRegistros) {
+            alert("Notas ingresadas con éxito");
+            setNotasPorCurso({}); // Reinicia el estado de las notas por curso
+            setModalRegistrarNotasOpen(false);
+          }
+        } else {
+          console.log(
+            "Error al guardar la nota para el estudiante en el curso:",
+            cursoId
+          );
+        }
       }
     } catch (error) {
-      console.error("Hubo un error al registrar las notas:", error);
+      console.error("Hubo un error al guardar las notas:", error);
     }
+  };
+
+  const [notasPorCurso, setNotasPorCurso] = useState({});
+
+  const handleChangeNota = (cursoId, nota) => {
+    // Actualiza el estado de las notas por curso
+    setNotasPorCurso((prevState) => ({
+      ...prevState,
+      [cursoId]: nota,
+    }));
   };
 
   useEffect(() => {
@@ -209,7 +240,7 @@ const Asistencia = () => {
 
   useEffect(() => {
     cargarEstudiantesPorGrado();
-  }, [selectedGrado]);
+  });
 
   const abrirModal = (estudiante) => {
     setSelectedEstudiante(estudiante);
@@ -223,16 +254,6 @@ const Asistencia = () => {
     cargarCursosPorGrado(selectedGrado); // Cargar cursos usando selectedGrado
     setModalRegistrarNotasOpen(true);
   };
-
-  useEffect(() => {
-    let timer;
-    if (notaIngresada) {
-      timer = setTimeout(() => {
-        setNotaIngresada(false);
-      }, 100);
-    }
-    return () => clearTimeout(timer);
-  }, [notaIngresada]);
 
   if (!usuario) {
     navigate("/login");
@@ -377,7 +398,6 @@ const Asistencia = () => {
             </Table>
           </ModalBody>
         </Modal>
-        {/* Modal para registrar notas */}
         <Modal
           isOpen={modalRegistrarNotasOpen}
           toggle={() => setModalRegistrarNotasOpen(!modalRegistrarNotasOpen)}
@@ -390,24 +410,32 @@ const Asistencia = () => {
             {selectedEstudiante && selectedEstudiante.nombreEstudiante}
           </ModalHeader>
           <ModalBody>
-            {/* Agregar un div para mostrar el mensaje */}
-            {notaIngresada && (
-              <div className="alert alert-success" role="alert">
-                Nota ingresada con éxito.
-              </div>
-            )}
-            <Input
-              type="select"
-              value={selectedCurso}
-              onChange={(e) => setSelectedCurso(e.target.value)}
-            >
-              <option value="">Seleccionar Curso</option>
-              {cursosPorGrado.map((curso) => (
-                <option key={curso._id} value={curso._id}>
-                  {curso.nombreCurso}
-                </option>
-              ))}
-            </Input>
+            <Table>
+              <thead>
+                <tr>
+                  <th>Curso</th>
+                  <th>Nota</th>
+                </tr>
+              </thead>
+              <tbody>
+                {cursosPorGrado.map((curso) => (
+                  <tr key={curso._id}>
+                    <td>{curso.nombreCurso}</td>
+                    <td>
+                      <Input
+                        type="number"
+                        placeholder="Nota"
+                        value={notasPorCurso[curso._id] || ""}
+                        onChange={(e) =>
+                          handleChangeNota(curso._id, e.target.value)
+                        }
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+
             <Input
               type="select"
               value={selectedBloque}
@@ -418,12 +446,6 @@ const Asistencia = () => {
               <option value="3">Bloque 3</option>
               <option value="4">Bloque 4</option>
             </Input>
-            <Input
-              type="number"
-              placeholder="Nota"
-              value={nota}
-              onChange={(e) => setNota(e.target.value)}
-            />
           </ModalBody>
           <ModalFooter>
             <Button color="primary" onClick={() => registrarNotas()}>
