@@ -80,6 +80,9 @@ const Asistencia = () => {
         `Docente: ${
           grados.find((grado) => grado.codigoGrado === selectedGrado)
             ?.cuiDocente[0].nombreDocente
+        } ${
+          grados.find((grado) => grado.codigoGrado === selectedGrado)
+            ?.cuiDocente[0].apellidoDocente
         }`,
         10,
         40

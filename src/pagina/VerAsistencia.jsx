@@ -110,6 +110,9 @@ const Asistencia = () => {
       `Docente: ${
         grados.find((grado) => grado.codigoGrado === selectedGrado)
           ?.cuiDocente[0].nombreDocente
+      } ${
+        grados.find((grado) => grado.codigoGrado === selectedGrado)
+          ?.cuiDocente[0].apellidoDocente
       }`,
       10,
       30
@@ -124,7 +127,7 @@ const Asistencia = () => {
       25
     );
     // En tu código existente:
-    doc.text(`Fecha: ${obtenerFechaSistema()}`, 10, 35);
+    doc.text(`Fecha: ${obtenerFechaSistema()}`, 10, 40);
     doc.text("Asistencia", 10, 45);
 
     // Contenido del reporte
