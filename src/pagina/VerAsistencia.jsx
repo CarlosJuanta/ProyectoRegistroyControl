@@ -90,7 +90,7 @@ const Asistencia = () => {
     doc.setFontSize(12);
 
     // Agregar el logo al encabezado
-    doc.addImage(logo, "PNG", 150, 8, 50, 30); // Ajusta las coordenadas y dimensiones según tus necesidades
+    doc.addImage(logo, "PNG", 150, 8, 40, 30); // Ajusta las coordenadas y dimensiones según tus necesidades
 
     doc.text('ESCUELA OFICIAL URBANA MIXTA JOSÉ JOAQUÍN PALMA"', 10, 10);
     doc.text(
@@ -105,6 +105,15 @@ const Asistencia = () => {
       10,
       25
     );
+
+    doc.text(
+      `Docente: ${
+        grados.find((grado) => grado.codigoGrado === selectedGrado)
+          ?.cuiDocente[0].nombreDocente
+      }`,
+      10,
+      30
+    );
     // Agregar la sección del grado
     doc.text(
       `Sección: ${
@@ -115,7 +124,7 @@ const Asistencia = () => {
       25
     );
     // En tu código existente:
-    doc.text(`Fecha: ${obtenerFechaSistema()}`, 10, 30);
+    doc.text(`Fecha: ${obtenerFechaSistema()}`, 10, 35);
     doc.text("Asistencia", 10, 45);
 
     // Contenido del reporte

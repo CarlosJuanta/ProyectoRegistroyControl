@@ -43,7 +43,7 @@ const Asistencia = () => {
       doc.setFont("times");
       doc.setFontSize(12);
       // Agregar el logo al encabezado
-      doc.addImage(logo, "PNG", 150, 8, 50, 30); // Ajusta las coordenadas y dimensiones según tus necesidades
+      doc.addImage(logo, "PNG", 150, 8, 40, 30); // Ajusta las coordenadas y dimensiones según tus necesidades
       doc.text('ESCUELA OFICIAL URBANA MIXTA JOSÉ JOAQUÍN PALMA"', 10, 10);
       doc.text(
         "3a. Calle 33A-37 zona 8, Colonia La Democracia, Quetzaltenango",
@@ -73,32 +73,59 @@ const Asistencia = () => {
           grados.find((grado) => grado.codigoGrado === selectedGrado)
             ?.seccionGrado
         }`,
-        70,
+        80,
         35
+      );
+      doc.text(
+        `Docente: ${
+          grados.find((grado) => grado.codigoGrado === selectedGrado)
+            ?.cuiDocente[0].nombreDocente
+        }`,
+        10,
+        40
       );
 
       // Datos de las calificaciones en una tabla
       const calificaciones = selectedEstudiante.notas;
       const data = [];
+
+      // Encabezados de las columnas (incluye "Promedio" al final)
+      const columnHeaders = [
+        "Curso",
+        "Bloque 1",
+        "Bloque 2",
+        "Bloque 3",
+        "Bloque 4",
+        "Promedio",
+      ];
+
       calificaciones.forEach((calificacion) => {
-        data.push([
+        const notas = calificacion.notas.map((nota) => nota.nota);
+        const sum = notas.reduce((acc, nota) => acc + nota, 0);
+        const promedio = (sum / notas.length).toFixed(2); // Calcula el promedio
+
+        const row = [
           calificacion.curso.nombreCurso,
-          ...calificacion.notas.map((nota) => nota.nota),
-          calificacion.promedio,
-          calificacion.estado,
-        ]);
+          notas[0], // Nota del "Bloque 1"
+          notas[1], // Nota del "Bloque 2"
+          notas[2], // Nota del "Bloque 3"
+          notas[3], // Nota del "Bloque 4"
+          promedio, // Promedio en la posición 4
+        ];
+        data.push(row);
       });
 
+      // Generar la tabla
       doc.autoTable({
-        head: [
-          ["Curso", "Bloque 1", "Bloque 2", "Bloque 3", "Bloque 4", "Promedio"],
-        ],
+        head: [columnHeaders], // Utiliza los encabezados personalizados
         body: data,
         startY: 50,
       });
 
       // Guardar el PDF
-      doc.save(`${nombreCompleto}_calificaciones.pdf`);
+      doc.save(
+        `${selectedEstudiante.nombreEstudiante}_${selectedEstudiante.apellidoEstudiante}_calificaciones.pdf`
+      );
     }
   };
 
