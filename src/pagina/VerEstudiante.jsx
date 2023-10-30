@@ -329,7 +329,11 @@ const VerEstudiante = () => {
                       <td>{estudiante.cuiEstudiante}</td>
                       <td>{estudiante.nombreEstudiante}</td>
                       <td>{estudiante.apellidoEstudiante}</td>
-                      <td>{estudiante.fechanacEstudiante}</td>
+                      <td>
+                        {new Date(
+                          estudiante.fechanacEstudiante
+                        ).toLocaleDateString("es-ES")}
+                      </td>
                       <td>{estudiante.direccionEstudiante}</td>
                       <td>{estudiante.nacionalidadEstudiante}</td>
                       <td>{estudiante.codigomineducEstudiante}</td>
@@ -441,7 +445,9 @@ const VerEstudiante = () => {
                 <>
                   <strong>Grados Asignados:</strong>
                   {selectedGradoAsignado.codigoGrado.map((grado, index) => (
-                    <p key={index._id}>{grado.nombreGrado}</p>
+                    <p key={index._id}>
+                      {grado.nombreGrado} {grado.seccionGrado}
+                    </p>
                   ))}
                 </>
               )}
@@ -457,8 +463,7 @@ const VerEstudiante = () => {
                   <option value="">Seleccionar...</option>
                   {grados.map((grado) => (
                     <option key={grado._id} value={grado.codigoGrado}>
-                      {grado.nombreGrado}
-                      {grado.seccion}
+                      {grado.nombreGrado} {grado.seccionGrado}
                     </option>
                   ))}
                 </Input>
@@ -483,7 +488,10 @@ const VerEstudiante = () => {
                 <>
                   <strong>Grados Asignados:</strong>
                   {selectedGradoAsignado.codigoGrado.map((grado, index) => (
-                    <p key={index._id}>{grado.nombreGrado}</p>
+                    <p key={index._id}>
+                      {grado.nombreGrado}
+                      {grado.seccionGrado}
+                    </p>
                   ))}
                 </>
               )}
@@ -500,7 +508,7 @@ const VerEstudiante = () => {
                   {grados.map((grado) => (
                     <option key={grado._id} value={grado._id}>
                       {grado.nombreGrado}
-                      {grado.seccion}
+                      {grado.seccionGrado}
                     </option>
                   ))}
                 </Input>
