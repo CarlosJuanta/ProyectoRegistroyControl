@@ -251,7 +251,7 @@ const Asistencia = () => {
 
   useEffect(() => {
     cargarEstudiantesPorGrado();
-  }, [selectedGrado]);
+  });
 
   useEffect(() => {
     let timer;
