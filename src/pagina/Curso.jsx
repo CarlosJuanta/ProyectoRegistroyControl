@@ -319,6 +319,7 @@ const VerCurso = () => {
                         <tr>
                           <th>Código Grado</th>
                           <th>Nombre del Grado</th>
+                          <th>Sección</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -326,6 +327,7 @@ const VerCurso = () => {
                           <tr key={index}>
                             <td>{grado.codigoGrado}</td>
                             <td>{grado.nombreGrado}</td>
+                            <td>{grado.seccionGrado}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -343,7 +345,7 @@ const VerCurso = () => {
                       <option value="">Seleccionar...</option>
                       {grados.map((grado) => (
                         <option key={grado.codigoGrado} value={grado._id}>
-                          {grado.nombreGrado}
+                          {grado.nombreGrado} {grado.seccionGrado}
                         </option>
                       ))}
                     </Input>
@@ -363,7 +365,7 @@ const VerCurso = () => {
 
           <Modal isOpen={modal} toggle={toggleModal}>
             <ModalHeader toggle={toggleModal}>
-              Información del grado y docente asignado
+              Información del grado asignado
             </ModalHeader>
             <ModalBody>
               {selectedCurso && (
@@ -374,6 +376,7 @@ const VerCurso = () => {
                         <tr>
                           <th>Código Grado</th>
                           <th>Nombre del Grado</th>
+                          <th>Sección</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -381,6 +384,7 @@ const VerCurso = () => {
                           <tr key={index}>
                             <td>{grado.codigoGrado}</td>
                             <td>{grado.nombreGrado}</td>
+                            <td>{grado.seccionGrado}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -401,7 +405,7 @@ const VerCurso = () => {
                           key={grado.codigoGrado}
                           value={grado.codigoGrado}
                         >
-                          {grado.nombreGrado}
+                          {grado.nombreGrado} {grado.seccionGrado}
                         </option>
                       ))}
                     </Input>
