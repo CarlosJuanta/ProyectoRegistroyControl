@@ -155,8 +155,10 @@ const Asistencia = () => {
     // Agrega el encabezado
     doc.setFont("times");
     doc.setFontSize(12);
+
     // Agregar el logo al encabezado
-    doc.addImage(logo, "PNG", 150, 8, 50, 30); // Ajusta las coordenadas y dimensiones según tus necesidades
+    doc.addImage(logo, "PNG", 150, 8, 40, 30); // Ajusta las coordenadas y dimensiones según tus necesidades
+
     doc.text('ESCUELA OFICIAL URBANA MIXTA JOSÉ JOAQUÍN PALMA"', 10, 10);
     doc.text(
       "3a. Calle 33A-37 zona 8, Colonia La Democracia, Quetzaltenango",
@@ -170,6 +172,18 @@ const Asistencia = () => {
       10,
       25
     );
+
+    doc.text(
+      `Docente: ${
+        grados.find((grado) => grado.codigoGrado === selectedGrado)
+          ?.cuiDocente[0].nombreDocente
+      } ${
+        grados.find((grado) => grado.codigoGrado === selectedGrado)
+          ?.cuiDocente[0].apellidoDocente
+      }`,
+      10,
+      30
+    );
     // Agregar la sección del grado
     doc.text(
       `Sección: ${
@@ -179,9 +193,9 @@ const Asistencia = () => {
       70,
       25
     );
-    doc.text(`Fecha: ${obtenerFechaSistemaheader()}`, 10, 30);
+    // En tu código existente:
+    doc.text(`Fecha: ${obtenerFechaSistema()}`, 10, 40);
     doc.text("Asistencia", 10, 45);
-
     const headers = ["CUI", "Nombre", "Apellido", "Asistencia", "Fecha"];
     const data = estudiantes.map((estudiante) => {
       const asistencia = asistencias.find(
