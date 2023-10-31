@@ -194,9 +194,9 @@ const Asistencia = () => {
       25
     );
     // En tu código existente:
-    doc.text(`Fecha: ${obtenerFechaSistema()}`, 10, 40);
+    doc.text(`Fecha: ${obtenerFechaSistemaheader()}`, 10, 40);
     doc.text("Asistencia", 10, 45);
-    const headers = ["CUI", "Nombre", "Apellido", "Asistencia", "Fecha"];
+    const headers = ["CUI", "Nombre", "Apellido", "Asistencia"];
     const data = estudiantes.map((estudiante) => {
       const asistencia = asistencias.find(
         (asis) => asis.estudiante === estudiante._id
@@ -212,7 +212,6 @@ const Asistencia = () => {
         estudiante.nombreEstudiante,
         estudiante.apellidoEstudiante,
         asistenciaTexto,
-        asistencia ? asistencia.fecha : obtenerFechaSistema(),
       ];
     });
 
