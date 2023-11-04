@@ -270,7 +270,7 @@ const Asistencia = () => {
 
   useEffect(() => {
     cargarEstudiantesPorGrado();
-  });
+  }, [selectedGrado]);
 
   const abrirModal = (estudiante) => {
     setSelectedEstudiante(estudiante);
