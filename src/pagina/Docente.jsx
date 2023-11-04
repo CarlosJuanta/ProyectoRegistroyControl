@@ -170,7 +170,7 @@ const Docente = () => {
             </Col>
             <Col>
               <FormGroup>
-                <Label for="username">Username</Label>
+                <Label for="username">Usuario</Label>
                 <Input
                   type="text-area"
                   name="username"
@@ -183,7 +183,7 @@ const Docente = () => {
             </Col>
             <Col>
               <FormGroup>
-                <Label for="password">Password</Label>
+                <Label for="password">Contraseña</Label>
                 <Input
                   type="text-area"
                   name="password"
