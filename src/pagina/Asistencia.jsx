@@ -272,7 +272,7 @@ const Asistencia = () => {
 
   useEffect(() => {
     cargarEstudiantesPorGrado();
-  });
+  }, [selectedGrado]);
 
   return (
     <>

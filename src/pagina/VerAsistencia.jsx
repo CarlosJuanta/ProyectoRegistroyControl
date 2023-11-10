@@ -22,50 +22,53 @@ const Asistencia = () => {
   const [selectedEstudiante, setSelectedEstudiante] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
 
+  const cargarGrados = async () => {
+    try {
+      const response = await fetch(`${API_URL}/grado/getall`);
+      if (response.status === 200) {
+        const data = await response.json();
+        setGrados(data.resultado);
+      } else {
+        console.log("Error al cargar los grados");
+      }
+    } catch (error) {
+      console.error("Hubo un error al cargar los grados:", error);
+    }
+  };
+
+  const cargarEstudiantesPorGrado = async () => {
+    if (!selectedGrado) return;
+
+    try {
+      const data = { codigoGrado: selectedGrado };
+      const response = await fetch(`${API_URL}/estudiante/getbygrado`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.status === 200) {
+        const data = await response.json();
+        setEstudiantes(data.gradosAsignados);
+      } else {
+        console.log("Error al cargar los estudiantes asignados al grado");
+      }
+    } catch (error) {
+      console.error(
+        "Hubo un error al cargar los estudiantes asignados al grado:",
+        error
+      );
+    }
+  };
+
   useEffect(() => {
-    const cargarGrados = async () => {
-      try {
-        const response = await fetch(`${API_URL}/grado/getall`);
-        if (response.status === 200) {
-          const data = await response.json();
-          setGrados(data.resultado);
-        } else {
-          console.log("Error al cargar los grados");
-        }
-      } catch (error) {
-        console.error("Hubo un error al cargar los grados:", error);
-      }
-    };
-
-    const cargarEstudiantesPorGrado = async () => {
-      if (!selectedGrado) return;
-
-      try {
-        const data = { codigoGrado: selectedGrado };
-        const response = await fetch(`${API_URL}/estudiante/getbygrado`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        });
-
-        if (response.status === 200) {
-          const data = await response.json();
-          setEstudiantes(data.gradosAsignados);
-        } else {
-          console.log("Error al cargar los estudiantes asignados al grado");
-        }
-      } catch (error) {
-        console.error(
-          "Hubo un error al cargar los estudiantes asignados al grado:",
-          error
-        );
-      }
-    };
-
     cargarGrados();
-    if (selectedGrado) cargarEstudiantesPorGrado();
+  }, []);
+
+  useEffect(() => {
+    cargarEstudiantesPorGrado();
   }, [selectedGrado]);
 
   const abrirModal = (estudiante) => {
